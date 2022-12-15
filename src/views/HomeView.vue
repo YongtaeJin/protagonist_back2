@@ -26,6 +26,9 @@
 <script>
   export default {
     name: 'Home',
+    title() {
+      return "My Homepage";
+    },
     methods : {
       toastTest1() {
         this.$toast.info('토스트 Info');
