@@ -3,10 +3,13 @@
 </template>
 
 <script>
-  <div>배포테스트</div>
+  import HelloWorld from '../components/HelloWorld'
 
   export default {
     name: 'Home',
 
+    components: {
+      HelloWorld,
+    },
   }
 </script>
