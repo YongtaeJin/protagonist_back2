@@ -1,0 +1,25 @@
+name: SERVER distribute
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+
+    steps:
+      - name: Deploy
+        uses: appleboy/ssh-action@v0.1.4
+        with:
+          host: ${{ secrets.REMOTE_IP }}
+          username: ${{ secrets.REMOTE_SSH_ID }}
+          password: ${{ secrets.REMOTE_SSH_PW }}
+          port: ${{ secrets.REMOTE_SSH_PORT }}
+          script: |
+            echo "테스트 출력"
+            cd /home/ubuntu/ezhome
+            sudo git pull
+            sudo yarn
+            sudo yarn build
+            pm2 reload all
