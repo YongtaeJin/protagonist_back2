@@ -24,7 +24,7 @@ const renderer = createBundleRenderer(serverBundle, {
 	clientManifest,
 });
 
-app.get('*', (req, res) => {
+app.get('*', (req, res) => {	
 	const ctx = {
 		url : req.url,
 		title : 'Vue SSR App',

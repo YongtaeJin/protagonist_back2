@@ -11,7 +11,7 @@ import titleMixin from './mixins/title-mixin';
 
 Vue.config.productionTip = false
 
-export function createApp(ctx) {
+export function createApp(ctx) {	
 	const router = createRouter();
 	const store = createStore();
 	sync(store, router);

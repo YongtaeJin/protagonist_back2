@@ -26,8 +26,25 @@
 <script>
   export default {
     name: 'Home',
-    title() {
+    title() {      
       return "My Homepage";
+    },
+    serverPrefetch() {      
+      return new Promise((resolve, reject) => {        
+        resolve();
+      });
+    },
+    beforeCreate() {
+      
+    },
+    created() {
+      
+    },
+    beforeMount() {
+      
+    },
+    mounted() {
+      
     },
     methods : {
       toastTest1() {

@@ -1,51 +1,55 @@
 <template>
   <v-app>
-    <v-app-bar
-      app
-      color="primary"
-      dark
-    >
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div>
-
-      <v-spacer></v-spacer>
-
-      <v-btn to="/">Home</v-btn>
-      <v-btn to="/about">About</v-btn>
-      
-    </v-app-bar>
+    <v-navigation-drawer app v-model="drawer">
+      <site-navi @close="toggleDrawer" />
+    </v-navigation-drawer>
+    <v-app-bar app color="primary" dark hide-on-scroll>
+      <v-app-bar-nav-icon @click="toggleDrawer" />
+      <site-title />
+		</v-app-bar>
 
     <v-main>
       <router-view/>
     </v-main>
+
+    <site-footer />
     <vue-progress-bar></vue-progress-bar>
   </v-app>
 </template>
 
 <script>
+import SiteFooter from './components/layout/SiteFooter.vue';
+import SiteTitle from './components/layout/SiteTitle.vue';
+import SiteNavi from './components/layout/SiteNavi.vue';
 
 export default {
+  components: { SiteTitle, SiteFooter, SiteNavi },
+  
   name: 'App',
 
-  data: () => ({
-    //
-  }),
+  data() {
+    return {
+      drawer : false,
+    }
+  },
+  methods : {
+    toggleDrawer() {
+      this.drawer = !this.drawer;
+    },
+  },
+
+  serverPrefetch() {
+    return new Promise((resolve, reject)=>{
+      resolve();
+    });
+  },
+  beforeCreate() {    
+  },
+  created() {    
+  },
+  beforeMount() {    
+  },
+  mounted() {    
+  },
 };
 </script>
