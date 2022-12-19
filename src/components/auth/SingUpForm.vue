@@ -5,16 +5,19 @@
     <input-duplicate-check ref="email" v-model="form.mb_email" label="이메일" prepend-icon="mdi-email" :rules="rules.email()" :cbCheck="cbCheckEmail" />
     <input-password label="비밀번호" v-model="form.mb_password" prepend-icon="mdi-lock"	:rules="rules.password()"	/>
 		<input-password label="비밀번호 확인"	v-model="confirmPw"	prepend-icon="mdi-lock"	:rules="[rules.matchValue(form.mb_password)]" />
+    <input-date label="생년월일" prepend-icon="mdi-calendar" v-model="form.mb_birth" :rules="rules.date({label : '생년월일'})" />
+    
     <v-btn type="submit" block color="primary">회원가입</v-btn>
   </v-form>
 </template>
 
 <script>
 import validateRules from "../../../util/validateRules";
+import InputDate from '../InputForms/InputDate.vue';
 import InputDuplicateCheck from "../InputForms/InputDuplicateCheck.vue";
 import InputPassword from '../InputForms/InputPassword.vue';
 export default {
-  components: { InputDuplicateCheck, InputPassword },
+  components: { InputDuplicateCheck, InputPassword, InputDate },
   name: "SignUpForm",
   props : {
     cbCheckId : {
