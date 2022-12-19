@@ -1,19 +1,19 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-
+import modules from "./modules";
 Vue.use(Vuex)
 
 export function createStore() {
 	const store = new Vuex.Store({
 		state: {
 			config : {
-				title : "Protagonist",
-				footer : "It's Jin Sysetms all right reserved.",
+				title : "ezCode",
+				footer : "ezCode all right reserved.",
 				menu : [
 					{
 						title : "Home",
 						icon : "mdi-home",
-						to : '/',
+						to : '',
 						grant : 0, 
 						newTab : false,
 						subItems : [
@@ -40,7 +40,6 @@ export function createStore() {
 										newTab : false,
 										subItems : []
 									},
-
 								]
 							},
 							{
@@ -61,6 +60,7 @@ export function createStore() {
 						newTab : false,
 						subItems : []
 					},
+
 				]
 			}
 		},
@@ -68,8 +68,8 @@ export function createStore() {
 		},
 		actions: {
 		},
-		modules: {
-		}
+		modules,
 	});
+
 	return store;
 }
