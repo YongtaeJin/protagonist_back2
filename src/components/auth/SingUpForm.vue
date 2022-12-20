@@ -6,7 +6,12 @@
     <input-password label="비밀번호" v-model="form.mb_password" prepend-icon="mdi-lock"	:rules="rules.password()"	/>
 		<input-password label="비밀번호 확인"	v-model="confirmPw"	prepend-icon="mdi-lock"	:rules="[rules.matchValue(form.mb_password)]" />
     <input-date label="생년월일" prepend-icon="mdi-calendar" v-model="form.mb_birth" :rules="rules.date({label : '생년월일'})" />
+    <input-radio v-model="form.mb_gender" :items="genderItems" row prepend-icon="mdi-gender-male-female" :rules="[rules.require({ label: '성별' })]" />
+    <input-phone v-model="form.mb_phone" label="전화번호" prepend-icon="mdi-phone" :rules="rules.phone()" />
+    <input-post	:zipcode.sync="form.mb_zip"	:addr1.sync="form.mb_addr1"	:addr2.sync="form.mb_addr2" />
     
+    
+
     <v-btn type="submit" block color="primary">회원가입</v-btn>
   </v-form>
 </template>
@@ -16,8 +21,11 @@ import validateRules from "../../../util/validateRules";
 import InputDate from '../InputForms/InputDate.vue';
 import InputDuplicateCheck from "../InputForms/InputDuplicateCheck.vue";
 import InputPassword from '../InputForms/InputPassword.vue';
+import InputPhone from '../InputForms/InputPhone.vue';
+import InputPost from '../InputForms/InputPost.vue';
+import InputRadio from '../InputForms/InputRadio.vue';
 export default {
-  components: { InputDuplicateCheck, InputPassword, InputDate },
+  components: { InputDuplicateCheck, InputPassword, InputDate, InputRadio, InputPhone, InputPost },
   name: "SignUpForm",
   props : {
     cbCheckId : {
@@ -33,17 +41,22 @@ export default {
     return {
       valid: true,
       form: {
-        mb_id: "",
-        mb_password: "",
-        mb_name: "",
-        mb_birth: "",
-        mb_gender: "",
-        mb_email: "",
-        mb_phone: "",
-        mb_zip: "",
-        mb_addr1: "",
-        mb_addr2: "",
+        mb_id: "test1",
+        mb_password: "abcd1234",
+        mb_name: "테스트",
+        mb_birth: "2022-12-20",
+        mb_gender: "M",
+        mb_email: "test@test.com",
+        mb_phone: "010-2010-2221",
+        mb_zip: "08589",
+        mb_addr1: "서울 금천구 가산디지털1로 119 (가산동, SK트윈테크타워)",
+        mb_addr2: "ㅇ332111",
       },
+      confirmPw: "abcd1234",
+      genderItems: [
+        { label: "남자", value: "M" },
+        { label: "여자", value: "F" },
+      ],
     };
   },
   computed : {
