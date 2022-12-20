@@ -6,6 +6,7 @@
     <input-password label="비밀번호" v-model="form.mb_password" prepend-icon="mdi-lock"	:rules="rules.password()"	/>
 		<input-password label="비밀번호 확인"	v-model="confirmPw"	prepend-icon="mdi-lock"	:rules="[rules.matchValue(form.mb_password)]" />
     <input-date label="생년월일" prepend-icon="mdi-calendar" v-model="form.mb_birth" :rules="rules.date({label : '생년월일'})" />
+    <v-file-input label="회원이미지" v-model="form.mb_image" prepend-icon="mdi-account-box"	accept="image/jpg,image/png" />
     <input-radio v-model="form.mb_gender" :items="genderItems" row prepend-icon="mdi-gender-male-female" :rules="[rules.require({ label: '성별' })]" />
     <input-phone v-model="form.mb_phone" label="전화번호" prepend-icon="mdi-phone" :rules="rules.phone()" />
     <input-post	:zipcode.sync="form.mb_zip"	:addr1.sync="form.mb_addr1"	:addr2.sync="form.mb_addr2" />
@@ -50,6 +51,7 @@ export default {
         mb_zip: "08589",
         mb_addr1: "서울 금천구 가산디지털1로 119 (가산동, SK트윈테크타워)",
         mb_addr2: "ㅇ332111",
+        mb_image: null,
       },
       confirmPw: "abcd1234",
       genderItems: [
@@ -68,8 +70,14 @@ export default {
       if(!this.valid) return;
       if(!this.$refs.id.validate()) return;
       if(!this.$refs.email.validate()) return;
-      
-      this.$emit('onSave', this.form);
+
+      // this.$emit('onSave', this.form); // 삭제
+			const formData = new FormData();
+			const keys = Object.keys(this.form);
+			for(const key of keys) {
+				formData.append(key, this.form[key]);
+			}      
+      this.$emit('onSave', formData);
     },
   },
 };

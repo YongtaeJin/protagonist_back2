@@ -12,6 +12,14 @@ const webServer = http.createServer(app);
 // 파서
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+const fileUpload = require('express-fileupload');
+app.use(fileUpload());
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
+
+// 글로벌
+global.MEMBER_PHOTO_PATH = path.join(__dirname, './upload/memberPhoto');
+fs.mkdirSync(MEMBER_PHOTO_PATH, {recursive: true})
 
 // Passport
 const passport = require('./plugins/passport');

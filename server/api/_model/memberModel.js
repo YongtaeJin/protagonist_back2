@@ -47,7 +47,6 @@ const memberModel = {
 	async createMember(req) {
 		const at = moment().format('LT');
 		const ip = getIp(req);
-		// console.log('IP', ip, at);
 
 		const payload = {
 			...req.body,
@@ -58,6 +57,17 @@ const memberModel = {
 			mb_update_at : at,
 			mb_update_ip : ip,
 		};
+
+		// 이미지 업로드 처리
+		delete payload.mb_image;
+		if(req.files && req.files.mb_image) {
+			req.files.mb_image.mv(`${MEMBER_PHOTO_PATH}/${payload.mb_id}.jpg`, (err)=>{
+				if(err) {
+					console.log("Member Image Upload Error", err);
+				}
+			});
+		}
+
 		payload.mb_password = jwt.generatePassword(payload.mb_password);		
 		const sql = sqlHelper.Insert(TABLE.MEMBER, payload);
 		const [row] = await db.execute(sql.query, sql.values);		

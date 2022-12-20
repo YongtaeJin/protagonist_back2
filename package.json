@@ -12,9 +12,11 @@
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
     "@mdi/font": "5.9.55",
+    "cookie-parser": "^1.4.6",
     "core-js": "^3.8.3",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "express-fileupload": "^1.4.0",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.4",
     "mysql2": "^2.3.3",
