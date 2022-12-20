@@ -5,7 +5,7 @@
         <v-toolbar-title>회원가입</v-toolbar-title>
       </v-toolbar>
       <v-card-text> 				
-                <sing-up-form :cbCheckId="checkId" :cbCheckEmail="checkEmail"/>
+        <sing-up-form :cbCheckId="checkId" :cbCheckEmail="checkEmail" @onSave="save" :isLoading="isLoading" />
 			</v-card-text>
     </v-card>
   </div>
@@ -17,16 +17,30 @@ import SingUpForm from "../../components/auth/SingUpForm.vue";
 export default {
   components: { SingUpForm },
   name: "Join",
+  data() {
+    return {
+      isLoading: false,
+    };
+  },
 	methods : {
-		...mapActions('user', ['duplicateCheck']),
+		...mapActions('user', ['duplicateCheck', 'createMember']),
 		async checkId(id) {
 			const data = await this.duplicateCheck({field : 'mb_id', value : id});
 			return data;
 		},
-        async checkEmail(email) {
+    async checkEmail(email) {
 			const data = await this.duplicateCheck({field : 'mb_email', value : email});
 			return data;
 		},
+    async save(form) {      
+      this.isLoading = true;
+      const data = await this.createMember(form);
+    	this.isLoading = false;            
+      if(data) {
+        this.$toast.info(`${form.mb_name}님 회의 가입하셧습니다. `);
+        this.$router.push('/login');
+      }
+    },
 	}
 };
 </script>

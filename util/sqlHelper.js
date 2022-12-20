@@ -18,7 +18,22 @@ const sqlHelper = {
 			query = query.replace('*', cols.join(', '));
 		}
 		return { query, values };
-	}
+	},
+
+	Insert(table, data) {
+		let query = `INSERT INTO ${table} ({1}) VALUES ({2})`;
+		const keys = Object.keys(data);
+		const prepare = new Array(keys.length).fill('?').join(', ');
+		const values = [];
+		for (const key of keys) {
+			values.push(data[key]);
+		}
+		query = query.replace('{1}', keys.join(', '));
+		query = query.replace('{2}', prepare);
+		return { query, values };
+	},
+
+
 };
 
 module.exports = sqlHelper;
