@@ -17,4 +17,9 @@ export const actions = {
 		const data = await $axios.post('/api/member', form);
 		return data;
 	},
+	async signInLocal({commit}, form) {
+		const { $axios } = Vue.prototype;
+		const data = await $axios.post('/api/member/loginLocal', form);
+		return data;
+	},
 };

@@ -19,7 +19,14 @@ const lib = {
 		}
 	},
 	getIp(req) {
-		return req.ip.replace('::ffff:', '');
+		//return req.ip.replace('::ffff:', '');
+		var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;		
+		if (ip.substr(0, 7) == "::ffff:") {
+  			ip = ip.substr(7);
+		} else {
+			ip = ip.replace('::ffff:', '');
+		}
+		return ip;
 	},
 }
 
