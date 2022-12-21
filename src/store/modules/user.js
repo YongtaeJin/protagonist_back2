@@ -1,4 +1,5 @@
 import Vue from "vue";
+import qs from 'qs';
 import { da } from "vuetify/es5/locale";
 
 export const state = () => ({
@@ -52,4 +53,11 @@ export const actions = {
 		commit('SET_TOKEN', null);
 		return mb_name;
 	},
+
+	async findIdLocal(ctx, form) {
+		const {$axios} = Vue.prototype;
+		const query = qs.stringify(form);
+		const data = await $axios.get(`/api/member/findId?${query}`);
+		return data;
+	}
 };

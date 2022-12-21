@@ -1,7 +1,7 @@
 {
   "publicPath": "/",
   "all": [
-    "js/vendor.52ec1ce8.js",
+    "js/vendor.08399bc3.js",
     "fonts/materialdesignicons-webfont.5d875350.eot",
     "fonts/materialdesignicons-webfont.21f691f0.ttf",
     "css/vendor.33b83f72.css",
@@ -31,25 +31,25 @@
     "fonts/Roboto-Regular.475ba9e4.woff2",
     "fonts/Roboto-Light.0e01b6cd.woff2",
     "fonts/Roboto-Thin.f7a95c9c.woff2",
-    "js/main.abe1ccd7.js",
-    "js/join.58ab2ab1.js",
-    "js/login.a5f66b9e.js",
-    "js/manifest.7babdd93.js",
+    "js/main.36a29fa9.js",
+    "js/join.4d6854b6.js",
+    "js/login.162b7cae.js",
+    "js/manifest.ee81a5ea.js",
     "favicon.ico",
-    "js/about.0d023705.js",
-    "js/error.4d3e711e.js"
+    "js/about.de728da8.js",
+    "js/error.3559d4a7.js"
   ],
   "initial": [
-    "js/manifest.7babdd93.js",
+    "js/manifest.ee81a5ea.js",
     "css/vendor.33b83f72.css",
-    "js/vendor.52ec1ce8.js",
-    "js/main.abe1ccd7.js"
+    "js/vendor.08399bc3.js",
+    "js/main.36a29fa9.js"
   ],
   "async": [
-    "js/join.58ab2ab1.js",
-    "js/login.a5f66b9e.js",
-    "js/about.0d023705.js",
-    "js/error.4d3e711e.js"
+    "js/join.4d6854b6.js",
+    "js/login.162b7cae.js",
+    "js/about.de728da8.js",
+    "js/error.3559d4a7.js"
   ],
   "modules": {
     "20415075": [
@@ -93,6 +93,10 @@
       0
     ],
     "56861052": [
+      3,
+      0
+    ],
+    "69322934": [
       3,
       0
     ],
@@ -1095,6 +1099,10 @@
       3,
       0
     ],
+    "7d6e4b81": [
+      3,
+      0
+    ],
     "4f14ae5a": [
       3,
       0
@@ -1579,6 +1587,18 @@
       3,
       0
     ],
+    "6c105668": [
+      3,
+      0
+    ],
+    "76dc1c92": [
+      3,
+      0
+    ],
+    "84f3fc00": [
+      3,
+      0
+    ],
     "e120d03e": [
       3,
       0
@@ -1730,6 +1750,14 @@
       3,
       0
     ],
+    "4775c4bf": [
+      3,
+      0
+    ],
+    "bb6b397c": [
+      3,
+      0
+    ],
     "3e46f712": [
       3,
       0
@@ -1818,6 +1846,18 @@
       3,
       0
     ],
+    "288d51a8": [
+      3,
+      0
+    ],
+    "523970bc": [
+      3,
+      0
+    ],
+    "113549b4": [
+      3,
+      0
+    ],
     "4c871657": [
       3,
       0
@@ -1890,6 +1930,25 @@
       3,
       0
     ],
+    "b7b45464": [
+      3,
+      0
+    ],
+    "3dcc5738": [
+      3,
+      0
+    ],
+    "1c464594": [
+      3,
+      0
+    ],
+    "4d3ebaea": [
+      3,
+      0
+    ],
+    "37896a18": [
+      30
+    ],
     "45434b85": [
       3,
       0
@@ -1951,6 +2010,10 @@
       0
     ],
     "046e7530": [
+      3,
+      0
+    ],
+    "70dc1f4e": [
       3,
       0
     ],
