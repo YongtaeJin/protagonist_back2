@@ -42,7 +42,17 @@ export default {
 				this.$router.push('/login');
 			}
     },
-	}
+	},
+  async loginLocal(form) {
+			this.isLoading = true;
+			const data = await this.signInLocal(form);
+			this.isLoading = false;
+			if(data) {
+				const mb_name = this.$store.state.user.member.mb_name;
+				this.$toast.info(`${mb_name}님 환영합니다.`);
+				this.$router.push('/');
+			}
+		},
 };
 </script>
 

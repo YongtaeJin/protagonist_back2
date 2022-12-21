@@ -20,7 +20,7 @@ router.post('/loginLocal', async (req, res) => {
 	passport.authenticate('local', function (err, member, info) {
 		if (info) {
 			res.json({ err: info })
-		} else {
+		} else {			
 			req.login(member, { session: false }, (err) => {
 				if (err) {
 					console.log('loginLocal', err);
@@ -30,11 +30,26 @@ router.post('/loginLocal', async (req, res) => {
 					const data = memberModel.loginMember(req);
 					member.mb_login_at = data.mb_login_at;
 					member.mb_login_ip = data.mb_login_ip;
-					res.json({token, member});
+					res.cookie('token', token, { httpOnly: true });
+					res.json({ token, member });
 				}
 			})
 		}
 	})(req, res);
+});
+
+// 인증 
+router.get('/auth', (req, res)=> {
+	const member = req.user;
+	const token = req.cookies.token;
+	// console.log('auth', member, token);
+	res.json({member, token});
+});
+
+// 로그아웃 
+router.get('/signOut', (req, res)=> {
+	res.clearCookie('token');
+	res.json(true);
 });
 
 module.exports = router;

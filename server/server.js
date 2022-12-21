@@ -61,17 +61,20 @@ const renderer = createBundleRenderer(serverBundle, {
 	clientManifest,
 });
 
-app.get('*', (req, res) => {	
+app.get('*', (req, res) => {
+	// console.log(req.cookies, req.user);
 	const ctx = {
-		url : req.url,
-		title : 'Vue SSR App',
-		metas : `<!-- inject more metas -->`,
+		url: req.url,
+		title: 'Vue SSR App',
+		metas: `<!-- inject more metas -->`,
+		token : req.cookies.token || null,
+		member : req.user || null,
 	};
 
 	const stream = renderer.renderToStream(ctx);
 
-	stream.on('end', ()=> {
-		console.log('스트림 렌더 종료');
+	stream.on('end', () => {
+		console.log('스트림 렌더 종료')
 	}).pipe(res);
 });
 
