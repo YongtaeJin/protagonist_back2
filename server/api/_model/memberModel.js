@@ -172,7 +172,7 @@ const memberModel = {
 		const delSql = sqlHelper.DeleteSimple(TABLE.SEND_MAIL, {sm_hash : data.hash});
 		db.execute(delSql.query, delSql.values);
 		return upRes.affectedRows == 1;
-	},
+	},  
 };
 
 module.exports = memberModel;
