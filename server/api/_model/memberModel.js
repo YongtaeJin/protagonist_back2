@@ -168,6 +168,57 @@ const memberModel = {
 		db.execute(delSql.query, delSql.values);
 		return upRes.affectedRows == 1;
 	},
+	async loginGoole(req, profile) {
+		let member = null;
+		try { // 이미 회원 있는지 ?
+			member = await memberModel.getMemberBy({
+				mb_email: profile.email
+			});
+		} catch (e) { // 없으면 새로 디비에 저장
+			const at = moment().format('LT');
+			const ip = getIp(req);
+			const data = {
+				mb_id : profile.id,
+				mb_password : '',
+				mb_name : profile.displayName,
+				mb_email : profile.email,
+				mb_level: await getDefaultMemberLevel(),
+				mb_create_at: at,
+				mb_create_ip: ip,
+				mb_update_at: at,
+				mb_update_ip: ip,
+			};
+			const sql = sqlHelper.Insert(TABLE.MEMBER, data);
+			await db.execute(sql.query, sql.values);
+			member = await memberModel.getMemberBy({
+				mb_email: profile.email
+			});
+		}
+		return member;
+	},
+	async googleCallback(req, res, err, member) {
+		let html = fs.readFileSync(__dirname + '/socialPopup.html').toString();
+		let payload = {};
+		if (err) {
+			payload.err = err;
+		} else {
+			// 토큰, 만들고 쿠키 생성
+			const token = jwt.getToken(member);
+			req.body.mb_id = member.mb_id;
+		
+			const data = memberModel.loginMember(req);
+			member.mb_login_at = data.mb_login_at;
+			member.mb_login_ip = data.mb_login_ip;
+			res.cookie('token', token, { httpOnly: true });
+
+			payload.token = token;
+			payload.member = member;
+		}
+		// console.log(payload);
+		html = html.replace('{{payload}}', JSON.stringify(payload));
+
+		return html;
+	},
 };
 
 module.exports = memberModel;

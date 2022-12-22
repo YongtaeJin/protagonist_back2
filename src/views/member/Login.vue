@@ -1,36 +1,39 @@
 <template>
-  <div class="d-flex justify-center align-center" style="height: 100%">
-    <v-card max-width="400" width="100%" elevation="10">
-      <v-toolbar>
-        <site-title />
-      </v-toolbar>
-      <v-tabs v-model="tabs" background-color="primary" dark>
-        <v-tab v-for="item in items" :key="item" style="flex:1">
-          {{ item }}
-        </v-tab>
-      </v-tabs>
-      <v-card-text>
-				<v-tabs-items v-model="tabs">
-					<v-tab-item>
-						<sign-in-form @save="loginLocal" :isLoading="isLoading"/>
-					</v-tab-item>
-					<v-tab-item>
-						<find-id-form @save="findId" :isLoading="isLoading"/>
-					</v-tab-item>
-					<v-tab-item>
-						<find-pw-form @save="findPw" :isLoading="isLoading"/>
-					</v-tab-item>
-				</v-tabs-items>
-			</v-card-text>
-			<v-card-text class="mt-n4">
-				<v-btn to="/join" block >회원가입</v-btn>
-			</v-card-text>
+	<div class="d-flex justify-center align-center" style="height: 100%">
+    	<v-card max-width="400" width="100%" elevation="10">
+      		<v-toolbar>
+        		<site-title />
+      		</v-toolbar>
+      	<v-tabs v-model="tabs" background-color="primary" dark>
+        	<v-tab v-for="item in items" :key="item" style="flex:1">
+          		{{ item }}
+        	</v-tab>
+      	</v-tabs>
+      	<v-card-text>
+			<v-tabs-items v-model="tabs">
+				<v-tab-item>
+					<sign-in-form @save="loginLocal" :isLoading="isLoading"/>
+				</v-tab-item>
+				<v-tab-item>
+					<find-id-form @save="findId" :isLoading="isLoading"/>
+				</v-tab-item>
+				<v-tab-item>
+					<find-pw-form @save="findPw" :isLoading="isLoading"/>
+				</v-tab-item>
+			</v-tabs-items>
+		</v-card-text>
+		<v-card-text class="mt-n4">
+        	<v-btn @click="loginGoogle" block>구글 로그인</v-btn>
+      	</v-card-text>
+		<v-card-text class="mt-n4">
+			<v-btn to="/join" block >회원가입</v-btn>
+		</v-card-text>
     </v-card>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapMutations } from 'vuex';
 import FindIdForm from '../../components/auth/FindIdForm.vue';
 import FindPwForm from '../../components/auth/FindPwForm.vue';
 import SignInForm from '../../components/auth/SignInForm.vue';
@@ -47,6 +50,7 @@ export default {
   },
 	methods : {
 		...mapActions('user', ['signInLocal', 'findIdLocal', 'findPwLocal']),
+		...mapMutations('user', ['SET_MEMBER', 'SET_TOKEN']),
 		async loginLocal(form) {
 			this.isLoading = true;
 			const data = await this.signInLocal(form);
@@ -80,7 +84,29 @@ export default {
 				);
 				this.tabs = 0;
 			}
-		}
+		},
+		async loginGoogle() {
+			const childWindow = window.open(
+				"/api/member/loginGoogle",
+				"googleAuth",
+				"top=10, left=10, width=500, height=600, status=no, menubar=no, toolbar=no, resizable=no"
+			);
+			if(!window.onGoogleCallback) {
+				window.onGoogleCallback = this.googleLoginCallback;
+			}
+   		},
+		googleLoginCallback(payload) {
+			if(payload.err) {
+				this.$toast.error(payload.err);
+			} else {
+				this.SET_MEMBER(payload.member);
+				this.SET_TOKEN(payload.token);
+				this.$router.push("/");
+        		this.$toast.info(
+          			`${this.$store.state.user.member.mb_name}님 환영합니다.`
+        		);
+			}
+		},
 	}
 };
 </script>
