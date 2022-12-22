@@ -6,7 +6,7 @@ const modules = {};
 requireModule.keys().forEach(filename => {
 	if(filename !== './index.js') {
 		const moduleName = camelCase(filename.replace(/(\.\/|\.js)/g, ''));
-		modules[moduleName] = {namespaced: true, ...requireModule(filename)}
+		modules[moduleName] = {namespaced : true, ...requireModule(filename)}
 	}
 });
 

@@ -1,4 +1,4 @@
-# protagonist
+# ezhome
 
 ## Project setup
 ```

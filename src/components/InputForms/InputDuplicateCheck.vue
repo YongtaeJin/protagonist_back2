@@ -47,9 +47,14 @@ export default {
 			default : "",
 		}
   },
+	watch : {
+		origin() {
+			this.isCheck = this.origin ? true : !this.cbCheck;
+		}
+	},
   data() {
     return {
-      isCheck: false,
+      isCheck: this.origin ? true : !this.cbCheck,
       loading: false,
 			errMsg : "",
 			successMsg : "",
@@ -97,3 +102,6 @@ export default {
   },
 };
 </script>
+
+<style>
+</style>

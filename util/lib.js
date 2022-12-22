@@ -19,15 +19,19 @@ const lib = {
 		}
 	},
 	getIp(req) {
-		//return req.ip.replace('::ffff:', '');
-		var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;		
-		if (ip.substr(0, 7) == "::ffff:") {
-  			ip = ip.substr(7);
-		} else {
-			ip = ip.replace('::ffff:', '');
-		}
-		return ip;
+		return req.ip.replace('::ffff:', '');
 	},
+	findParentVm(vm, target) {
+		let parent = vm.$parent;
+		while(parent.$vnode) {
+			// console.log(parent.$vnode.tag);
+			if(parent.$vnode.tag.endsWith(target)) {
+				return parent;
+			}
+			parent = parent.$parent
+		}
+		return null;
+	}
 }
 
 module.exports = lib;

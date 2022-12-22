@@ -43,10 +43,10 @@ export default {
 		return {
 			valid : true,
 			form : {
-				password : "",
+				password : "abcd1234",
 				hash : this.$route.params.hash
 			},
-			confirmPw : "",
+			confirmPw : "abcd1234",
 			loading : false,
 		}
 	},
@@ -70,3 +70,7 @@ export default {
 	}
 }
 </script>
+
+<style>
+
+</style>

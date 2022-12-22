@@ -3,11 +3,11 @@ const jwt = require('jsonwebtoken');
 const randToken = require('rand-token');
 const crypto = require('crypto');
 
-const { SECRET_KEY } = process.env;
+const { SECRET_KEY } = $config.server;
 
 const options = {
 	algorithm : 'HS256',
-	issuer : 'ItsJin',
+	issuer : 'ezcode',
 	// expiresIn : '30m',
 };
 
@@ -34,3 +34,4 @@ const token = {
 };
 
 module.exports = token;
+

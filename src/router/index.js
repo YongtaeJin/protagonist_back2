@@ -5,15 +5,14 @@ import store from '../store';
 
 Vue.use(VueRouter)
 
-
 export function createRouter() {
-        const router = new VueRouter({
-                mode: 'history',
-                base: process.env.BASE_URL,
-                routes
-        });
+	const router = new VueRouter({
+		mode: 'history',
+		base: process.env.BASE_URL,
+		routes
+	});
 
-        router.beforeEach(async (to, from, next) => {
+	router.beforeEach(async (to, from, next) => {
 		const { $Progress, $toast } = Vue.prototype;
 		if($Progress) $Progress.start();
 
@@ -31,8 +30,10 @@ export function createRouter() {
 		next();
 	});
 
-        router.afterEach((to, from)=> {
-        });
+	router.afterEach((to, from)=> {
+	
+	})
 
-        return router;
+	return router;
 }
+

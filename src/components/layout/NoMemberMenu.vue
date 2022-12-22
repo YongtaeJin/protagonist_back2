@@ -14,3 +14,6 @@ export default {
   name: "NoMemberMenu",
 };
 </script>
+
+<style>
+</style>

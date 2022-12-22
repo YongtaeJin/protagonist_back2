@@ -1,17 +1,18 @@
 <template>
   <v-app>
-    <v-navigation-drawer app v-model="drawer">
+    <v-navigation-drawer app v-model="drawer" :width="drawerWidth">
       <site-navi @close="toggleDrawer" />
     </v-navigation-drawer>
+
     <v-app-bar app color="primary" dark hide-on-scroll>
       <v-app-bar-nav-icon @click="toggleDrawer" />
       <site-title />
-      <v-spacer />
+      <v-spacer></v-spacer>
       <site-user />
-		</v-app-bar>
+    </v-app-bar>
 
     <v-main>
-      <router-view/>
+      <router-view />
     </v-main>
 
     <site-footer />
@@ -20,39 +21,52 @@
 </template>
 
 <script>
-import SiteFooter from './components/layout/SiteFooter.vue';
-import SiteTitle from './components/layout/SiteTitle.vue';
-import SiteNavi from './components/layout/SiteNavi.vue';
-import SiteUser from './components/layout/SiteUser.vue';
+import SiteFooter from "./components/layout/SiteFooter.vue";
+import SiteTitle from "./components/layout/SiteTitle.vue";
+import SiteNavi from "./components/layout/SiteNavi.vue";
+import SiteUser from "./components/layout/SiteUser.vue";
+import { mapActions, mapMutations } from "vuex";
 
 export default {
   components: { SiteTitle, SiteFooter, SiteNavi, SiteUser },
-  
-  name: 'App',
-
+  name: "App",
+  socket() {
+    return {
+      connect: () => {
+        console.log("socket connect");
+        this.SET_ONLINE(true);
+				this.initRoom();
+      },
+      disconnect: () => {
+        console.log("socket disconnect");
+        this.SET_ONLINE(false);
+      },
+      "config:update": (data) => {
+        console.log(data);
+        this.SET_CONFIG(data);
+      },
+      "config:remove": (key) => {
+        this.SET_CONFIG({ key, value: null });
+      },
+    };
+  },
   data() {
     return {
-      drawer : false,
-    }
+      drawer: false,
+    };
   },
-  methods : {
+  computed: {
+    drawerWidth() {
+      return this.$vuetify.breakpoint.xs ? "100%" : "360";
+    },
+  },
+  methods: {
+    ...mapMutations(["SET_CONFIG"]),
+    ...mapMutations("socket", ["SET_ONLINE"]),
+    ...mapActions("socket", ["initRoom"]),
     toggleDrawer() {
       this.drawer = !this.drawer;
     },
-  },
-
-  serverPrefetch() {
-    return new Promise((resolve, reject)=>{
-      resolve();
-    });
-  },
-  beforeCreate() {    
-  },
-  created() {    
-  },
-  beforeMount() {    
-  },
-  mounted() {    
   },
 };
 </script>

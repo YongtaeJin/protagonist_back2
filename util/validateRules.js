@@ -6,7 +6,7 @@ const rules = {
 		return v => !!v ? v.length >= len || `[${label}] ${len}자 이상 입력하세요.` : true;
 	},
 	alphaNum() {
-		return v => !!v ? /^[a-zA-Z0-9]+$/.test(v) || `영어와 숫자만 입력하세요.` : true; 
+		return v => !!v ? /^[a-zA-Z0-9_]+$/.test(v) || `영어와 숫자만 입력하세요.` : true; 
 	},
 	pattern({label, pattern}) {
 		return v => !!v ? pattern.test(v) || `[${label}] 형식에 맞게 입력하세요.` : true; 
@@ -57,7 +57,6 @@ const rules = {
 		arr.push(rules.pattern(opt));
 		return arr;
 	},
-	
 	password(options) {
 		const defaultOptions = {
 			label : '비밀번호',
@@ -74,23 +73,20 @@ const rules = {
 		arr.push(rules.pattern(opt));
 		return arr;
 	},
-
 	date(options) {
 		const defaultOptions = {
-			label : "날자",
-			info : 'YYYY-MM-DD 형식에 맞게 입력하세요',
-			required: true,
+			label : '날자',
+			required : true,
 			pattern : /^\d{4}-\d{2}-\d{2}$/
 		};
 		const opt = Object.assign(defaultOptions, options);
-		const ruleArr= [];
+		const arr = [];
 		if(opt.required) {
-			ruleArr.push(rules.require(opt));
+			arr.push(rules.require(opt));
 		}
-		ruleArr.push(rules.pattern(opt));
-		return ruleArr;
+		arr.push(rules.pattern(opt));
+		return arr;
 	},
-
 	phone(options) {
 		const defaultOptions = {
 			label : '전화번호',
@@ -104,7 +100,7 @@ const rules = {
 		}
 		arr.push(rules.pattern(opt));
 		return arr;
-	},
+	}
 };
 
 module.exports = rules;

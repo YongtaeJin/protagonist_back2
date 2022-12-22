@@ -1,13 +1,9 @@
 <template>
   <v-form @submit.prevent="save" ref="form" v-model="valid" lazy-validation>
-    <v-text-field
-      label="아이디"
-      v-model.trim="form.mb_id"
-      :rules="rules.id()"
-    />
+    <v-text-field label="아이디" v-model="form.mb_id" :rules="rules.id()" />
     <v-text-field
       label="이메일"
-      v-model.trim="form.mb_email"
+      v-model="form.mb_email"
       :rules="rules.email()"
     />
     <v-btn block color="primary" type="submit" :loading="isLoading">
@@ -39,12 +35,15 @@ export default {
     rules: () => validateRules,
   },
   methods: {
-    async save() {      
-      this.$refs.form.validate();      
-      await this.$nextTick();      
-      if (!this.valid) return;      
-      this.$emit("save", this.form);      
+    async save() {
+      this.$refs.form.validate();
+      await this.$nextTick();
+      if (!this.valid) return;
+      this.$emit("save", this.form);
     },
   },
 };
 </script>
+
+<style>
+</style>

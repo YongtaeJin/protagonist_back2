@@ -1,7 +1,11 @@
 <template>
   <v-form @submit.prevent="save" ref="form" v-model="valid" lazy-validation>
     <v-text-field label="아이디" v-model="form.mb_id" :rules="rules.id()" />
-    <input-password label="비밀번호"  v-model="form.mb_password" :rules="rules.password()" />
+    <input-password
+      label="비밀번호"
+      v-model="form.mb_password"
+      :rules="rules.password()"
+    />
     <v-btn block color="primary" type="submit" :loading="isLoading">
       로그인
     </v-btn>
@@ -24,8 +28,8 @@ export default {
     return {
       valid: true,
       form: {
-        mb_id: "",
-        mb_password: "",
+        mb_id: "test4",
+        mb_password: "abcd1234",
       },
     };
   },
@@ -42,3 +46,6 @@ export default {
   },
 };
 </script>
+
+<style>
+</style>

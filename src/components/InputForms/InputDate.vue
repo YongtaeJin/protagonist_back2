@@ -6,18 +6,18 @@
         :value="value"
         @input="onInput"
       >
-				<template v-slot:append>
-					<v-btn icon small tabindex="-1" @click="open">
-						<v-icon>mdi-magnify</v-icon>
-					</v-btn>
-				</template>
+        <template v-slot:append>
+          <v-btn icon small tabindex="-1" @click="open">
+            <v-icon>mdi-magnify</v-icon>
+          </v-btn>
+        </template>
       </v-text-field>
     </template>
-		<v-card>
-			<v-toolbar>
-				<v-toolbar-title>{{$attrs.label}}</v-toolbar-title>
-				<v-spacer/>
-				<v-btn icon plain @click="modal = !modal">
+    <v-card>
+      <v-toolbar>
+				<v-toolbar-title>{{ $attrs.label }}</v-toolbar-title>
+				<v-spacer></v-spacer>
+				<v-btn icon plain @click="close">
 					<v-icon>mdi-close</v-icon>
 				</v-btn>
 			</v-toolbar>
@@ -27,7 +27,7 @@
 				@input="picker"
 				:day-format="dayFormat"
 			/>
-		</v-card>
+    </v-card>
   </v-dialog>
 </template>
 
@@ -47,25 +47,30 @@ export default {
 			date : "",
     };
   },
-	methods : {
-		onInput(val) {
-			this.$emit('input', val);
-		},
+  methods: {
+    onInput(val) {
+      this.$emit("input", val);
+    },
 		open() {
 			const pattern = /^\d{4}-\d{2}-\d{2}$/;
-			this.date = pattern.test(this.value) ? this.value : "";
+			this.date = pattern.test(this.value) ? this.value : this.date;
 			this.modal = true;
 		},
-		picker() {
-			this.$emit('input', this.date);
+		close() {
 			this.modal = false;
+		},
+		picker() {
+			this.onInput(this.date);
+			this.close();
 		},
 		dayFormat(day) {
 			if(!this.modal) return;
-			// console.log(day);
 			const arr = day.split('-');
 			return Number(arr[arr.length-1]);
 		}
-	}
+  },
 };
 </script>
+
+<style>
+</style>
