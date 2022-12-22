@@ -26,6 +26,11 @@ const routes = [
       name: 'Error',
       component: () => import(/* webpackChunkName: "error" */ '../views/Error.vue')
     },
+    {
+      path: '/modifyPassword/:hash',
+      name: 'NoAuthModifyPassword',
+      component: () => import(/* webpackChunkName: "modifyPassword" */ '../views/member/ModifyPassword.vue')
+    },
   ]
 
 export default routes;

@@ -31,23 +31,25 @@
     "fonts/Roboto-Regular.475ba9e4.woff2",
     "fonts/Roboto-Light.0e01b6cd.woff2",
     "fonts/Roboto-Thin.f7a95c9c.woff2",
-    "js/main.36a29fa9.js",
+    "js/main.4d414923.js",
     "js/join.4d6854b6.js",
-    "js/login.162b7cae.js",
-    "js/manifest.ee81a5ea.js",
+    "js/login.5abd1748.js",
+    "js/manifest.131f7530.js",
+    "js/modifyPassword.8b6f0313.js",
     "favicon.ico",
     "js/about.de728da8.js",
     "js/error.3559d4a7.js"
   ],
   "initial": [
-    "js/manifest.ee81a5ea.js",
+    "js/manifest.131f7530.js",
     "css/vendor.33b83f72.css",
     "js/vendor.08399bc3.js",
-    "js/main.36a29fa9.js"
+    "js/main.4d414923.js"
   ],
   "async": [
     "js/join.4d6854b6.js",
-    "js/login.162b7cae.js",
+    "js/login.5abd1748.js",
+    "js/modifyPassword.8b6f0313.js",
     "js/about.de728da8.js",
     "js/error.3559d4a7.js"
   ],
@@ -426,7 +428,7 @@
       0
     ],
     "cf4344d2": [
-      35
+      36
     ],
     "0d5eaf32": [
       32
@@ -435,7 +437,10 @@
       31
     ],
     "c3f20166": [
-      36
+      37
+    ],
+    "2a849afc": [
+      34
     ],
     "c9c4dc50": [
       30
