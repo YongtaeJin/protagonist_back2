@@ -5,8 +5,7 @@ const defaultOptions = {
 	icon: "",
 	iconColor: "orange",
 	type: "alert",
-	text : "",
-	formType : 'text',
+	text : ""
 };
 
 export default {

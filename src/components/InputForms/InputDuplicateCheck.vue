@@ -47,14 +47,9 @@ export default {
 			default : "",
 		}
   },
-	watch : {
-		origin() {
-			this.isCheck = this.origin ? true : !this.cbCheck;
-		}
-	},
   data() {
     return {
-      isCheck: this.origin ? true : !this.cbCheck,
+      isCheck: false,
       loading: false,
 			errMsg : "",
 			successMsg : "",

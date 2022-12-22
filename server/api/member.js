@@ -4,7 +4,6 @@ const { modelCall } = require('../../util/lib');
 const passport = require('passport');
 const jwt = require('../plugins/jwt');
 
-
 // /api/member/duplicateCheck/mb_id/abcd
 // MVC 
 router.get('/duplicateCheck/:field/:value', async (req, res) => {
@@ -15,12 +14,6 @@ router.get('/duplicateCheck/:field/:value', async (req, res) => {
 // 회원가입
 router.post('/', async (req, res) => {
 	const result = await modelCall(memberModel.createMember, req);
-	res.json(result);
-});
-
-// 회원정보수정
-router.patch('/', async (req, res) => {
-	const result = await modelCall(memberModel.updateMember, req);
 	res.json(result);
 })
 
@@ -51,6 +44,7 @@ router.post('/loginLocal', async (req, res) => {
 router.get('/auth', (req, res) => {
 	const member = req.user;
 	const token = req.cookies.token;
+	// console.log('auth', member, token);
 	res.json({ member, token });
 });
 
@@ -77,34 +71,4 @@ router.patch('/modifyPassword', async (req, res) => {
 	const result = await modelCall(memberModel.modifyPassword, req.body);
 	res.json(result);
 });
-
-// 구글 로그인 요청
-router.get('/loginGoogle', passport.authenticate('google', {
-	scope: ['email', 'profile']
-}));
-// 카카오 로그인 요청
-router.get('/loginKakao', passport.authenticate('kakao'));
-// 네이버 로그인 요청
-router.get('/loginNaver', passport.authenticate('naver'));
-
-router.get('/social-callback/:provider', (req, res) => {
-	const provider = req.params.provider
-	passport.authenticate(provider, async function (err, member) {
-		// console.log(member);
-		// res.json(member);
-		const result = await modelCall(memberModel.socialCallback, req, res, err, member);
-		res.end(result);
-	})(req, res);
-})
-
-// 비밀번호 확인
-router.post('/checkPassword', async (req, res) => {
-	const result = await modelCall(memberModel.checkPassword, req);
-	res.json(result);
-})
-
-router.get('/', async (req, res) => {
-	const result = await modelCall(memberModel.getMembers, req);
-	res.json(result);
-})
 module.exports = router;

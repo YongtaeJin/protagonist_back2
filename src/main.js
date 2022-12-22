@@ -4,12 +4,12 @@ import { createRouter } from './router'
 import { createStore } from './store'
 import { sync } from "vuex-router-sync";
 
-import plugins from './plugins';
+import vuetify from './plugins/vuetify'
+import './plugins/axios'
 import '@babel/polyfill'
 import 'roboto-fontface/css/roboto/roboto-fontface.css'
 import '@mdi/font/css/materialdesignicons.css'
-
-import Mixins from './mixins';
+import titleMixin from './mixins/title-mixin';
 
 Vue.config.productionTip = false
 
@@ -18,18 +18,13 @@ export function createApp(ctx) {
 	const store = createStore();
 	sync(store, router);
 
-	const mixins = Object.keys(Mixins);
-	for (const mixin of mixins) {
-		if(Mixins[mixin]) {
-			Vue.mixin(Mixins[mixin]);
-		}
-	}
+	Vue.mixin(titleMixin);
 
 	const app = new Vue({
 		data: { url: ctx ? ctx.url : '' },
 		router,
 		store,
-		vuetify : plugins.vuetify,
+		vuetify,
 		render: h => h(App)
 	});
 

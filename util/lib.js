@@ -20,17 +20,6 @@ const lib = {
 	},
 	getIp(req) {
 		return req.ip.replace('::ffff:', '');
-	},
-	findParentVm(vm, target) {
-		let parent = vm.$parent;
-		while(parent.$vnode) {
-			// console.log(parent.$vnode.tag);
-			if(parent.$vnode.tag.endsWith(target)) {
-				return parent;
-			}
-			parent = parent.$parent
-		}
-		return null;
 	}
 }
 
