@@ -72,7 +72,7 @@ module.exports = (app) => {
 		},
 		async (request, accessToken, refreshToken, profile, done) => {
 			if (profile && profile.id) {
-				// console.log(profile);
+				console.log(profile);
 				const member = await memberModel.loginNaver(request, profile);
 				done(null, member);
 			} else {
