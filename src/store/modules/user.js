@@ -1,5 +1,6 @@
 import Vue from "vue";
 import qs from 'qs';
+import { LV } from '../../../util/level'
 
 export const state = () => ({
 	member : null,
@@ -14,7 +15,14 @@ export const mutations = {
 		state.token = token;
 	}
 };
-export const getters = {};
+export const getters = {
+	isAdmin(state) {
+		return state.member && state.member.mb_level >= LV.ADMIN;
+	},
+	isSuper(state) {
+		return state.member && state.member.mb_level >= LV.SUPER;
+	},
+};
 export const actions = {
 	async initUser({commit}) {
 		const {$axios} = Vue.prototype;
