@@ -1,5 +1,5 @@
 const sqlHelper = {
-	SelectSimple(table, data = null, cols = []) {
+	SelectSimple(table, data = null, cols = [], sort = null) {
 		let query = `SELECT * FROM ${table}`;
 		const where = [];
 		const values = [];
@@ -10,11 +10,24 @@ const sqlHelper = {
 				where.push(`${key}=?`);
 				values.push(data[key]);
 			}
-			query += ` WHERE ` + where.join(' AND ');
+			if(where.length > 0) {
+				query += ` WHERE ` + where.join(' AND ');
+			}
 		}
 
 		if (cols.length > 0) {
 			query = query.replace('*', cols.join(', '));
+		}
+
+		if(sort) {
+			let sorts = [];
+			const keys = Object.keys(sort);
+			for(const key of keys) {
+				sorts.push(key + (sort[key] ? ' ASC ' : ' DESC '))
+			}
+			if(sorts.length ) {
+				query += ` ORDER BY ` + sorts.join(', ');
+			}
 		}
 		return { query, values };
 	},
@@ -29,6 +42,21 @@ const sqlHelper = {
 		query = query.replace('{1}', keys.join(', '));
 		query = query.replace('{2}', prepare);
 		return { query, values };
+	},
+	InsertOrUpdate(table, data) {
+		let query = `INSERT INTO ${table} ({1}) VALUES ({2}) ON DUPLICATE KEY UPDATE {3}`;
+		const keys = Object.keys(data);
+		const prepare = new Array(keys.length).fill('?').join(', ');
+		const values = [];
+		const sets = [];
+		for (const key of keys) {
+			values.push(data[key]);
+			sets.push(`${key}=?`);
+		}
+		query = query.replace('{1}', keys.join(', '));
+		query = query.replace('{2}', prepare);
+		query = query.replace('{3}', sets.join(', '));
+		return { query, values: values.concat(values) };
 	},
 	Update(table, data, where) {
 		let query = `UPDATE ${table} SET {1} WHERE {2}`;
@@ -49,21 +77,6 @@ const sqlHelper = {
 		}
 		query = query.replace('{2}', wheres.join(' AND '));
 		return { query, values };
-	},
-	InsertOrUpdate(table, data) {
-		let query = `INSERT INTO ${table} ({1}) VALUES ({2}) ON DUPLICATE KEY UPDATE {3}`;
-		const keys = Object.keys(data);
-		const prepare = new Array(keys.length).fill('?').join(', ');
-		const values = [];
-		const sets = [];
-		for (const key of keys) {
-			values.push(data[key]);
-			sets.push(`${key}=?`);
-		}
-		query = query.replace('{1}', keys.join(', '));
-		query = query.replace('{2}', prepare);
-		query = query.replace('{3}', sets.join(', '));
-		return { query, values : values.concat(values)};
 	},
 	DeleteSimple(table, data) {
 		let query = `DELETE FROM ${table}`;
