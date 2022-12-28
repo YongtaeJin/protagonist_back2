@@ -1,4 +1,6 @@
 const fs = require('fs');
+const path = require('path');
+
 const db = require('../../plugins/mysql');
 const jwt = require('../../plugins/jwt');
 const sendMailer = require('../../plugins/sendMailer');
@@ -60,8 +62,10 @@ const memberModel = {
 		}
 		// 이미지 업로드 처리
 		delete payload.mb_image;
+		const fileName = jwt.getRandToken(16);
 		if (req.files && req.files.mb_image) {
-			req.files.mb_image.mv(`${MEMBER_PHOTO_PATH}/${payload.mb_id}.jpg`, (err) => {
+			payload.mb_photo = `/upload/memberPhoto/${fileName}.jpg`;
+			req.files.mb_image.mv(`${MEMBER_PHOTO_PATH}/${fileName}.jpg`, (err) => {
 				if (err) {
 					console.log("Member Image Upload Error", err);
 				}
@@ -73,6 +77,71 @@ const memberModel = {
 		const [row] = await db.execute(sql.query, sql.values);
 
 		return row.affectedRows == 1;
+	},
+	async updateMember(req) {
+		// return {body : req.body, file:req.files};
+		const at = moment().format('LT');
+		const ip = getIp(req);
+
+		const payload = {
+			...req.body,
+			mb_update_at : at,
+			mb_update_ip : ip,
+		};
+
+		const admMode = payload.admMode;
+		const mb_id = payload.mb_id;
+		const deleteImage = payload.deleteImage;
+		delete payload.admMode;
+		delete payload.mb_id;
+		delete payload.deleteImage;
+
+		// 비밀번호가 변경 해야 한다
+		if(payload.mb_password) {
+			payload.mb_password = jwt.generatePassword(payload.mb_password);
+		} else {
+			delete payload.mb_password;
+		}
+
+		// 이미지 처리
+		delete payload.mb_image;
+		const mb_photo = payload.mb_photo || '';
+		const photoPathInfo = path.parse(mb_photo);
+		const oldName = photoPathInfo.name;
+		const oldFile = `${MEMBER_PHOTO_PATH}/${oldName}.jpg`;
+		const cachePath = `${MEMBER_PHOTO_PATH}/.cache`;
+
+		// 기존 이미지 삭제
+		if(deleteImage || (req.files && req.files.mb_image)) {
+			payload.mb_photo = '';
+			try {
+				fs.unlinkSync(oldFile);
+				const cacheDir = fs.readdirSync(cachePath);
+				for(const p of cacheDir) {
+					if(p.startsWith(oldName)) {
+						try {
+							fs.unlinkSync(`${cachePath}/${p}`);
+						} catch(e) {}
+					}
+				}
+			} catch(e) {}
+		}
+
+		// 이미지 업로드 되었으면 처리
+		if(req.files && req.files.mb_image) {
+			const newName = jwt.getRandToken(16);
+			payload.mb_photo = `/upload/memberPhoto/${newName}.jpg`;
+			const newFile = `${MEMBER_PHOTO_PATH}/${newName}.jpg`;
+			req.files.mb_image.mv(newFile, (err)=>{
+				if(err) {
+					console.log('Member Photo 업로드 실패', err);
+				}
+			})
+		}
+
+		const sql = sqlHelper.Update(TABLE.MEMBER, payload, {mb_id});
+		const [row] = await db.execute(sql.query, sql.values);
+		return await memberModel.getMemberBy({mb_id});
 	},
 	async getMemberBy(form, cols = []) {
 		const sql = sqlHelper.SelectSimple(TABLE.MEMBER, form, cols);
@@ -109,7 +178,7 @@ const memberModel = {
 		// sm_to, sm_type, sm_hash, sm_subject, sm_content, sm_create_at, sm_expire_at
 		// 있으면 토큰 하나 발급
 		const sm_hash = jwt.getRandToken(64);
-		const title = 'Protagonist'; // 나중에 사이트 설정갑에서 가지고 오자
+		const title = 'ezCode'; // 나중에 사이트 설정갑에서 가지고 오자
 		const sm_subject = `${title} 비밀번호 찾기`;
 		const sm_create_at = moment().format('LT');
 		const expire_at = moment().add('30', 'm');
@@ -164,83 +233,26 @@ const memberModel = {
 		const [upRes] = await db.execute(upSql.query, upSql.values);
 
 		// 처리한거 삭제
-		const delSql = sqlHelper.DeleteSimple(TABLE.SEND_MAIL, {sm_hash : data.hash});
+		const delSql = sqlHelper.DeleteSimple(TABLE.SEND_MAIL, { sm_hash: data.hash });
 		db.execute(delSql.query, delSql.values);
 		return upRes.affectedRows == 1;
 	},
-	async loginGoogle(req, profile) {
+	async loginSocial(req, data) {
 		let member = null;
-		try {
-			member = await memberModel.getMemberBy({ mb_email: profile.email })
-		} catch (e) {
-			const at = moment().format('LT');
-			const ip = getIp(req);
-			const data = {
-				mb_id: profile.id,
-				mb_password: '',
-				mb_provider : profile.provider,
-				mb_name: profile.displayName,
-				mb_email: profile.email,
-				mb_photo: profile.picture,
-				mb_level: await getDefaultMemberLevel(),
-				mb_create_at: at,
-				mb_create_ip: ip,
-				mb_update_at: at,
-				mb_update_ip: ip,
-			};
-			const sql = sqlHelper.Insert(TABLE.MEMBER, data);
-			await db.execute(sql.query, sql.values);
-			member = await memberModel.getMemberBy({ mb_email: profile.email });
-		}
-		return member;
-	},
-
-	async loginKakao(req, profile) {		
-		let member = null;		
-		//const {email} = profile._json.kakao_account;
-		let email = profile.id;
-		const { nickname, thumbnail_image_url} = profile._json.kakao_account.profile;		
-		try {
-			member = await memberModel.getMemberBy({ mb_email: email })
-		} catch (e) {			
-			const at = moment().format('LT');
-			const ip = getIp(req);
-			const data = {
-				mb_id: profile.id,
-				mb_password: '',
-				mb_provider : profile.provider,
-				mb_name: nickname,
-				mb_email: email,
-				mb_photo: thumbnail_image_url,
-				mb_level: await getDefaultMemberLevel(),
-				mb_create_at: at,
-				mb_create_ip: ip,
-				mb_update_at: at,
-				mb_update_ip: ip,
-			};			
-			const sql = sqlHelper.Insert(TABLE.MEMBER, data);			
-			await db.execute(sql.query, sql.values);
-			member = await memberModel.getMemberBy({ mb_email: email });
-		}
-		return member;
-	},
-
-	async loginNaver(req, profile) {
-		let member = null;
-		const { email, nickname, profile_image }  = profile._json;
-
+		const { id, provider, email, nickname, image }  = data;
+		
 		try {
 			member = await memberModel.getMemberBy({ mb_email: email })
 		} catch (e) {
 			const at = moment().format('LT');
 			const ip = getIp(req);
 			const data = {
-				mb_id: profile.id,
+				mb_id: id,
 				mb_password: '',
-				mb_provider : profile.provider,
+				mb_provider : provider,
 				mb_name: nickname,
 				mb_email: email,
-				mb_photo: profile_image,
+				mb_photo: image,
 				mb_level: await getDefaultMemberLevel(),
 				mb_create_at: at,
 				mb_create_ip: ip,
@@ -253,36 +265,6 @@ const memberModel = {
 		}
 		return member;
 	},
-
-	async loginNaver(req, profile) {
-		let member = null;
-		const { email, nickname, profile_image }  = profile._json;
-
-		try {
-			member = await memberModel.getMemberBy({ mb_email: email })
-		} catch (e) {
-			const at = moment().format('LT');
-			const ip = getIp(req);
-			const data = {
-				mb_id: profile.id,
-				mb_password: '',
-				mb_provider : profile.provider,
-				mb_name: nickname,
-				mb_email: email,
-				mb_photo: profile_image,
-				mb_level: await getDefaultMemberLevel(),
-				mb_create_at: at,
-				mb_create_ip: ip,
-				mb_update_at: at,
-				mb_update_ip: ip,
-			};
-			const sql = sqlHelper.Insert(TABLE.MEMBER, data);
-			await db.execute(sql.query, sql.values);
-			member = await memberModel.getMemberBy({ mb_email: email });
-		}
-		return member;
-	},
-
 	async socialCallback(req, res, err, member) {
 		let html = fs.readFileSync(__dirname + '/socialPopup.html').toString();
 		let payload = {};
@@ -302,8 +284,23 @@ const memberModel = {
 
 		html = html.replace('{{payload}}', JSON.stringify(payload));
 		return html;
+	},
+	async checkPassword(req) {
+		if(!req.user) {
+			throw new Error('로그인 되어 있지 않습니다.');
+		}
+		const data = {
+			mb_id : req.user.mb_id,
+			mb_password : await jwt.generatePassword(req.body.mb_password),
+		};
+		const sql = sqlHelper.SelectSimple(TABLE.MEMBER, data, ['COUNT(*) AS cnt']);
+		const [[{cnt}]] = await db.execute(sql.query, sql.values);
+		if(cnt == 0) {
+			throw new Error('비밀번호가 올바르지 않습니다.');
+		} else {
+			return true;
+		}
 	}
-	
 };
 
 module.exports = memberModel;

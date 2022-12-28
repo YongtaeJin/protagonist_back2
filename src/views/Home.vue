@@ -33,7 +33,7 @@ export default {
   name: "Home",
 	data() {
 		return {
-			title : "Protagonist",
+			title : "My App",
 		}
 	},
 	title() {

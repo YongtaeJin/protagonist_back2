@@ -67,5 +67,18 @@ export const actions = {
 		const {$axios} = Vue.prototype;
 		const data = await $axios.patch(`/api/member/modifyPassword`, form);
 		return data;
+	},
+	async checkPassword(ctx, form) {
+		const {$axios} = Vue.prototype;
+		const data = await $axios.post(`/api/member/checkPassword`, form);
+		return data;
+	},
+	async updateMember({commit}, form) {
+		const {$axios} = Vue.prototype;
+		const data = await $axios.patch(`/api/member`, form);
+		if(data) {
+			commit('SET_MEMBER', data);
+		}
+		return !!data;
 	}
 };

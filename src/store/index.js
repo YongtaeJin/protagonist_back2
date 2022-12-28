@@ -13,7 +13,7 @@ const store = new Vuex.Store({
 				{
 					title : "Home",
 					icon : "mdi-home",
-					to : '/',
+					to : '',
 					grant : 0, 
 					newTab : false,
 					subItems : [
