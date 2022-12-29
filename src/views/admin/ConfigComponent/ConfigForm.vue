@@ -24,6 +24,8 @@
         label="키"
         v-model="form.cf_key"
         :cbCheck="keyCheck"
+        :origin="originKey"
+        :readonly="!!item"
         :rules="[rules.require({ label: '키' }), rules.alphaNum()]"
       />
     </div>
@@ -48,6 +50,7 @@ import validateRules from "../../../../util/validateRules";
 import InputDuplicateCheck from "../../../components/InputForms/InputDuplicateCheck.vue";
 import { LV } from "../../../../util/level";
 import TypeValue from './TypeValue.vue';
+import { deepCopy, findParentVm } from '../../../../util/lib';
 export default {
   components: { InputDuplicateCheck, TypeValue },
   name: "ConfigForm",
@@ -55,6 +58,14 @@ export default {
     keyCheck: {
       type: Function,
       default: null,
+    },
+    groupItems : {
+      type : Array,
+      default : []
+    },
+    item : {
+      type : Object,
+      default : null,
     },
   },
   data() {
@@ -70,21 +81,59 @@ export default {
         cf_comment: "",
         cf_client: 0,
       },
-      groupItems: [],
       typeItems: ["String", "Number", "Json", "Secret"],
     };
   },
   computed: {
     rules: () => validateRules,
-		LV : () => LV
+		LV : () => LV,
+    originKey() {
+      return this.item ? this.item.cf_key  : "";
+    }
+  },
+  watch: {
+    item() {
+      this.init();
+    }
+  },
+  created() {
+    this.init();
   },
   methods: {
+    init() {
+      if (this.item) {
+        this.form = deepCopy(this.item);
+      } else {
+        this.form = {
+          cf_key: "",
+          cf_val: "",
+          cf_name: "",
+          cf_group: "",
+          cf_level: "",
+          cf_type: "String",
+          cf_comment: "",
+          cf_client: 0,
+        };
+      }
+      if(this.$refs.form) {
+        this.$refs.form.resetValidation();
+      }
+    },
     async save() {
 			this.$refs.form.validate();
 			await this.$nextTick();
 			if(!this.valid) return;
-			if(!this.$refs.cfKey.validate()) return;
-      this.form.cf_sort = 0;
+			if(!this.$refs.cfKey.validate()) return;      
+      if(!this.item) {
+        let i = 0;
+        const parent = findParentVm(this, 'AdmConfig');
+        parent.items.forEach((item) => {
+          if(item.cf_group == this.form.cf_group) {
+            i++;
+          }
+        });
+        this.form.cf_sort = i;        
+      };
 			this.$emit('save', this.form);
 		},
   },
