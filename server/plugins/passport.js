@@ -9,14 +9,16 @@ const NaverStrategy = require('passport-naver').Strategy;
 const { LV } = require('../../util/level');
 
 const {
+	CALLBACK_URL,	
+} = process.env;
+const {
 	GOOGLE_CLIENT_ID,
-	GOOGLE_CLIENT_SECRET,
-	CALLBACK_URL,
+	GOOGLE_CLIENT_SECRET,	
 	KAKAO_CLIENT_ID,
 	KAKAO_CLIENT_SECRET,
 	NAVER_CLIENT_ID,
 	NAVER_CLIENT_SECRET,
-} = process.env;
+} = $config.server;
 
 function loginRules(member) {
 	// 탈퇴회원
