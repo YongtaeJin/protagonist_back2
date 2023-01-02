@@ -17,17 +17,22 @@
       </v-col>
     </v-row>
 
-		<draggable tag="ul" :list="curItems" class="config-list-group" handle=".handle" @end="sortEnd">
-			<config-item 
-				class="list-group-item"
-				v-for="item in curItems"
-				:key="item.cf_key"
-				:item="item"
+    <draggable
+      tag="ul"
+      :list="curItems"
+      class="config-list-group"
+      handle=".handle"
+      @end="sortEnd"
+    >
+      <config-item
+        class="list-group-item"
+        v-for="item in curItems"
+        :key="item.cf_key"
+        :item="item"
         @update="updateConfig"
         @remove="removeConfig"
-			/>
-
-		</draggable>
+      />
+    </draggable>
 
     <ez-dialog
       label="설정 추가"
@@ -37,7 +42,12 @@
       color="primary"
       persistent
     >
-      <config-form @save="save" :keyCheck="keyCheck" :item="item"  :groupItems="groupItems"/>
+      <config-form
+        @save="save"
+        :keyCheck="keyCheck"
+        :item="item"
+        :groupItems="groupItems"
+      />
     </ez-dialog>
   </v-container>
 </template>
@@ -47,8 +57,8 @@ import { mapActions } from "vuex";
 import EzDialog from "../../components/etc/EzDialog.vue";
 import TooltipBtn from "../../components/etc/TooltipBtn.vue";
 import ConfigForm from "./ConfigComponent/ConfigForm.vue";
-import draggable from 'vuedraggable';
-import ConfigItem from './ConfigComponent/ConfigItem.vue';
+import draggable from "vuedraggable";
+import ConfigItem from "./ConfigComponent/ConfigItem.vue";
 
 export default {
   components: { TooltipBtn, EzDialog, ConfigForm, draggable, ConfigItem },
@@ -93,26 +103,39 @@ export default {
     },
     async save(form) {
       const data = await this.configSave(form);
-      if(this.item) {
+
+      if (data.cf_client) {
+        this.$socket.emit("config:update", {
+          key: data.cf_key,
+          value: data.cf_val,
+        });
+      } else if (this.item && this.item.cf_client) {
+        this.$socket.emit("config:remove", data.cf_key);
+      }
+
+      if (this.item) {
         this.$toast.info(`[${form.cf_name}] 수정 하였습니다.`);
         const idx = this.items.indexOf(this.item);
-        this.items.splice(idx, 1, data);
+        this.items.splice(idx, 1, form);
       } else {
         this.$toast.info(`[${form.cf_name}] 추가 하였습니다.`);
-        this.items.push(data);
+        this.items.push(form);
       }
       this.setCurItems();
       this.$refs.dialog.close();
     },
-    async removeConfig(item){
+    async removeConfig(item) {
       const result = await this.$ezNotify.confirm(
-        `<b>[${item.cf_name}]</b> 삭제 하시겠습니까 ?`,
-        '설정항목 삭제',
-        {icon : 'mdi-delete', iconColor: 'red'}
+        `<b>[${item.cf_name}]</b> 삭제 하시겠습니까?`,
+        "설정항목 삭제",
+        { icon: "mdi-delete", iconColor: "red" }
       );
-      if(!result) return;
+      if (!result) return;
       const data = await this.$axios.delete(`/api/config/${item.cf_key}`);
-      if(data) {
+      if (data) {
+        if (item.cf_client) {
+          this.$socket.emit("config:remove", item.cf_key);
+        }
         this.$toast.info(`[${item.cf_name}] 삭제 하였습니다.`);
         const idx = this.items.indexOf(item);
         this.items.splice(idx, 1);
@@ -128,25 +151,24 @@ export default {
     },
     async fetchData() {
       this.items = await this.$axios.get("/api/config?all=true");
-      console.log(this.groupItems);
     },
-		sortEnd() {
-			let i =0;
-			const payload = [];
-			this.curItems.forEach((item)=>{
-				item.cf_sort = i++;
-				payload.push({
-					cf_key : item.cf_key,
-					cf_sort : item.cf_sort
-				})
-			});
-			this.$axios.put('/api/config', payload);
-		},
+    sortEnd() {
+      let i = 0;
+      const payload = [];
+      this.curItems.forEach((item) => {
+        item.cf_sort = i++;
+        payload.push({
+          cf_key: item.cf_key,
+          cf_sort: item.cf_sort,
+        });
+      });
+      this.$axios.put("/api/config", payload);
+    },
     setCurItems() {
       this.curItems = this.items.filter((item) => {
         return item.cf_group == this.groupName;
-      });  
-    }
+      });
+    },
   },
 };
 </script>
