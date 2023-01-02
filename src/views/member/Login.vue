@@ -22,13 +22,13 @@
           </v-tab-item>
         </v-tabs-items>
       </v-card-text>
-      <v-card-text class="mt-n4">
+      <v-card-text class="mt-n4" v-if="config.useLoginGoogle">
         <v-btn @click="loginGoogle" block>구글 로그인</v-btn>
       </v-card-text>
-      <v-card-text class="mt-n4">
+      <v-card-text class="mt-n4" v-if="config.useLoginKakao">
         <v-btn @click="loginKakao" block>카카오 로그인</v-btn>
       </v-card-text>
-      <v-card-text class="mt-n4">
+      <v-card-text class="mt-n4" v-if="config.useLoginNaver">
         <v-btn @click="loginNaver" block>네이버 로그인</v-btn>
       </v-card-text>
       <v-card-text class="mt-n4">
@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from "vuex";
+import { mapActions, mapMutations, mapState } from "vuex";
 import FindIdForm from "../../components/auth/FindIdForm.vue";
 import FindPwForm from "../../components/auth/FindPwForm.vue";
 import SignInForm from "../../components/auth/SignInForm.vue";
@@ -54,9 +54,18 @@ export default {
       isLoading: false,
     };
   },
+  computed: {
+    ...mapState({
+      config: (state) => state.config,
+    }),
+  },
   methods: {
-    ...mapActions("user", ["signInLocal", "findIdLocal", "findPwLocal"]),
-    ...mapMutations("user", ["SET_MEMBER", "SET_TOKEN"]),
+    ...mapActions("user", [
+      "signInLocal",
+      "findIdLocal",
+      "findPwLocal",
+      "singInSocial",
+    ]),
     async loginLocal(form) {
       this.isLoading = true;
       const data = await this.signInLocal(form);
@@ -114,8 +123,7 @@ export default {
       if (payload.err) {
         this.$toast.error(payload.err);
       } else {
-        this.SET_MEMBER(payload.member);
-        this.SET_TOKEN(payload.token);
+        this.singInSocial(payload);
         this.$router.push("/");
         this.$toast.info(
           `${this.$store.state.user.member.mb_name}님 환영합니다.`
