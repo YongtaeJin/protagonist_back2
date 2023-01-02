@@ -7,7 +7,7 @@ const { SECRET_KEY } = $config.server;
 
 const options = {
 	algorithm : 'HS256',
-	issuer : 'ItsJin',
+	issuer : 'ezcode',
 	// expiresIn : '30m',
 };
 

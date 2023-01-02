@@ -20,6 +20,7 @@
       prepend-icon="mdi-card-account-details-outline"
       :rules="rules.name()"
     />
+
     <template v-if="!member.mb_provider">
       <input-password
         label="비밀번호"
@@ -43,8 +44,8 @@
       prepend-icon="mdi-email"
       :rules="rules.email()"
       :cbCheck="cbCheckEmail"
-			:origin="member.mb_email"
-			:readonly="!admMode"
+      :origin="member.mb_email"
+      :readonly="!admMode"
     />
 
     <input-date
@@ -57,12 +58,13 @@
     <div class="d-flex align-center">
       <display-avatar :member="member" />
       <v-file-input
-				class="ml-2"
+        class="ml-2"
         label="회원이미지"
         v-model="form.mb_image"
         :prepend-icon="null"
         accept="image/jpg,image/png"
       />
+      <v-checkbox v-model="form.deleteImage" label="삭제"> </v-checkbox>
     </div>
 
     <input-radio
@@ -86,8 +88,12 @@
       :addr2.sync="form.mb_addr2"
     />
 
-    <v-btn type="submit" block color="primary" :loading="isLoading">정보수정</v-btn>    
-    <v-btn class="mt-4" block color="error" :loading="isLoading" @click="$emit('onLeave')">회원탈퇴</v-btn>
+    <v-btn type="submit" block color="primary" :loading="isLoading">
+      정보 수정
+    </v-btn>
+		<v-btn class="mt-4" block color="error" :loading="isLoading" @click="$emit('onLeave')">
+      회원 탈퇴
+    </v-btn>
   </v-form>
 </template>
 
@@ -100,7 +106,7 @@ import InputPassword from "../InputForms/InputPassword.vue";
 import InputPhone from "../InputForms/InputPhone.vue";
 import InputPost from "../InputForms/InputPost.vue";
 import InputRadio from "../InputForms/InputRadio.vue";
-import DisplayAvatar from '../layout/DisplayAvatar.vue'
+import DisplayAvatar from "../layout/DisplayAvatar.vue";
 
 export default {
   components: {
@@ -110,7 +116,7 @@ export default {
     InputRadio,
     InputPhone,
     InputPost,
-		DisplayAvatar,
+    DisplayAvatar,
   },
   name: "UserUpdateForm",
   props: {
@@ -144,7 +150,9 @@ export default {
   },
   mounted() {
     this.form = deepCopy(this.member);
-    (this.form.mb_password = ""), (this.form.admMode = this.admMode);
+    this.form.mb_password = "";
+    this.form.admMode = this.admMode;
+    this.form.deleteImage = false;
     delete this.form.mb_create_at;
     delete this.form.mb_create_ip;
     delete this.form.mb_update_at;
@@ -152,7 +160,9 @@ export default {
     delete this.form.mb_login_at;
     delete this.form.mb_login_ip;
     delete this.form.mb_leave_at;
-    console.log(this.form);
+  },
+  destroyed() {
+    this.form = null;
   },
   methods: {
     async save() {

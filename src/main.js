@@ -35,3 +35,4 @@ export function createApp(ctx) {
 
 	return { app, router, store };
 }
+
