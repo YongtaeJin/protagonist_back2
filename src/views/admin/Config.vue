@@ -3,26 +3,8 @@
     <v-toolbar>
       <v-toolbar-title>설정관리</v-toolbar-title>
       <v-spacer></v-spacer>
-      <tooltip-btn
-        fab
-        small
-        label="설정추가"
-        color="primary"
-        @click="addConfig"
-      >
+      <tooltip-btn fab small label="설정추가" @click="addConfig">
         <v-icon>mdi-plus</v-icon>
-      </tooltip-btn>
-
-      <tooltip-btn
-        fab
-        small
-        label="서버재시작"
-        color="error"
-        @click="restartServer"
-        childClass="ml-2"
-        :loading="restart"
-      >
-        <v-icon>mdi-power</v-icon>
       </tooltip-btn>
     </v-toolbar>
     <v-row>
@@ -71,7 +53,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions } from "vuex";
 import EzDialog from "../../components/etc/EzDialog.vue";
 import TooltipBtn from "../../components/etc/TooltipBtn.vue";
 import ConfigForm from "./ConfigComponent/ConfigForm.vue";
@@ -87,13 +69,9 @@ export default {
       group: -1,
       curItems: [],
       item: null,
-      restart: false,
     };
   },
   computed: {
-    ...mapState({
-      online: (state) => state.socket.online,
-    }),
     groupItems() {
       const sets = new Set();
       this.items.forEach((item) => {
@@ -108,12 +86,6 @@ export default {
   watch: {
     group() {
       this.setCurItems();
-    },
-    online() {
-      if (this.online) {
-        this.$toast.info("서버가 재시작 되었습니다.");
-        this.restart = false;
-      }
     },
   },
   mounted() {
@@ -193,33 +165,9 @@ export default {
       this.$axios.put("/api/config", payload);
     },
     setCurItems() {
-      this.curItems = this.items
-        .filter((item) => {
-          return item.cf_group == this.groupName;
-        })
-        .sort((a, b) => {
-          return a.cf_sort - b.cf_sort;
-        });
-    },
-    async restartServer() {
-      const result = await this.$ezNotify.confirm(
-        "서버를 재시작 하시겠습니까?",
-        "서버 재시작"
-      );
-      if (!result) return;
-      this.restart = true;
-      const data = await this.$axios.get("/api/config/restart");
-      if (data) {
-        this.$toast.error("서버 재시작을 요청하였습니다.");
-      }
-      setTimeout(() => {
-        if (this.restart) {
-          this.restart = false;
-          this.$toast.error(
-            "서버 재시작을 실패하였습니다.\n다시 시도해주세요."
-          );
-        }
-      }, 20000);
+      this.curItems = this.items.filter((item) => {
+        return item.cf_group == this.groupName;
+      });
     },
   },
 };

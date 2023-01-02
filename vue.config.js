@@ -56,10 +56,6 @@ module.exports = {
 			},
 			'/upload' : {
 				target : `http://localhost:${process.env.VUE_APP_SERVER_PORT}`
-			},
-			'/socket.io' : {
-				target : `http://localhost:${process.env.VUE_APP_SERVER_PORT}`,
-				ws : true
 			}
 		}
 	},

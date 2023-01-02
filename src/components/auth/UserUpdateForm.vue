@@ -52,7 +52,7 @@
       v-model="form.mb_birth"
       label="생년월일"
       prepend-icon="mdi-calendar"
-      :rules="rules.date({ label: '생년월일', required: !admMode })"
+      :rules="rules.date({ label: '생년월일' })"
     />
 
     <div class="d-flex align-center">
@@ -79,14 +79,13 @@
       v-model="form.mb_phone"
       label="전화번호"
       prepend-icon="mdi-phone"
-      :rules="rules.phone({required: !admMode})"
+      :rules="rules.phone()"
     />
 
     <input-post
       :zipcode.sync="form.mb_zip"
       :addr1.sync="form.mb_addr1"
       :addr2.sync="form.mb_addr2"
-			:required="!admMode"
     />
 
     <v-btn type="submit" block color="primary" :loading="isLoading">
