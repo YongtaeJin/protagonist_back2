@@ -9,6 +9,6 @@ requireModule.keys().forEach(filename => {
 		modules[moduleName] = requireModule(filename).default;
 	}
 });
-//console.log(Object.keys(modules));
+// console.log(Object.keys(modules));
 
 export default modules;

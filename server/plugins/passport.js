@@ -8,12 +8,11 @@ const KakaoStrategy = require('passport-kakao').Strategy;
 const NaverStrategy = require('passport-naver').Strategy;
 const { LV } = require('../../util/level');
 
-const {
-	CALLBACK_URL,	
-} = process.env;
+const { CALLBACK_URL } = process.env;
+
 const {
 	GOOGLE_CLIENT_ID,
-	GOOGLE_CLIENT_SECRET,	
+	GOOGLE_CLIENT_SECRET,
 	KAKAO_CLIENT_ID,
 	KAKAO_CLIENT_SECRET,
 	NAVER_CLIENT_ID,
@@ -22,13 +21,13 @@ const {
 
 function loginRules(member) {
 	// 탈퇴회원
-	if(member.mb_leave_at) {
+	if (member.mb_leave_at) {
 		return '탈퇴 회원입니다.';
 	}
-	switch(member.mb_level) {
-		case LV.AWAIT :
+	switch (member.mb_level) {
+		case LV.AWAIT:
 			return '대기 회원입니다.';
-		case LV.BLOCK : 
+		case LV.BLOCK:
 			return '차단 회원입니다.';
 	}
 }
@@ -46,7 +45,7 @@ module.exports = (app) => {
 				mb_password = jwt.generatePassword(mb_password);
 				const member = await memberModel.getMemberBy({ mb_id, mb_password });
 				const msg = loginRules(member);
-				if(msg) {
+				if (msg) {
 					return done(null, null, msg);
 				}
 				return done(null, member);
@@ -76,7 +75,7 @@ module.exports = (app) => {
 				};
 				const member = await memberModel.loginSocial(request, data);
 				const msg = loginRules(member);
-				if(msg) {
+				if (msg) {
 					return done(null, null, msg);
 				}
 				done(null, member);
@@ -106,7 +105,7 @@ module.exports = (app) => {
 				};
 				const member = await memberModel.loginSocial(request, data);
 				const msg = loginRules(member);
-				if(msg) {
+				if (msg) {
 					return done(null, null, msg);
 				}
 				done(null, member);
@@ -136,7 +135,7 @@ module.exports = (app) => {
 				};
 				const member = await memberModel.loginSocial(request, data);
 				const msg = loginRules(member);
-				if(msg) {
+				if (msg) {
 					return done(null, null, msg);
 				}
 				done(null, member);
