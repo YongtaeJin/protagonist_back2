@@ -15,7 +15,7 @@ require('./plugins/pm2Bus');
 	await configModel.load();
 
 	setInterval(() => {
-		console.log($config.client.test1, $config.server.test1)
+		//console.log($config.client.title, $config.server.title)
 	}, 5000);
 
 	let isDiableKeepAlive = false;

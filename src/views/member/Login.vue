@@ -22,18 +22,20 @@
           </v-tab-item>
         </v-tabs-items>
       </v-card-text>
-      <v-card-text class="mt-n4">
-        <v-btn @click="loginGoogle" block>구글 로그인</v-btn>
-      </v-card-text>
-      <v-card-text class="mt-n4">
-        <v-btn @click="loginKakao" block>카카오 로그인</v-btn>
-      </v-card-text>
-      <v-card-text class="mt-n4">
-        <v-btn @click="loginNaver" block>네이버 로그인</v-btn>
-      </v-card-text>
-      <v-card-text class="mt-n4">
-        <v-btn to="/join" block>회원가입</v-btn>
-      </v-card-text>
+      <template v-if=false>
+        <v-card-text class="mt-n4">
+          <v-btn @click="loginGoogle" block>구글 로그인</v-btn>
+        </v-card-text>
+        <v-card-text class="mt-n4">
+          <v-btn @click="loginKakao" block>카카오 로그인</v-btn>
+        </v-card-text>
+        <v-card-text class="mt-n4">
+          <v-btn @click="loginNaver" block>네이버 로그인</v-btn>
+        </v-card-text>
+        <v-card-text class="mt-n4">
+          <v-btn to="/join" block>회원가입</v-btn>
+        </v-card-text>
+      </template>
     </v-card>
   </div>
 </template>
@@ -50,7 +52,8 @@ export default {
   data() {
     return {
       tabs: parseInt(this.$route.query.tabs) || 0,
-      items: ["로그인", "아이디 찾기", "비밀번호 찾기"],
+      //items: ["로그인", "아이디 찾기", "비밀번호 찾기"],
+      items: ["로그인"],
       isLoading: false,
     };
   },

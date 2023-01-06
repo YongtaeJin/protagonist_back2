@@ -4,7 +4,7 @@ const level = {
 		AWAIT: 1,
 		MEMBER: 2,
 		VIP: 4,
-		ADMIN: 6,
+		ADMIN: 9,
 		SUPER: 10
 	},
 	LV_LABEL: (lv) => {
