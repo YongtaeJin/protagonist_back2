@@ -1,23 +1,23 @@
 <template>
-  <v-app>
+ 	<v-app>
 		<v-navigation-drawer app v-model="drawer" :width="drawerWidth">
 			<site-navi @close="toggleDrawer"/>
 		</v-navigation-drawer>
 
-    <v-app-bar app color="primary" dark hide-on-scroll>
+    	<v-app-bar app color="primary" dark hide-on-scroll>
 			<v-app-bar-nav-icon @click="toggleDrawer" />
 			<site-title />
 			<v-spacer></v-spacer>
 			<site-user />
 		</v-app-bar>
 
-    <v-main>
-      <router-view />
-    </v-main>
+    	<v-main>
+    		<router-view />
+    	</v-main>
 
 		<site-footer />
-    <vue-progress-bar></vue-progress-bar>
-  </v-app>
+    	<vue-progress-bar></vue-progress-bar>
+	</v-app>
 </template>
 
 <script>

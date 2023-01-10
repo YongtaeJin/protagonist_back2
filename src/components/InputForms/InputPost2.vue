@@ -5,8 +5,7 @@
         label="우편번호"
         :value="zipcode"
         readonly
-        prepend-icon="mdi-map-marker"		
-        :rules="required ? [rules.require({ label: '주소' })] : []"		
+        prepend-icon="mdi-map-marker"		        
       >
         <template v-slot:append>
           <v-btn icon small tabindex="-1" @click="open">

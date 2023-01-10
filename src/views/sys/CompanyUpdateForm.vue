@@ -1,48 +1,117 @@
 <template>
-    <v-form v-if="form" @submit.prevent="save" ref="form" v-model="valid" lazy-validation >
-        <v-text-field label="사업장코드" v-model="form.i_com"  readonly />
-        <v-text-field label="사업자번호" v-model="form.n_com"   />
-        <v-text-field label="사업자  명" v-model="form.i_creg"   />
-        <v-text-field label="대표자성명" v-model="form.n_pernm"   />
-        <v-text-field label="전화번호" v-model="form.t_tel"   />
-        <v-text-field label="FAX 번호" v-model="form.t_fax"   />
-        <v-text-field label="E-mail" v-model="form.t_email"   />
-        <v-text-field label="우편번호" v-model="form.t_post"   />
-        <v-text-field label="주소" v-model="form.t_addr1"   />
-        <v-text-field label="상세주소" v-model="form.t_addr2"   />
+    <v-form @submit.prevent="save" ref="form" v-model="valid" lazy-validation >
+        <input-duplicate-check
+            ref="id"
+            label="사업장코드" 
+            v-model="form.i_com" 
+            counter="10"
+            prepend-icon="mdi-barcode"
+            :rules="rules.id()"
+            />
+        <v-text-field label="사업자번호" v-model="form.i_creg" prepend-icon="mdi-office-building-outline" />
+        <v-text-field label="사업자  명" v-model="form.n_com" prepend-icon="mdi-rename-box " />
+        <v-text-field label="대표자성명" v-model="form.n_pernm" prepend-icon="mdi-account" />
         
+        <input-phone label="전화번호" v-model="form.t_tel" prepend-icon="mdi-phone" />
+        <input-phone label="FAX 번호" v-model="form.t_fax" prepend-icon="mdi-fax" />
+        
+        <v-text-field label="E-mail" v-model="form.t_email" prepend-icon="mdi-at" />
+        <input-post2 :zipcode.sync="form.t_post" :addr1.sync="form.t_addr1" :addr2.sync="form.t_addr2" />
+     
+        
+        <v-btn type="submit" block color="primary" :loading="isLoading">{{ newItem }}</v-btn>
     </v-form>
-  
 </template>
 
 <script>
 import { deepCopy } from "../../../util/lib";
 import validateRules from "../../../util/validateRules";
+import InputDuplicateCheck from '../../components/InputForms/InputDuplicateCheck.vue';
+import InputPhone from '../../components/InputForms/InputPhone.vue';
+import InputPost2 from '../../components/InputForms/InputPost2.vue';
+
+
 export default {
+    components: { InputDuplicateCheck, InputPhone, InputPost2 },
     name: "CompanyUpdateForm",
     props: {
-        admMode: {
-            type: Boolean,
-            default: false,
-        },
         company: {
             type: Object,
-            required: true,
-        },
+            default: null,
+        },    
         isLoading: Boolean,
+        newItem: {
+            type: String,
+            default: null,
+        }
     },
     data() {
         return {
-        valid: true,
-        form: null,
-        }
-    },
-    mounted() {
+            valid: true,            
+            form: {
+                i_com: "",
+                n_com: "",
+                i_creg: "",
+                n_pernm: "",
+                t_tel: "",
+                t_fax: "",
+                t_email: "",
+                t_post: "",
+                t_addr1: "",
+                t_addr2: "",
+            },      
+        };
+    },    
+    mounted() {        
         this.form = deepCopy(this.company);
-        console.log(this.company);
     },
-    destroyed() {
+    watch: {        
+        company() {        
+            this.init();             
+        },        
+    },
+    computed: {
+        rules: () => validateRules,
+    },
+    created() {        
+        this.init();
+    },    
+    destroyed() {        
         this.form = null;
+    },
+    methods: {       
+        init() {
+            if (this.company) {
+                this.form = deepCopy(this.company);
+            } else {
+                this.from = { 
+                    i_com: "",
+                    n_com: "",
+                    i_creg: "",
+                    n_pernm: "",
+                    t_tel: "",
+                    t_fax: "",
+                    t_email: "",
+                    t_post: "",
+                    t_addr1: "",
+                    t_addr2: "",
+                };
+            }
+            if (this.$refs.form) this.$refs.form.resetValidation(); 
+        } ,
+        async save() {            
+            const formData = new FormData();
+            const keys = Object.keys(this.form);
+            for (const key of keys) {
+                formData.append(key, this.form[key]);
+            }       
+            console.log("ssssss");
+        //     if (this.cred == "수 정") {
+        //         this.$emit("onSave", formData)
+        //     } else {
+        //         this.$emit("onCreate", formData) 
+        //     }
+        },
     },
 }
 </script>

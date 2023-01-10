@@ -1,31 +1,29 @@
 const router = require('express').Router();
 const { modelCall } = require('../../util/lib');
-const configModel = require('./_model/configModel');
 const companyModel = require('./_model/companyModel');
 
+// 사업장 전체 조회
 router.get('/company', async (req, res) => {
 	const result = await modelCall(companyModel.getCompany, req);
 	res.json(result);
 });
 
+// 사업장 추가
+router.post('/', async (req, res) => {	
+	const result = await modelCall(companyModel.createCompany, req);
+	res.json(result);
+});
+
+// 사업장 코드 중복 체크
 router.get('/duplicateCheck', async (req, res) => {
-	const result = await modelCall(configModel.duplicateCheck, req.query);
+	const result = await modelCall(companyModel.duplicateCheck, req.query);
 	res.json(result);
 });
 
-router.post('/', async (req, res) => {
-	const result = await modelCall(configModel.saveConfig, req);
-	res.json(result);
-});
-
-router.put('/', async (req, res)=> {
-	const result = await modelCall(configModel.sortUpdate, req);
+// 사업장 수정
+router.patch('/', async (req, res) => {
+	const result = await modelCall(companyModel.updateCompany, req);
 	res.json(result);
 })
-
-router.delete('/:cf_key', async(req, res)=>{
-	const result = await modelCall(configModel.removeConfig, req);
-	res.json(result);
-});
 
 module.exports = router;
