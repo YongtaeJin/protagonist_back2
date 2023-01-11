@@ -15,8 +15,8 @@ router.post('/', async (req, res) => {
 });
 
 // 사업장 코드 중복 체크
-router.get('/duplicateCheck', async (req, res) => {
-	const result = await modelCall(companyModel.duplicateCheck, req.query);
+router.get('/duplicateCheckCompany/:field/:value', async (req, res) => {
+	const result = await modelCall(companyModel.duplicateCheckCompany, req.params);
 	res.json(result);
 });
 

@@ -40,7 +40,7 @@ _axios.interceptors.response.use(
 		const { data, status } = response;
 		let msg = "";
 
-		console.log("AJAX", response);
+		// console.log("AJAX", response);
 		if (status != 200) {
 			msg = "서버접속 실패";
 		}

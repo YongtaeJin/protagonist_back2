@@ -20,9 +20,12 @@ const companyModel = {
         const payload = {
 			...req.body,
         };
+        const i_com = payload.i_com;        
         const sql = sqlHelper.Insert(TABLE.COMPANY, payload);
-		const [row] = await db.execute(sql.query, sql.values);
-		return row.affectedRows == 1;
+		const [row] = await db.execute(sql.query, sql.values);  
+        if(row.affectedRows == 1) {
+            return await companyModel.getCompanyBy({ i_com });
+        }
     },
     async updateCompany(req) {
         const payload = {
@@ -41,5 +44,14 @@ const companyModel = {
 		};
         return row;
     },
+    async duplicateCheckCompany({ field, value }) {
+		const sql = sqlHelper.SelectSimple(
+			TABLE.COMPANY,
+			{ [field]: value },
+			['COUNT(*) as cnt']
+		);
+        const [[row]] = await db.execute(sql.query, sql.values);        
+		return row;
+	},
 }
 module.exports = companyModel;

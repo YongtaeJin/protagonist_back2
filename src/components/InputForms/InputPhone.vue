@@ -24,7 +24,6 @@ export default {
   },
   methods: {
     onInput(event) {
-			console.log("event val", event.target.value);
 			const val = this.authDash(event.target.value);
       this.$emit("input", val);
     },

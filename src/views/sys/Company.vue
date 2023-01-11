@@ -21,7 +21,7 @@
         </v-data-table>
         
         <ez-dialog label="사업장 추가/수정" ref="dialog" width="500" color="primary" persistent>
-            <company-update-form :company="curitem" :newItem="newItem">
+            <company-update-form @onSave="companyUpdate" @onCreate="companyCreate" :keyCheck="keyCheck" :company="curitem" :newItem="newItem">
             </company-update-form>
         </ez-dialog>
     </v-container>
@@ -74,22 +74,50 @@ export default {
         this.fetchData();        
     },
     methods: {
-        ...mapActions("company", ["duplicateCheck"]),
+        ...mapActions('company', ["duplicateCheckCompany"]),
 
-
+        async keyCheck(value) {
+            const payload = {
+                field: "i_com",
+                value,
+            };            
+            return await this.duplicateCheckCompany(payload);            
+        },
         async fetchData() {
             this.items = await this.$axios.get("/api/company/company");
-        },
-        
+        },        
         openDialog(item) {
             if(item) { 
                 this.curitem = item;
                 this.newItem = "수 정";
-            } else {
-                this.curitem = this.initItem;
+            } else {                
+                this.curitem = this.initItem;                
                 this.newItem = "추 가";
             }
             this.$refs.dialog.open();
+        },
+
+        async companyUpdate(form) {
+            this.loading = true;
+            const data = await this.$axios.patch("/api/company", form);
+            this.loading = false;
+            if (data) {
+                const idx = this.items.indexOf(this.curitem);
+                this.items.splice(idx, 1, data);
+                this.$toast.info(`${data.i_com} 수정 하였습니다.`);
+        
+            }
+            this.$refs.dialog.close();
+        },
+        async companyCreate(form) {
+            this.loading = true;
+            const data = await this.$axios.post("/api/company", form);
+            this.loading = false;
+            if (data) {
+                this.items.push(data);                
+                this.$toast.info(`${data.i_com} 추가 하였습니다.`);
+            }
+            this.$refs.dialog.close();
         },
     },
 }
