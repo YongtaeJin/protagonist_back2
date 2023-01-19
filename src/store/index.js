@@ -68,7 +68,7 @@ const store = new Vuex.Store({
 					subItems : [
 						{
 							title : "사업장관리",
-							icon : "",
+							icon : "mdi-office-building-outline",
 							to : '/sys/company',
 							grant : 0, 
 							newTab : false,
@@ -76,8 +76,8 @@ const store = new Vuex.Store({
 						},
 						{
 							title : "사용자관리",
-							icon : "",
-							to : '/sys/user',
+							icon : "mdi-account",
+							to : '/sys/users',
 							grant : 0, 
 							newTab : false,
 							subItems : []
