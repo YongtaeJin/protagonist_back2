@@ -17,4 +17,19 @@ export const actions = {
 		const data = await $axios.get(`/api/company/duplicateCheckCompany/${field}/${value}`);
 		return data;
 	},
+	async createUser(ctx, form) {
+		const { $axios } = Vue.prototype;
+		const data = await $axios.post('/api/company/user', form);
+		return data;
+	},
+	async updateUser(ctx, form) {
+		const { $axios } = Vue.prototype;
+		const data = await $axios.post('/api/company/userMod', form);
+		return data;
+	},
+	async deleteUser(ctx, form)	 {
+		const { $axios } = Vue.prototype;
+		const data = await $axios.post('/api/company/userDelete', form);
+		return false;
+	}
 };

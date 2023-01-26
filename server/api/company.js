@@ -26,4 +26,32 @@ router.patch('/', async (req, res) => {
 	res.json(result);
 })
 
+router.get('/companylist', async (req, res) => {
+	const result = await modelCall(companyModel.getCompanyList, req);
+	res.json(result);
+});
+router.get('/companyusers', async (req, res) => {
+	const result = await modelCall(companyModel.getCompanyUsers, req);
+	res.json(result);
+});
+
+// 사업장_사용자 추가 
+router.post('/user', async (req, res) => {	
+	const result = await modelCall(companyModel.createUser, req);
+	res.json(result);
+});
+// 사업장_사용자 수정 
+router.post('/userMod', async (req, res) => {	
+	const result = await modelCall(companyModel.updateUser, req);
+	res.json(result);
+});
+// 사업장_사용자 삭제  
+router.post('/userDelete', async (req, res) => {		
+	const result = await modelCall(companyModel.deleteUser, req);	
+	res.json(result);
+});
+
+
+
+
 module.exports = router;

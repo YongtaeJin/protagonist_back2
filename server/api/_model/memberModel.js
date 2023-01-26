@@ -178,7 +178,7 @@ const memberModel = {
 		// sm_to, sm_type, sm_hash, sm_subject, sm_content, sm_create_at, sm_expire_at
 		// 있으면 토큰 하나 발급
 		const sm_hash = jwt.getRandToken(64);
-		const title = 'ezCode'; // 나중에 사이트 설정갑에서 가지고 오자
+		const title = 'Protagonist'; // 나중에 사이트 설정갑에서 가지고 오자
 		const sm_subject = `${title} 비밀번호 찾기`;
 		const sm_create_at = moment().format('LT');
 		const expire_at = moment().add('30', 'm');

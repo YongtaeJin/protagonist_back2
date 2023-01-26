@@ -143,7 +143,6 @@ export default {
       if (!this.$refs.id.validate()) return;
       if (!this.$refs.email.validate()) return;
 
-      // this.$emit('onSave', this.form);
 			const formData = new FormData();
 			const keys = Object.keys(this.form);
 			for(const key of keys) {

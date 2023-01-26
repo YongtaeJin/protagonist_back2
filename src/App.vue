@@ -10,11 +10,11 @@
 			<v-spacer></v-spacer>
 			<site-user />
 		</v-app-bar>
-
-    	<v-main>
-    		<router-view />
+		
+    	<v-main>			 
+    		<router-view />			 
     	</v-main>
-
+		
 		<site-footer />
     	<vue-progress-bar></vue-progress-bar>
 	</v-app>

@@ -17,10 +17,10 @@ const token = {
 	},
 	generatePassword(password) {
 		return crypto.pbkdf2Sync(password, SECRET_KEY, 10, 64, 'sha512').toString('base64');
-	},
+	},	
 	getToken(user) {
 		const payload = {
-			mb_id : user.mb_id
+			i_id : user.i_id
 		};
 		return jwt.sign(payload, SECRET_KEY, options);
 	},
