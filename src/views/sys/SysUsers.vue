@@ -29,12 +29,13 @@
         
     
         <ez-dialog label="사용자 추가/수정" ref="dialog" width="400" color="primary" persistent>
-        <!--
+        
             <sys-users-form :user="user" :companys="compnayLists" :isNew="isNew" @onSave="save" @onDelete="userdel">
             </sys-users-form>
-            -->
+            <!--
             <sys-users-form :user="user" :companys="compnayLists" :isNew="isNew" @onSave="save">
             </sys-users-form>
+            -->
         </ez-dialog>
     </v-container>
 </template>
