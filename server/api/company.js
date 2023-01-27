@@ -50,8 +50,11 @@ router.post('/userDelete', async (req, res) => {
 	const result = await modelCall(companyModel.deleteUser, req);	
 	res.json(result);
 });
-
-
+// 사용 ID 중복 체크
+router.get('/duplicateCheckId/:field/:value', async (req, res) => {
+	const result = await modelCall(companyModel.duplicateCheckId, req.params);
+	res.json(result);
+});
 
 
 module.exports = router;

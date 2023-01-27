@@ -28,9 +28,9 @@
         </v-card>
         
     
-        <ez-dialog label="사용자 추가/수정" ref="dialog" width="400" color="primary" persistent>
+        <ez-dialog label="사용자 추가/수정" ref="dialog" width="400" color="primary" persistent @onClose="onClose">
         
-            <sys-users-form :user="user" :companys="compnayLists" :isNew="isNew" @onSave="save" @onDelete="userdel">
+            <sys-users-form :user="user" :companys="compnayLists" :isNew="isNew" :cbCheckId="cbCheckId" @onSave="save" @onDelete="userdel" :onClose="onClose">
             </sys-users-form>
             <!--
             <sys-users-form :user="user" :companys="compnayLists" :isNew="isNew" @onSave="save">
@@ -69,6 +69,7 @@ export default {
             curUsers: [],
             user: null,
             isNew: true,
+            isEdit: false,
         };
     },
     computed: {
@@ -86,19 +87,31 @@ export default {
         this.fetchData();
     },
     methods: {        
-        ...mapActions("company", ["createUser", "updateUser", "deleteUser"]),
-
+        ...mapActions("company", ["createUser", "updateUser", "deleteUser", "duplicateCheckId"]),
+        onClose(){
+            if(!this.isEdit) {
+                if(this.users) {
+                    if (this.user) {
+                        this.user = null;
+                    } else {
+                        this.user = this.users[0];
+                    }
+                }
+            }
+        },
         async fetchData() {            
             this.compnayLists = await this.$axios.get("/api/company/companylist");
             this.users = await this.$axios.get("/api/company/companyusers");                 
         },
-        openDialog(item) {
-            this.isNew = true;
+        openDialog() {
+            this.isNew = true;            
             this.user = null;
-            this.$refs.dialog.open();
+            this.isEdit = false;
+            this.$refs.dialog.open();            
         },
         showRowInfo(event, { item }) {
             this.isNew = false;
+            this.isEdit = false;
             this.user = item;
             this.$refs.dialog.open();
         },       
@@ -106,6 +119,13 @@ export default {
             console.log("item", this.item);
             // this.user = item;
             // this.$refs.dialog.open();
+        },
+        async cbCheckId(value) {
+            const payload = {
+                field: "i_id",
+                value,
+            };            
+            return await this.duplicateCheckId(payload); 
         },
         async save(form) {
             this.isLoading = true;            
@@ -129,6 +149,7 @@ export default {
                     }
                 }
             }            
+            this.isEdit = true;
             this.isLoading = false;    
             this.$refs.dialog.close();       
         },
@@ -143,13 +164,14 @@ export default {
                 this.$refs.dialog.close();
                 return;
             } 
+            this.isEdit = true;
             const idx = this.users.indexOf(this.user);
             this.users.splice(idx, 1);
             this.$toast.info(`${this.user.i_id} 삭제 하였습니다.`);
 
             const data = await this.deleteUser(form); 
             
-            this.$refs.dialog.close();
+            this.$refs.dialog.close();            
         }
         
     },

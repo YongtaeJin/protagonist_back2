@@ -31,5 +31,10 @@ export const actions = {
 		const { $axios } = Vue.prototype;
 		const data = await $axios.post('/api/company/userDelete', form);
 		return false;
-	}
+	},
+	async duplicateCheckId(ctx, { field, value }) {        
+		const { $axios } = Vue.prototype;
+		const data = await $axios.get(`/api/company/duplicateCheckId/${field}/${value}`);
+		return data;
+	},
 };

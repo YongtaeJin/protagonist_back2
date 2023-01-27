@@ -11,28 +11,30 @@
             persistent-hint
             return-object     
             :readonly=!isNew
+            :rules="user_icom" 
         />
         
-        <input-duplicate-check-2 ref="id"
+        <input-duplicate-check ref="id"
             v-model="form.i_id"
             label="아이디"
             prepend-icon="mdi-account"
-            counter="30"
+            counter="15"
+            :origin="originKey"
             :rules="rules.id()"
             :readonly=!isNew
-            :cbCheck="cbCheckId" />
+            :cbCheck="cbCheckId"
+            
+             />
         <v-text-field
             label="이름"
             v-model="form.n_name"
             prepend-icon="mdi-card-account-details-outline"
             :rules="rules.name()"
         />        
-        <input-password
-            label="비밀번호"
-            v-model="form.i_password"
-            prepend-icon="mdi-lock"
-            :rules="rules.password()"
-        />
+        
+        <input-password v-if=isNew label="비밀번호" v-model="form.i_password" prepend-icon="mdi-lock" :rules="rules.password()"/>
+        <input-password v-if=!isNew label="비밀번호" v-model="form.i_password" prepend-icon="mdi-lock" :rules="rules.password2()"/>
+        
         <v-text-field
             label="비고"
             v-model="form.t_memo"
@@ -66,7 +68,7 @@ export default {
             default: null,
         },
         isLoading : Boolean,
-        isNew : Boolean,
+        isNew : Boolean,        
     },
     data() {
         return {
@@ -77,7 +79,12 @@ export default {
                 i_password: "",
                 n_name: "",
                 t_memo: ""
-            },            
+            }, 
+            user_icom: [
+                v => !!v || '사업장 필수 입력사항입니다.',
+                v => !(v && v.length >= 30) || '이름은 30자 이상 입력할 수 없습니다.',
+                v => !/[~!@#$%^&*()_+|<>?:{}]/.test(v) || '이름에는 특수문자를 사용할 수 없습니다.'
+            ]           
         };
     },
     mounted() {        
@@ -90,9 +97,9 @@ export default {
     },
     computed: {
         rules: () => validateRules,
-        // originKey() {
-        //     return this.company ? this.company.i_com : "";
-        // },
+        originKey() {
+           return this.user ? this.user.i_id : "";
+        },
     },
    
     created() {        
@@ -101,7 +108,7 @@ export default {
     destroyed() {        
         this.form = null;
     },
-    methods: {   
+    methods: {          
         init() {
             if (this.user) {
                 this.form = deepCopy(this.user);
@@ -119,11 +126,12 @@ export default {
                 this.$refs.form.resetValidation();
             };
         },
+        
         async save() {
-            //this.$refs.form.validate();
-            //await this.$nextTick();
-            //if (!this.valid) return;
-            //if (!this.$refs.id.validate()) return;
+            this.$refs.form.validate();
+            await this.$nextTick();
+            if (!this.valid) return;
+            if (!this.$refs.id.validate()) return;
             
             const formData = new FormData();
 			const keys = Object.keys(this.form);

@@ -73,6 +73,22 @@ const rules = {
 		arr.push(rules.pattern(opt));
 		return arr;
 	},
+	password2(options) {
+		const defaultOptions = {
+			label : '비밀번호',
+			required : false,
+			len : 6,
+			pattern : /^.*(?=^.{6,}$)(?=.*\d)(?=.*[a-zA-Z]).*$/
+		};
+		const opt = Object.assign(defaultOptions, options);
+		const arr = [];
+		if(opt.required) {
+			arr.push(rules.require(opt));
+		}
+		arr.push(rules.min(opt));
+		arr.push(rules.pattern(opt));
+		return arr;
+	},
 	date(options) {
 		const defaultOptions = {
 			label : '날자',

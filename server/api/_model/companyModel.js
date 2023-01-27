@@ -147,10 +147,17 @@ const companyModel = {
         const [row] = await db.execute(sql.query, sql.values);       
         
         return row.affectedRows;
-    }
-    // const i_com = payload.i_com;        
-    //     const sql = sqlHelper.Update(TABLE.COMPANY, payload, {i_com});
-	// 	const [row] = await db.execute(sql.query, sql.values);
-	// 	return await companyModel.getCompanyBy( {i_com} );
+    },
+
+    async duplicateCheckId({ field, value }) {
+		const sql = sqlHelper.SelectSimple(
+			TABLE.USERS,
+			{ [field]: value },
+			['COUNT(*) as cnt']
+		);
+        const [[row]] = await db.execute(sql.query, sql.values);        
+		return row;
+	},
+    
 }
 module.exports = companyModel;
