@@ -40,21 +40,21 @@
       :cbCheck="cbCheckEmail"
     />
 
-    <input-date
+    <input-date v-if=false
       v-model="form.mb_birth"
       label="생년월일"
       prepend-icon="mdi-calendar"
       :rules="rules.date({ label: '생년월일' })"
     />
 
-		<v-file-input 
+		<v-file-input v-if=false
 			label="회원이미지"
 			v-model="form.mb_image"
 			prepend-icon="mdi-account-box"
 			accept="image/jpg,image/png"
 		/>
 
-    <input-radio
+    <input-radio v-if=false
       v-model="form.mb_gender"
       :items="genderItems"
       row
@@ -66,10 +66,10 @@
       v-model="form.mb_phone"
       label="전화번호"
       prepend-icon="mdi-phone"
-			:rules="rules.phone()"
+			:rules="[rules.phone({ required: 'false'})]"
     />
 
-		<input-post 
+		<input-post v-if=false
 			:zipcode.sync="form.mb_zip"
 			:addr1.sync="form.mb_addr1"
 			:addr2.sync="form.mb_addr2"
@@ -113,19 +113,19 @@ export default {
     return {
       valid: true,
       form: {
-        mb_id: "test1",
-        mb_password: "abcd1234",
-        mb_name: "테스트",
-        mb_birth: "2000-10-01",
-        mb_gender: "M",
-        mb_email: "test@test.com",
-        mb_phone: "010-1111-1111",
-        mb_zip: "06302",
-        mb_addr1: "서울 강남구 양재천로 163 (도곡동, 바디프랜드 도곡타워)",
-        mb_addr2: "3층",
+        mb_id: "",
+        mb_password: "",
+        mb_name: "",
+        mb_birth: "",
+        mb_gender: "",
+        mb_email: "",
+        mb_phone: "",
+        mb_zip: "",
+        mb_addr1: "",
+        mb_addr2: "",
 				mb_image : null,
       },
-      confirmPw: "abcd1234",
+      confirmPw: "",
       genderItems: [
         { label: "남자", value: "M" },
         { label: "여자", value: "F" },

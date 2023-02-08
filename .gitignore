@@ -1,6 +1,7 @@
 .DS_Store
 node_modules
 /OracleKey
+/dist
 
 # local env files
 .env.local

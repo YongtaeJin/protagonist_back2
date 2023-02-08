@@ -1,13 +1,13 @@
 <template>
  	<v-app>
-		<v-navigation-drawer app v-model="drawer" :width="drawerWidth">
-			<site-navi @close="toggleDrawer"/>
+		<v-navigation-drawer v-if="this.$store.state.user.member"  app v-model="drawer" :width="drawerWidth">
+			<site-navi  @close="toggleDrawer"/>
 		</v-navigation-drawer>
 
     	<v-app-bar app color="primary" dark hide-on-scroll>
 			<v-app-bar-nav-icon @click="toggleDrawer" />
 			<site-title />
-			<v-spacer></v-spacer>
+			<v-spacer></v-spacer> 
 			<site-user />
 		</v-app-bar>
 		
@@ -21,6 +21,8 @@
 </template>
 
 <script>
+import { mapActions, mapMutations } from "vuex";
+
 import SiteFooter from './components/layout/SiteFooter.vue';
 import SiteTitle from './components/layout/SiteTitle.vue';
 import SiteNavi from "./components/layout/SiteNavi.vue";
@@ -33,6 +35,7 @@ export default {
   data() {
 		return {
 			drawer : false,
+			loginchk : false,
 		}
 	},
 	computed : {
@@ -40,10 +43,11 @@ export default {
 			return this.$vuetify.breakpoint.xs ? '100%' : '360';
 		}
 	},
-	methods : {
+	methods : {		
 		toggleDrawer() {
 			this.drawer = !this.drawer;
 		}
+		
 	}
 };
 </script>
