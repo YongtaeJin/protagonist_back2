@@ -33,8 +33,9 @@ router.post('/loginLocal', async (req, res) => {
 				if (err) {
 					console.log('loginLocal', err);
 					res.json({ err })
-				} else {
+				} else {					
 					const token = jwt.getToken(member);
+					console.log("token", token);
 					const data = memberModel.loginMember(req);
 					member.mb_login_at = data.mb_login_at;
 					member.mb_login_ip = data.mb_login_ip;

@@ -2,7 +2,7 @@
   <div :style="{'padding-left' : depth*2 + 'px'}">
     <div v-for="(item, i) in items" :key="`${i}${item.title}`">
       <v-list-group
-        v-if="item.subItems && item.subItems.length > 0"
+        v-if="item.subItems && item.subItems.length > 0 && member.mb_level >= item.grant "
         :prepend-icon="depth === 0 ? item.icon : ''"
         no-action
         :sub-group="depth > 0"
@@ -18,8 +18,8 @@
         </template>
         <nested-menu :items="item.subItems" :depth="depth + 1" />
       </v-list-group>
-
-      <v-list-item v-else v-bind="getLink(item)">
+      
+      <v-list-item v-else-if="member.mb_level >= item.grant" v-bind="getLink(item)">
         <v-list-item-icon v-if="depth === 0">
           <v-icon>{{ item.icon }}</v-icon>
         </v-list-item-icon>
@@ -29,11 +29,13 @@
           <div>{{ item.title }}</div>
         </v-list-item-title>
       </v-list-item>
+      
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters, mapState } from 'vuex';
 export default {
   name: "NestedMenu",
   props: {
@@ -45,6 +47,11 @@ export default {
       type: Number,
       default: 0,
     },
+  },
+  computed: {
+    ...mapState({
+      member : state => state.user.member,
+    }),    
   },
   methods: {
     getLink(item) {

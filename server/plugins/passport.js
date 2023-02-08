@@ -150,6 +150,8 @@ module.exports = (app) => {
 		const token = req.cookies.token;
 		if (!token) return next();
 		const { mb_id } = jwt.vetify(token);
+		const user = jwt.vetify(token);
+		
 		if (!mb_id) return next();
 		try {
 			const member = await memberModel.getMemberBy({ mb_id });

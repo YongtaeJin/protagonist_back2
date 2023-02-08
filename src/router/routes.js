@@ -42,6 +42,11 @@ const routes = [
 		component: () => import(/* webpackChunkName: "SysUsers" */ '../views/sys/SysUsers.vue')		
 	},
 	{
+		path: '/shop/signed',
+		name: 'ShopSigned',
+		component: () => import(/* webpackChunkName: "ShopSigned" */ '../views/shop/Signed.vue')		
+	},
+	{
 		path: '*',
 		name: 'Error',
 		component: () => import(/* webpackChunkName: "error" */ '../views/Error.vue')

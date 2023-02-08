@@ -13,21 +13,21 @@ const store = new Vuex.Store({
 					title : "Home",
 					icon : "mdi-home",
 					to : '',
-					grant : 0, 
+					grant : 3, 
 					newTab : false,
 					subItems : [
 						{
 							title : "Menu1",
 							icon : "",
 							to : '/menu1',
-							grant : 0, 
+							grant : 3, 
 							newTab : false,
 							subItems : [
 								{
 									title : "Menu1-1",
 									icon : "",
 									to : '/menu1-1',
-									grant : 0, 
+									grant : 3, 
 									newTab : false,
 									subItems : []
 								},
@@ -35,29 +35,39 @@ const store = new Vuex.Store({
 									title : "Menu1-2",
 									icon : "",
 									to : '/menu1-2',
-									grant : 0, 
+									grant : 3, 
 									newTab : false,
 									subItems : []
 								},
 							]
 						},
 						{
-							title : "Menu2",
+							title : "Shop",
 							icon : "",
-							to : '/menu2',
-							grant : 0, 
+							to : '',
+							grant : 3, 
 							newTab : false,
 							subItems : []
 						},
 					]
 				},
 				{
-					title : "About",
-					icon : "mdi-help",
-					to : '/about',
-					grant : 0, 
+					title : "스마트공방",
+					icon : "mdi-store-plus",
+					to : '',
+					grant : 2, 
 					newTab : false,
-					subItems : []
+					subItems : [
+						{
+							title : "스마트공방 신청",
+							icon : "",
+							to : '/shop/signed',							
+							grant : 2, 
+							newTab : false,
+							subItems : []
+						},
+
+					]
 				},
 				{
 					title : "System",
@@ -70,7 +80,7 @@ const store = new Vuex.Store({
 							title : "사업장관리",
 							icon : "mdi-office-building-outline",
 							to : '/sys/company',
-							grant : 0, 
+							grant : 8, 
 							newTab : false,
 							subItems : []
 						},
@@ -78,7 +88,7 @@ const store = new Vuex.Store({
 							title : "사용자관리",
 							icon : "mdi-account",
 							to : '/sys/users',
-							grant : 0, 
+							grant : 8, 
 							newTab : false,
 							subItems : []
 						},
