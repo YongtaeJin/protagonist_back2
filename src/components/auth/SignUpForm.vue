@@ -115,9 +115,7 @@ export default {
       form: {
         mb_id: "",
         mb_password: "",
-        mb_name: "",
-        mb_birth: "",
-        mb_gender: "",
+        mb_name: "",        
         mb_email: "",
         mb_phone: "",
         mb_zip: "",
