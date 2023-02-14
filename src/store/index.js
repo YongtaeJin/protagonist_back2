@@ -59,9 +59,17 @@ const store = new Vuex.Store({
 					newTab : false,
 					subItems : [
 						{
-							title : "스마트공방 신청",
+							title : "사업신청",
 							icon : "",
 							to : '/shop/signed',							
+							grant : 2, 
+							newTab : false,
+							subItems : []
+						},
+						{
+							title : "협약신청",
+							icon : "",
+							to : '/shop/agree',							
 							grant : 2, 
 							newTab : false,
 							subItems : []
@@ -73,14 +81,14 @@ const store = new Vuex.Store({
 					title : "System",
 					icon : "mdi-dialpad",
 					to : '',
-					grant : 9, 
+					grant : 10, 
 					newTab : false,
 					subItems : [
 						{
 							title : "사업장관리",
 							icon : "mdi-office-building-outline",
 							to : '/sys/company',
-							grant : 8, 
+							grant : 10, 
 							newTab : false,
 							subItems : []
 						},
@@ -88,7 +96,7 @@ const store = new Vuex.Store({
 							title : "사용자관리",
 							icon : "mdi-account",
 							to : '/sys/users',
-							grant : 8, 
+							grant : 10, 
 							newTab : false,
 							subItems : []
 						},

@@ -4,7 +4,8 @@ const routes = [
 	{
 		path: '/',
 		name: 'Home',
-		component: Home
+		component: Home,
+		
 	},
 	{
 		path: '/about',
@@ -15,6 +16,7 @@ const routes = [
 		path: '/login',
 		name: 'NoAuthLogin',
 		component: () => import(/* webpackChunkName: "login" */ '../views/member/Login.vue')
+		
 	},
 	{
 		path: '/join',
@@ -44,7 +46,13 @@ const routes = [
 	{
 		path: '/shop/signed',
 		name: 'ShopSigned',
-		component: () => import(/* webpackChunkName: "ShopSigned" */ '../views/shop/Signed.vue')		
+		component: () => import(/* webpackChunkName: "ShopSigned" */ '../views/shop/Signed.vue'),
+		meta: { requireLogin: true }
+	},
+	{
+		path: '/no',
+		name: 'NoLogin',
+		component: () => import(/* webpackChunkName: "nologin" */ '../views/NotLogin.vue')
 	},
 	{
 		path: '*',
