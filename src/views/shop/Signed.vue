@@ -1,13 +1,16 @@
 <template>
-    <div>
-        스마트 공방 신청 화면
-    </div>
+    <login v-if="!this.$store.state.user.member"/>
 </template>
 
 <script>
+import Login from '../member/Login.vue'
+
 export default {
+  components: { Login },
+
 	name :"ShopSigned",
-	title : "스마트공방 신청"	    
+	title : "스마트공방 신청",	    
+   
 }
 </script>
 
