@@ -12,44 +12,10 @@ const store = new Vuex.Store({
 				{
 					title : "Home",
 					icon : "mdi-home",
-					to : '',
-					grant : 3, 
+					to : '/',
+					grant : 2, 
 					newTab : false,
-					subItems : [
-						{
-							title : "Menu1",
-							icon : "",
-							to : '/menu1',
-							grant : 3, 
-							newTab : false,
-							subItems : [
-								{
-									title : "Menu1-1",
-									icon : "",
-									to : '/menu1-1',
-									grant : 3, 
-									newTab : false,
-									subItems : []
-								},
-								{
-									title : "Menu1-2",
-									icon : "",
-									to : '/menu1-2',
-									grant : 3, 
-									newTab : false,
-									subItems : []
-								},
-							]
-						},
-						{
-							title : "Shop",
-							icon : "",
-							to : '',
-							grant : 3, 
-							newTab : false,
-							subItems : []
-						},
-					]
+					subItems : []
 				},
 				{
 					title : "스마트공방",
@@ -74,35 +40,8 @@ const store = new Vuex.Store({
 							newTab : false,
 							subItems : []
 						},
-
 					]
 				},
-				{
-					title : "System",
-					icon : "mdi-dialpad",
-					to : '',
-					grant : 10, 
-					newTab : false,
-					subItems : [
-						{
-							title : "사업장관리",
-							icon : "mdi-office-building-outline",
-							to : '/sys/company',
-							grant : 10, 
-							newTab : false,
-							subItems : []
-						},
-						{
-							title : "사용자관리",
-							icon : "mdi-account",
-							to : '/sys/users',
-							grant : 10, 
-							newTab : false,
-							subItems : []
-						},
-					]
-				},
-
 			]
 		},
 	},
