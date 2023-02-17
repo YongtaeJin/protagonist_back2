@@ -127,10 +127,13 @@ const sqlHelper = {
 		const prepare = new Array(keys.length).fill('?').join(', ');
 		const values = [];
 		for (const key of keys) {
+			//values.push(data[key]);
 			values.push(data[key]);
+			//console.log(data[key].replace('null',''));
 		}
 		query = query.replace('{1}', keys.join(', '));
 		query = query.replace('{2}', prepare);
+		
 		return { query, values };
 	},
 	InsertOrUpdate(table, data) {

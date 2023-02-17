@@ -5,6 +5,7 @@ import { LV } from '../../../util/level';
 export const state = () => ({
 	member: null,
 	token: null,
+	shopinfo: null,   // 스마트공방 신청 정보
 });
 
 export const mutations = {
@@ -13,6 +14,9 @@ export const mutations = {
 	},
 	SET_TOKEN(state, token) {
 		state.token = token;
+	},	
+	SET_SHOPINFO(state, shopinfo) {
+		state.shopinfo = shopinfo;
 	}
 };
 export const getters = {
@@ -57,6 +61,7 @@ export const actions = {
 		const data = await $axios.get('/api/member/signOut');
 		commit('SET_MEMBER', null);
 		commit('SET_TOKEN', null);
+		commit('SET_SHOPINFO', null);
 		return mb_name;
 	},
 	async findIdLocal(ctx, form) {
@@ -88,5 +93,23 @@ export const actions = {
 			commit('SET_MEMBER', data);
 		}
 		return !!data;
+	},
+	async checkShopInfo({ commit }, form) {
+		const { $axios } = Vue.prototype;
+		const data = await $axios.get(`/api/shopinfo`, form);		
+		if (data) {			
+			commit('SET_SHOPINFO', data);
+		}				
+		return !!data;
+	},
+	async updateShopInfo({ commit }, form) {
+		const { $axios } = Vue.prototype;
+		const data = await $axios.patch(`/api/shopinfo`, form);		
+		// if (data) {
+		// 	console.log(data);
+		// 	commit('SET_SHOPINFO', data);
+		// }
+		return !!data;
+
 	}
 };
