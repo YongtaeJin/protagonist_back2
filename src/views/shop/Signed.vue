@@ -20,7 +20,7 @@
         
         <v-card-text>
             <v-tabs-items v-model="tabs">                                 
-                <v-tab-item> <signed-p-01-form @save="save1" /></v-tab-item>                
+                <v-tab-item><signed-p-01-form @save="save1" /></v-tab-item>                
                 <v-tab-item><signed-p-02-form /></v-tab-item>
                 <v-tab-item>c</v-tab-item>
                 <v-tab-item>d</v-tab-item>
@@ -63,7 +63,8 @@ export default {
         }
     },
     mounted() {
-        if ( this.$store.state.user.member ) {
+        console.log(this.$store.state.user);
+        if (this.$store.state.user.member ) {
             this.fetchData();
         }
     },

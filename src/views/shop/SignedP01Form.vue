@@ -2,10 +2,12 @@
   
   <v-form @submit.prevent="save" ref="form">    
       <v-checkbox v-model="form.f_persioninfo" 
-        
+        :disabled="!this.$store.state.user.shopinfo || this.$store.state.user.shopinfo.f_persioninfo=='1'"
         label="개인정보 수집 및 이용 동의함" color="success" value="1" hide-details></v-checkbox>    
       
-      <v-btn color="primary" type="submit" block>동의함</v-btn>       
+      <v-btn 
+        :disabled="!this.$store.state.user.shopinfo || this.$store.state.user.shopinfo.f_persioninfo=='1'"
+        color="primary" type="submit" block>동의함</v-btn>       
 
       <br>    
       당 사이트는 「개인정보보호법」 제15조 제1항 제1호, 제17조 제1항 제1호, 제23조 제1호 따라 아래와 같이 개인정보의 수집. 이용에 관하여 귀하의 동의를 얻고자 합니다.<br>

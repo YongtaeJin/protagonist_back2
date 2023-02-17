@@ -34,7 +34,7 @@ export const actions = {
 		if (data) {
 			commit('SET_MEMBER', data.member);
 			commit('SET_TOKEN', data.token);
-		}
+		}		
 	},
 	async duplicateCheck(ctx, { field, value }) {
 		const { $axios } = Vue.prototype;
@@ -52,6 +52,10 @@ export const actions = {
 		if (data) {
 			commit('SET_MEMBER', data.member);
 			commit('SET_TOKEN', data.token);
+		}
+		const data2 = await $axios.get(`/api/shopinfo`, form);		
+		if (data2) {			
+			commit('SET_SHOPINFO', data2);
 		}
 		return !!data;
 	},
