@@ -57,6 +57,24 @@ const shopinfoModel = {
 		return row;
 	},
 
+	async attfiles(req) {
+
+		const token = req.cookies.token;
+		const { mb_id } = jwt.vetify(req.cookies.token);
+		const i_shop = req.cookies.i_shop;
+		const i_no = req.cookies.i_no;	
+
+
+		sql = "select a.i_shop, a.i_ser, a.f_yn, a.n_file n_filename, " +
+			  "			b.i_no, b.n_file, b.t_att " +
+			  "  from tb_shopmag_file a " +
+			  "	      left outer join tb_shopinput_file b on a.i_shop = b.i_shop and a.i_ser = b.i_ser and b.i_no = " + i_no 
+			  "	where a.i_shop = '" + i_shop + "' " +
+			  "	order by a.i_shop, a.i_ser ";		
+		const [row] = await db.execute(sql);		
+		return row;
+	},
+
     async updateMember(req) {
 		// return {body : req.body, file:req.files};
 		const at = moment().format('LT');

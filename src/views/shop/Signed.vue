@@ -22,7 +22,7 @@
             <v-tabs-items v-model="tabs">                                 
                 <v-tab-item><signed-p-01-form @save="save1" /></v-tab-item>                
                 <v-tab-item><signed-p-02-form @save="save2" :item="this.$store.state.user.shopinfo"/></v-tab-item>
-                <v-tab-item>c</v-tab-item>
+                <v-tab-item><signed-p-03-form @save="save3" :item="shioinfofiles"/></v-tab-item>
                 <v-tab-item>d</v-tab-item>
             </v-tabs-items>            
         </v-card-text>
@@ -38,9 +38,10 @@ import SignedP01Form from './SignedP01Form.vue'
 import SignedP02Form from './SignedP02Form.vue'
 
 import { deepCopy } from "../../../util/lib";
+import SignedP03Form from './SignedP03Form.vue';
 
 export default {
-  components: { Login, SignedP01Form, SignedP02Form },
+  components: { Login, SignedP01Form, SignedP02Form, SignedP03Form },
 
 	name :"ShopSigned",
 	title : "스마트공방 신청",
@@ -55,7 +56,9 @@ export default {
                 {id:'Cominfo', name:'회사 정보', enable:'Y'},
                 {id:'Input', name:'스마트공방 신청', enable:'Y'},
                 {id:'Addinfo', name:'회사 추가 정보', enable:'Y'},
-            ],            
+            ],
+            shioinfofiles: [],
+            shopinfofileadds: [],
             // active_tab: 0,                       
         }
     },
@@ -75,6 +78,7 @@ export default {
 
         async fetchData() {       
             const data = await this.checkShopInfo();     
+            this.shioinfofiles = await this.$axios.patch(`/api/shopinfo/attfiles`);
         },        
         async save1(form) {
             if (!form.i_shop) {
@@ -83,7 +87,8 @@ export default {
             }           
             const data = await this.updateShopInfo(form);
             if ( data ) {
-                await this.checkShopInfo();                 
+                await this.checkShopInfo();     
+                this.$toast.info(`개인정보 동의 하였습니다.`);                            
             }
         },
         async save2(form) {
@@ -92,6 +97,9 @@ export default {
                 await this.checkShopInfo(); 
                 this.$toast.info(`회사 정보 저장 하였습니다.`);                
             }
+        },
+        async save3(form) {
+            console.log("save3")
         },
 
     }

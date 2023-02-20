@@ -58,6 +58,8 @@ router.get('/auth', (req, res) => {
 // 로그아웃 
 router.get('/signOut', (req, res) => {
 	res.clearCookie('token');
+	res.clearCookie('i_no');
+	res.clearCookie('i_shop');
 	res.json(true);
 });
 
