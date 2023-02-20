@@ -21,16 +21,13 @@
         <v-card-text>
             <v-tabs-items v-model="tabs">                                 
                 <v-tab-item><signed-p-01-form @save="save1" /></v-tab-item>                
-                <v-tab-item><signed-p-02-form /></v-tab-item>
+                <v-tab-item><signed-p-02-form @save="save2" :item="this.$store.state.user.shopinfo"/></v-tab-item>
                 <v-tab-item>c</v-tab-item>
                 <v-tab-item>d</v-tab-item>
             </v-tabs-items>            
         </v-card-text>
       
-
     </v-card>
-    
-       
 
 </template>
 
@@ -48,8 +45,8 @@ export default {
 	name :"ShopSigned",
 	title : "스마트공방 신청",
     data() {
-        return {	    
-            tabs: parseInt(this.$route.query.tabs) || 0,
+        return {            
+            tabs: parseInt(this.$route.query.tabs) || 0 ,
             // items: ["개인정보 동의", "회사 정보", "스마트공방 신청", "회사 추가 정보"],  
 
             isLoading: false,
@@ -59,13 +56,17 @@ export default {
                 {id:'Input', name:'스마트공방 신청', enable:'Y'},
                 {id:'Addinfo', name:'회사 추가 정보', enable:'Y'},
             ],            
-            // active_tab: 0,            
+            // active_tab: 0,                       
         }
     },
-    mounted() {
-        console.log(this.$store.state.user);
+    mounted() {        
         if (this.$store.state.user.member ) {
             this.fetchData();
+            if(this.$store.state.user.shopinfo) {
+               this.tabs = 1;
+            } else {
+                this.tabs = 0;
+            }
         }
     },
     methods: {
@@ -83,6 +84,13 @@ export default {
             const data = await this.updateShopInfo(form);
             if ( data ) {
                 await this.checkShopInfo();                 
+            }
+        },
+        async save2(form) {
+            const data = await this.updateShopInfo(form);
+            if ( data ) {
+                await this.checkShopInfo(); 
+                this.$toast.info(`회사 정보 저장 하였습니다.`);                
             }
         },
 

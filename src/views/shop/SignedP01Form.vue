@@ -59,6 +59,7 @@ export default {
           n_person: null,
           t_tel1: null,
           t_tel2: null,
+          i_email: null,
           i_presno: null,
           i_post: null,
           t_addr1: null,

@@ -48,6 +48,8 @@ const shopinfoModel = {
 			const i_no_new = await shopinfoModel.getShopinputNo(i_shop, i_userid);
 			payload.i_no = i_no_new.i_no;
 			payload.d_persioninfo = at;
+		} else {
+			delete payload.d_persioninfo;
 		}
 		sql = sqlHelper.InsertOrUpdate('tb_shopinput', payload, {i_shop, i_no});
 		
