@@ -22,7 +22,7 @@
             <v-tabs-items v-model="tabs">                                 
                 <v-tab-item><signed-p-01-form @save="save1" /></v-tab-item>                
                 <v-tab-item><signed-p-02-form @save="save2" :item="this.$store.state.user.shopinfo"/></v-tab-item>
-                <v-tab-item><signed-p-03-form @save="save3" :item="shioinfofiles"/></v-tab-item>
+                <v-tab-item><signed-p-03-form @save="save3" :attfile="shioinfofiles"/></v-tab-item>
                 <v-tab-item>d</v-tab-item>
             </v-tabs-items>            
         </v-card-text>
