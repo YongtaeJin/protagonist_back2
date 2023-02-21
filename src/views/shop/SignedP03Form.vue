@@ -5,7 +5,7 @@
       <v-data-table :headers="headers" :items="form" class="elevation-1">
         <template v-slot:item= " { item } " >
           <tr>
-            <td  :class="{red2: item.f_yn==1, green2: item.f_yn == 0}">{{f_ynchk(item.f_yn)}} </td>
+            <td  :class="{red2: item.f_yn==1, green2: item.f_yn == 0}">{{item.f_yn}} </td>
             <td> <span style="color:green"> {{ item.n_filename }} </span></td>
             <td> {{ item.n_file }} </td>
           </tr>            
@@ -38,7 +38,7 @@ export default {
         n_file: null,
         t_att: null,       
       },
-      yn_Items: ["필수", '선택'],
+      
       headers: [
         { text: '신청번호',  value: 'i_shop', sortable: false, align:' d-none' },
         { text: '파일순번', value: 'i_ser', sortable: false, align:' d-none' },
