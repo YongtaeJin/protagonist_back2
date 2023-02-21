@@ -4,6 +4,16 @@ import modules from "./modules";
 import qs from 'qs';
 Vue.use(Vuex)
 
+
+function menuAccess(ref, arr) {
+	arr.forEach(el=> {
+		ref[el.to] = el.grant;
+		if(el.subItems && el.subItems.length) {
+			menuAccess(ref, el.subItems);
+		}
+	})
+}
+
 const store = new Vuex.Store({
 	state: {
 		appReady: false,
@@ -50,14 +60,42 @@ const store = new Vuex.Store({
 			state.appReady = true;
 		},
 		SET_CONFIG(state, { key, value }) {
-			if (state.config[key]) {
-				try {
-					value = JSON.parse(value);
-				} catch (e) { }
+			// console.log(typeof value, key, value);
+			try {
+				value = JSON.parse(value);
+			} catch(e){}
+			
+			if(state.config[key]){
 				state.config[key] = value;
 			} else {
 				Vue.set(state.config, key, value);
 			}
+		},
+		PUSH_FETCH(state, tag) {
+			state.initFetchs.push(tag);
+		},
+		SET_INITDATA(state, data) {
+			if(data == null) {
+				this.initFetchs = null;
+				this.initData = null;
+			} else {
+				const keys = Object.keys(data);
+				if(state.initData == null) {
+					state.initData = {};
+				}
+				for(const key of keys) {
+					state.initData[key] = data[key];
+				}
+			}
+		},
+	},
+	getters : {
+		access(state) {
+			const obj = {};
+			if(state.config.menu) {
+				menuAccess(obj, state.config.menu);
+			}
+			return obj;
 		}
 	},
 	actions: {

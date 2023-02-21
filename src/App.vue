@@ -38,6 +38,24 @@ export default {
 			loginchk : false,
 		}
 	},
+	serverPrefetch() {		
+		return new Promise((resolve, reject)=>{
+			resolve();
+		});
+	},
+	beforeCreate() {
+		
+	},
+	created() {
+		
+	},
+	beforeMount() {
+		
+	},
+	mounted() {
+		
+	},
+
 	computed : {
 		drawerWidth() {
 			return this.$vuetify.breakpoint.xs ? '100%' : '360';

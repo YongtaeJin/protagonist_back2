@@ -77,8 +77,8 @@ export default {
         ...mapMutations("user", ["SET_SHOPINFO"]),
 
         async fetchData() {       
-            const data = await this.checkShopInfo();     
-            this.shioinfofiles = await this.$axios.patch(`/api/shopinfo/attfiles`);
+            const data = await this.checkShopInfo();
+            this.shioinfofiles = await this.$axios.patch(`/api/shopinfo/attfiles`);            
         },        
         async save1(form) {
             if (!form.i_shop) {
@@ -86,8 +86,10 @@ export default {
                 form.i_userid = this.$store.state.user.shopinfo.i_userid;
             }           
             const data = await this.updateShopInfo(form);
-            if ( data ) {
+            if ( data ) {                
+                this.shioinfofiles = await this.$axios.patch(`/api/shopinfo/attfiles`);
                 await this.checkShopInfo();     
+                
                 this.$toast.info(`개인정보 동의 하였습니다.`);                            
             }
         },
@@ -99,7 +101,7 @@ export default {
             }
         },
         async save3(form) {
-            console.log("save3")
+            console.log("form", form)
         },
 
     }
