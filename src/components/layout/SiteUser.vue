@@ -99,6 +99,7 @@ export default {
       this.dialog = false;
     },
 		async save(form) {
+      console.log(form);
 			this.isLoading = true;
 			const data = await this.updateMember(form);
 			if(data) {

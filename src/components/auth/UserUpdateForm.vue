@@ -26,7 +26,7 @@
         label="비밀번호"
         v-model="form.mb_password"
         prepend-icon="mdi-lock"
-        :rules="rules.password({ required: false })"
+        :rules="rules.password2({ required: false , len: 3 })"
       />
 
       <input-password
@@ -47,7 +47,7 @@
       :origin="member.mb_email"
       :readonly="!admMode"
     />
-
+<!--
     <input-date
       v-model="form.mb_birth"
       label="생년월일"
@@ -87,7 +87,7 @@
       :addr1.sync="form.mb_addr1"
       :addr2.sync="form.mb_addr2"
     />
-
+-->
     <v-btn type="submit" block color="primary" :loading="isLoading">
       정보 수정
     </v-btn>

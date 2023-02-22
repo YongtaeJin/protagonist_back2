@@ -16,12 +16,13 @@
       prepend-icon="mdi-card-account-details-outline"
       :rules="rules.name()"
     />
-
+  
     <input-password
       label="비밀번호"
       v-model="form.mb_password"
       prepend-icon="mdi-lock"
-      :rules="rules.password()"
+      
+      :rules="rules.password2({len:3})"
     />
 
     <input-password
@@ -54,26 +55,6 @@
 			accept="image/jpg,image/png"
 		/>
 
-    <input-radio v-if=false
-      v-model="form.mb_gender"
-      :items="genderItems"
-      row
-      prepend-icon="mdi-gender-male-female"
-      :rules="[rules.require({ label: '성별' })]"
-    />
-
-    <input-phone
-      v-model="form.mb_phone"
-      label="전화번호"
-      prepend-icon="mdi-phone"
-			:rules="[rules.phone({ required: 'false'})]"
-    />
-
-		<input-post v-if=false
-			:zipcode.sync="form.mb_zip"
-			:addr1.sync="form.mb_addr1"
-			:addr2.sync="form.mb_addr2"
-		/>
 
     <v-btn type="submit" block color="primary" :loading="isLoading">회원가입</v-btn>
   </v-form>

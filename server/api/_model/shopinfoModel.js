@@ -75,6 +75,16 @@ const shopinfoModel = {
 		const [row] = await db.execute(sql);		
 		return row;
 	},
+	// 첨부파일 Upload
+	async attfilesupload(req) {
+		const payload = {
+			...req.body,
+		};
+		console.log("payload", payload);
+		console.log("req.files", req.files);
+			
+
+	},
 
     async updateMember(req) {
 		// return {body : req.body, file:req.files};

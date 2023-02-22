@@ -109,11 +109,6 @@ export const actions = {
 	async updateShopInfo({ commit }, form) {
 		const { $axios } = Vue.prototype;
 		const data = await $axios.patch(`/api/shopinfo`, form);		
-		// if (data) {
-		// 	console.log(data);
-		// 	commit('SET_SHOPINFO', data);
-		// }
 		return !!data;
-
 	}
 };

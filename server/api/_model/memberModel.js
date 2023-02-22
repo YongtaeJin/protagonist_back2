@@ -80,6 +80,7 @@ const memberModel = {
 	},
 	async updateMember(req) {
 		// return {body : req.body, file:req.files};
+		console.log("req.files", req.files);
 		const at = moment().format('LT');
 		const ip = getIp(req);
 
@@ -88,6 +89,7 @@ const memberModel = {
 			mb_update_at : at,
 			mb_update_ip : ip,
 		};
+		
 
 		const admMode = payload.admMode;
 		const mb_id = payload.mb_id;
@@ -110,6 +112,8 @@ const memberModel = {
 		const oldName = photoPathInfo.name;
 		const oldFile = `${MEMBER_PHOTO_PATH}/${oldName}.jpg`;
 		const cachePath = `${MEMBER_PHOTO_PATH}/.cache`;
+
+		console.log(mb_photo, photoPathInfo); ///////////////////////////////
 
 		// 기존 이미지 삭제
 		if(deleteImage || (req.files && req.files.mb_image)) {

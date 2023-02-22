@@ -26,6 +26,11 @@ router.patch('/attfiles/', async (req, res)=> {
 	res.json(result);
 }),
 
+// 첨부파일 upload
+router.patch('/attfiles/upload', async (req, res)=> {	
+	const result = await modelCall(shopinfoModel.attfilesupload, req);
+	res.json(result);
+}),
 
 
 module.exports = router;

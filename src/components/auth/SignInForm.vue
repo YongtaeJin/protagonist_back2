@@ -4,7 +4,7 @@
     <input-password
       label="비밀번호"
       v-model="form.mb_password"
-      :rules="rules.password()"
+      :rules="rules.password2({len:3})"
     />
     <v-btn block color="primary" type="submit" :loading="isLoading">
       로그인

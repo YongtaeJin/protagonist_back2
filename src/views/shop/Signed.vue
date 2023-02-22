@@ -101,7 +101,7 @@ export default {
             }
         },
         async save3(form) {
-            console.log("form", form)
+            await this.$axios.patch(`/api/shopinfo/attfiles/upload`, form);
         },
 
     }
