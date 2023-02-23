@@ -8,7 +8,8 @@
           <tr>
             <td align=center :class="{red2: item.f_yn==1, green2: item.f_yn == 0}">{{f_ynchk(item.f_yn)}} </td>
             <td> {{ item.n_filename }} </td>
-            <td>                 
+            <td> {{ item.n_file2 }} </td>
+            <td align=center>                 
                 <v-file-input  v-model="item.n_file" :multiple="false"                                   
                   :dense="true"
                   @change="getFilename($event, item)"
@@ -56,6 +57,7 @@ export default {
         f_yn: null,
         n_filename: null,
         i_no: null,
+        n_file2: null,
         n_file: null,
         t_att: null,       
       },
@@ -66,8 +68,9 @@ export default {
         { text: '필수여부', value: 'f_yn', sortable: false, width: "120px", fixed: true, align:'center'},
         { text: '첨부파일명', value: 'n_filename', sortable: false, width: "200px" },
         { text: '신청no', value: 'i_no', sortable: false, align:' d-none' },
-        { text: '파일명', value: 'n_file', sortable: false, },
-        { text: 'UP/DOWN', value: 't_att', sortable: false, width: "100px"  },        
+        { text: '파일명', value: 'n_file2', sortable: false, },
+        { text: 'UP', value: 'n_file', sortable: false, width: "50px" },
+        { text: 'DOWN', value: 't_att', sortable: false, width: "50px" },        
       ],
       isSelecting: false,
       selectedFile: null,

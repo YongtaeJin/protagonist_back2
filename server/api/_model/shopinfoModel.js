@@ -63,7 +63,7 @@ const shopinfoModel = {
 		const i_no = req.cookies.i_no;	
 
 		sql = "select a.i_shop, a.i_ser, a.f_yn, a.n_file n_filename, " +
-			  "			c.i_no, b.n_file, b.t_att " +
+			  "			c.i_no, null n_file, b.n_file n_file2, b.t_att " +
 			  "  from tb_shopmag_file a " +
 			  "       left outer join tb_shopinput c on a.i_shop = c.i_shop and c.i_userid = '" + mb_id + "' " +
 			  "	      left outer join tb_shopinput_file b on a.i_shop = b.i_shop and a.i_ser = b.i_ser and c.i_no = b.i_no " +
@@ -94,7 +94,7 @@ const shopinfoModel = {
 		const { n_file } = req.files;
 		// UPLOAD 폴더 생성 (신청번호: 첫번재 i_shop)		
 		let fPath = "";
-		if (Array.isArray(i_shop)) {  fPath = `./upload/shopsigned/${i_shop[0]}/${mb_id}` } else { fPath = `./upload/shopsigned/${i_shop}/${mb_id}` } ;
+		if (Array.isArray(i_shop)) {  fPath = `./server/upload/shopsigned/${i_shop[0]}/${mb_id}` } else { fPath = `./server/upload/shopsigned/${i_shop}/${mb_id}` } ;
 		makeFolder(fPath);
 
 		if (Array.isArray(i_shop)) {			
