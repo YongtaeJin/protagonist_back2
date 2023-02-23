@@ -22,7 +22,7 @@
             <v-tabs-items v-model="tabs">                                 
                 <v-tab-item><signed-p-01-form @save="save1" /></v-tab-item>                
                 <v-tab-item><signed-p-02-form @save="save2" :item="this.$store.state.user.shopinfo"/></v-tab-item>
-                <v-tab-item><signed-p-03-form @save="save3" :attfile="shioinfofiles"/></v-tab-item>
+                <v-tab-item><signed-p-03-form @save="save3" :attfile="this.shioinfofiles" /></v-tab-item>
                 <v-tab-item>d</v-tab-item>
             </v-tabs-items>            
         </v-card-text>
@@ -88,8 +88,7 @@ export default {
             const data = await this.updateShopInfo(form);
             if ( data ) {                
                 this.shioinfofiles = await this.$axios.patch(`/api/shopinfo/attfiles`);
-                await this.checkShopInfo();     
-                
+                await this.checkShopInfo();
                 this.$toast.info(`개인정보 동의 하였습니다.`);                            
             }
         },
@@ -97,7 +96,7 @@ export default {
             const data = await this.updateShopInfo(form);
             if ( data ) {
                 await this.checkShopInfo(); 
-                this.$toast.info(`회사 정보 저장 하였습니다.`);                
+                this.$toast.info(`회사 정보 저장 하였습니다.`);                   
             }
         },
         async save3(form) {
