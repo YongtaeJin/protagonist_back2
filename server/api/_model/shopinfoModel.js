@@ -10,13 +10,12 @@ const { LV } = require('../../../util/level');
 const moment = require('../../../util/moment');
 const { getIp, deepCopy } = require('../../../util/lib');
 
-
 const shopinfoModel = {
     // 공방신청 내용 조회
     async checkShopinfo(req) {       
     	const sql1 = "select i_shop from tb_shopmag where  now() between d_date1 and d_date2";
     	const [[row]] = await db.execute(sql1);
-    	//const sql2 = "select * from tb_shopinput where i_shop = '" + row.i_shop + "' and i_userid = '" + req.user.mb_id + "'";
+    	
 		const sql2 = "select a.i_shop, i_no, ifnull(i_userid, '" + req.user.mb_id + "') i_userid, f_persioninfo, d_persioninfo, i_regno, n_company, n_person, t_tel1, t_tel2,  i_presno,  i_post, t_addr1, t_addr2, f_saugup,  f_run, f_dart,  t_enarainfo " +
   					 "	from tb_shopmag a " +
        				 "       left outer join tb_shopinput b on a.i_shop = b.i_shop and b.i_userid = '" + req.user.mb_id +"'" +
@@ -26,7 +25,6 @@ const shopinfoModel = {
     },
 
 	async getShopinputNo(as_shop, as_userid) {
-		//sql = "select ifnull(max(i_no),) + 1 i_no from tb_shopinput where i_shop = '" + as_shop + "'";
 		sql = "select  ifnull(max(case i_userid when '" + as_userid + "' then i_no end), ifnull(max(i_no),0) + 1) i_no" +
 			  "  from tb_shopinput " +
 			  "	where i_shop = '" + as_shop + "' " ;
@@ -80,11 +78,73 @@ const shopinfoModel = {
 		const payload = {
 			...req.body,
 		};
-		console.log("payload", payload);
-		console.log("req.files", req.files);
-			
+		delete payload.f_yn;
 
+		console.log(payload);
+		
+		const { i_shop, i_ser, f_yn, n_filename, i_no, t_att } = payload;		
+		const makeFolder = (dir) => {
+			if( !fs.existsSync(dir) )  { 				
+				fs.mkdirSync(dir, { recursive: true }, err => {});				
+			} ;
+		}
+
+		if ( !i_shop )  { return ; }
+
+		const { n_file } = req.files;
+
+		// UPLOAD 폴더 생성 (신청번호: 첫번재 i_shop)		
+
+		let fPath = "";
+		if (Array.isArray(i_shop)) {  fPath = `./upload/shopsigned/${i_shop[0]}` } else { fPath = `./upload/shopsigned/${i_shop}` } ;
+		makeFolder(fPath);
+
+		delete payload.n_filename;
+
+		if (Array.isArray(i_shop)) {			
+			i_shop.forEach(function(item, index) {
+				const newFile = `${fPath}/${n_filename[index]}${path.extname(n_file[index].name)}`;
+				n_file[index].mv(newFile, (err)=>{
+					if ( err ) {
+						console.log('업로드 실패', err);
+						return;
+					}
+				});
+				const sql = sqlHelper.Update(TABLE.MEMBER, payload, {mb_id});
+			});
+		} else {
+			const newFile = `${fPath}/${n_filename}${path.extname(n_file.name)}`;
+			n_file.mv(newFile, (err)=>{
+				if ( err ) {
+					console.log('업로드 실패', err);
+					return;
+				}
+			});			
+
+			sql = "select count(*) cnt  from tb_shopinput_file where i_shop = '" + i_shop + "' and i_no = "  + i_no + " and i_ser = " + i_ser;
+			const [[data]] = await db.execute(sql);
+
+			if ( !data.cnt ) {
+				// inset
+				sql = "insert into tb_shopinput_file (i_shop, i_no, i_ser, n_file, t_att) " +
+				      " values ('" + i_shop + "'," + i_no + "," + i_ser + ", '" + t_att + "', '" + newFile + "')";
+
+			} else {
+				sql = "update tb_shopinput_file set n_file = '" + t_att + "', t_att = '" + newFile + "'" +
+				      " where i_shop = '" + i_shop + "' and i_no = " + i_no + " and i_ser = " + i_ser ;
+			}
+			console.log(sql);
+			const [row] = await db.execute(sql);
+			// sql = sqlHelper.InsertOrUpdate('tb_shopinput_file', payload, {i_shop, i_no, i_ser});
+			// console.log(sql);
+			// const [row] = await db.execute(sql.query, sql.values);
+			return row;
+
+		}
+
+	
 	},
+	
 
     async updateMember(req) {
 		// return {body : req.body, file:req.files};

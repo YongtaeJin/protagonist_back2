@@ -8,16 +8,24 @@
           <tr>
             <td align=center :class="{red2: item.f_yn==1, green2: item.f_yn == 0}">{{f_ynchk(item.f_yn)}} </td>
             <td> {{ item.n_filename }} </td>
-            <td> {{ item.n_file }} </td>
             <!--
+            <td> {{ item.n_file }} </td>
+            -->            
             <td>                 
-                <v-file-input  v-model="item.n_file" :multiple="false" color="primary accent-4" hide-details prepend-icon="" />
+                <v-file-input  v-model="item.n_file" :multiple="false"                                   
+                  :dense="true"
+                  @change="getFilename($event, item)"
+                  color="primary accent-4" hide-details prepend-icon="mdi-file-upload" />
             </td>  
-            -->
+            
+         
+
             <td align=center>
+              <!--
                 <v-btn fab x-small  @click="onButtonClick1(item)">
                   <v-icon dark>mdi-file-upload</v-icon>
                 </v-btn>                
+                -->
                 <v-btn fab x-small  @click="onButtonClick2(item)">
                   <v-icon dark>mdi-file-download</v-icon>
                 </v-btn>                
@@ -27,7 +35,7 @@
       </v-data-table>
     </v-flex>    
     </v-layout>
-    <!-- <v-btn  color="primary" type="submit" block> 저 장 </v-btn> -->
+    <v-btn  color="primary" type="submit" block> 저 장 </v-btn>
   </v-form>
 
 </template>
@@ -89,23 +97,41 @@ export default {
     },
     async save() {     
       // 한번에 저장 하기 위해 아래 와 같이 전달 해야 함...  (첨부파일 동시 Upload 문제 때문에 주석 처리)
-      // const formData = new FormData();   
-      // for (const item of Object.keys(this.form)) {          
-      //    for (const key of Object.keys(this.form[item])) {
-      //       formData.append(key, this.form[item][key]);
-      //    }
-      // }
-      //this.$emit("save", formData);
+      const formData = new FormData();   
+      
+      for (const item of Object.keys(this.form)) {        
+        const { n_file } = this.form[item];   
+        if (n_file) {
+          for (const key of Object.keys(this.form[item])) {            
+            formData.append(key, this.form[item][key]);
+          }
+        }
+      }
+      this.$emit("save", formData);
 
-      console.log("save")
+      //console.log("save")
+    },
+
+    async getFilename(files, item) {
+      if (files) {
+        console.log(files.name);
+        item.t_att = files.name;
+      }
     },
     
     async onButtonClick1(item) {
       console.log(item);
     },
   
-    async onButtonClick2(item) {      
-    }
+    async onButtonClick2(item) {  
+          console.log("onButtonClick2", item);
+           window.addEventListener('focus', () => {
+                  
+                }, { once: true });
+            this.$refs.uploader.click();
+    },
+
+    
    
   },  
 }

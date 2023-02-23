@@ -99,8 +99,7 @@ export default {
       this.dialog = false;
     },
 		async save(form) {
-      console.log(form);
-			this.isLoading = true;
+      this.isLoading = true;
 			const data = await this.updateMember(form);
 			if(data) {
 				this.$toast.info(`${this.$store.state.user.member.mb_name}님 정보 수정하였습니다.`);
