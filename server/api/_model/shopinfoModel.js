@@ -108,7 +108,7 @@ const shopinfoModel = {
 
 		if (Array.isArray(i_shop)) {			
 			i_shop.forEach(async function(item, index) {
-				const fileName = `${i_ser[index]}_jwt.getRandToken(16)`;
+				const fileName = `${i_ser[index]}_` + jwt.getRandToken(16);
 				const newFile = `${fPath}/${fileName}${path.extname(n_file[index].name)}`;
 				const tPathFile = `${tPath}/${fileName}${path.extname(n_file[index].name)}`;
 				n_file[index].mv(newFile, (err)=>{
@@ -130,7 +130,7 @@ const shopinfoModel = {
 			});
 		} else {
 			//const fileName = jwt.getRandToken(16);
-			const fileName = `${i_ser}_jwt.getRandToken(16)`;
+			const fileName = `${i_ser}_` + jwt.getRandToken(16);
 			const newFile = `${fPath}/${fileName}${path.extname(n_file.name)}`;
 			const tPathFile = `${tPath}/${fileName}${path.extname(n_file.name)}`;
 			n_file.mv(newFile, (err)=>{
