@@ -28,6 +28,23 @@ const store = new Vuex.Store({
 					subItems : []
 				},
 				{
+					title : "사업관리",
+					icon : "mdi-store",
+					to : '',
+					grant : 7, 
+					newTab : false,
+					subItems : [
+						{
+							title : "사업등록",
+							icon : "",
+							to : '/shop/shopmag',							
+							grant : 7, 
+							newTab : false,
+							subItems : []
+						},						
+					]
+				},
+				{
 					title : "스마트공방",
 					icon : "mdi-store-plus",
 					to : '',

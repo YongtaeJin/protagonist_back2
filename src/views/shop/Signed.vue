@@ -23,7 +23,7 @@
                 <v-tab-item><signed-p-01-form @save="save1" /></v-tab-item>                
                 <v-tab-item><signed-p-02-form @save="save2" :item="this.$store.state.user.shopinfo"/></v-tab-item>
                 <v-tab-item><signed-p-03-form @save="save3" :attfile="this.shioinfofiles" /></v-tab-item>
-                <v-tab-item>d</v-tab-item>
+                <v-tab-item><signed-p-04-form @save="save4" :attfile="this.shopinfofileadds" /></v-tab-item>
             </v-tabs-items>            
         </v-card-text>
       
@@ -33,15 +33,15 @@
 
 <script>
 import { mapActions, mapMutations } from "vuex";
+import { deepCopy } from "../../../util/lib";
 import Login from '../member/Login.vue'
 import SignedP01Form from './SignedP01Form.vue'
 import SignedP02Form from './SignedP02Form.vue'
-
-import { deepCopy } from "../../../util/lib";
-import SignedP03Form from './SignedP03Form.vue';
+import SignedP03Form from './SignedP03Form.vue'
+import SignedP04Form from './SignedP04Form.vue'
 
 export default {
-  components: { Login, SignedP01Form, SignedP02Form, SignedP03Form },
+  components: { Login, SignedP01Form, SignedP02Form, SignedP03Form, SignedP04Form },
 
 	name :"ShopSigned",
 	title : "스마트공방 신청",
@@ -58,8 +58,7 @@ export default {
                 {id:'Addinfo', name:'회사 추가 정보', enable:'Y'},
             ],
             shioinfofiles: [],
-            shopinfofileadds: [],
-            // active_tab: 0,                       
+            shopinfofileadds: [],            
         }
     },
     mounted() {        
@@ -77,8 +76,9 @@ export default {
         ...mapMutations("user", ["SET_SHOPINFO"]),
 
         async fetchData() {       
-            const data = await this.checkShopInfo();
-            this.shioinfofiles = await this.$axios.patch(`/api/shopinfo/attfiles`);            
+            const data = await this.checkShopInfo();            
+            this.shioinfofiles = await this.$axios.patch(`/api/shopinfo/attfiles?f_gubun=1`);
+            this.shopinfofileadds = await this.$axios.patch(`/api/shopinfo/attfiles?f_gubun=2`);
         },        
         async save1(form) {
             if (!form.i_shop) {
@@ -87,7 +87,8 @@ export default {
             }           
             const data = await this.updateShopInfo(form);
             if ( data ) {                
-                this.shioinfofiles = await this.$axios.patch(`/api/shopinfo/attfiles`);
+                this.shioinfofiles = await this.$axios.patch(`/api/shopinfo/attfiles?f_gubun=1`);
+                this.shopinfofileadds = await this.$axios.patch(`/api/shopinfo/attfiles?f_gubun=2`);
                 await this.checkShopInfo();
                 this.$toast.info(`개인정보 동의 하였습니다.`);                            
             }
@@ -101,8 +102,13 @@ export default {
         },
         async save3(form) {
             await this.$axios.patch(`/api/shopinfo/attfiles/upload`, form);
-            this.shioinfofiles = await this.$axios.patch(`/api/shopinfo/attfiles`);
-            this.$toast.info(`저장 하였습니다.`);  
+            this.shioinfofiles = await this.$axios.patch(`/api/shopinfo/attfiles?f_gubun=1`);
+            this.$toast.info(`스마트공방 신청 저장 하였습니다.`);  
+        },
+        async save4(form) {
+            await this.$axios.patch(`/api/shopinfo/attfiles/upload`, form);
+            this.shopinfofileadds = await this.$axios.patch(`/api/shopinfo/attfiles?f_gubun=2`);
+            this.$toast.info(`회사 추가 정보 저장 하였습니다.`);  
         },
 
     }

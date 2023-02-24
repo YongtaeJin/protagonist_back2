@@ -34,9 +34,8 @@ import { deepCopy } from "../../../util/lib";
 import InputPost3 from '../../components/InputForms/InputPost3.vue';
 export default {
   components: { InputPost3 },
-  name: "SignedP03Form",
+  name: "SignedP04Form",
   props: {
-    //attfile: [],
     attfile: {
       type: Array,
       default: null,

@@ -13,7 +13,7 @@ const { getIp, deepCopy } = require('../../../util/lib');
 const shopinfoModel = {
     // 공방신청 내용 조회
     async checkShopinfo(req) {       
-    	const sql1 = "select i_shop from tb_shopmag where  now() between d_date1 and d_date2";
+		const sql1 = "select i_shop from tb_shopmag where  now() between d_date1 and d_date2";
     	const [[row]] = await db.execute(sql1);
     	
 		const sql2 = "select a.i_shop, i_no, ifnull(i_userid, '" + req.user.mb_id + "') i_userid, f_persioninfo, d_persioninfo, i_regno, n_company, n_person, t_tel1, t_tel2,  i_presno,  i_post, t_addr1, t_addr2, f_saugup,  f_run, f_dart,  t_enarainfo " +
@@ -56,23 +56,25 @@ const shopinfoModel = {
 	},
 
 	async attfiles(req) {
-
 		const token = req.cookies.token;
 		const { mb_id } = jwt.vetify(req.cookies.token);
 		const i_shop = req.cookies.i_shop;
 		const i_no = req.cookies.i_no;	
-
+		const { f_gubun } = req.query;
+		
 		sql = "select a.i_shop, a.i_ser, a.f_yn, a.n_file n_filename, " +
 			  "			c.i_no, null n_file, b.n_file n_file2, b.t_att " +
 			  "  from tb_shopmag_file a " +
 			  "       left outer join tb_shopinput c on a.i_shop = c.i_shop and c.i_userid = '" + mb_id + "' " +
 			  "	      left outer join tb_shopinput_file b on a.i_shop = b.i_shop and a.i_ser = b.i_ser and c.i_no = b.i_no " +
 			  "	where a.i_shop = '" + i_shop + "' " +
-			  "   and a.f_gubun = '1'" +
+			  "   and a.f_gubun = '" + f_gubun + "'" +
 			  "	order by a.i_shop, a.i_ser ";		
 		const [row] = await db.execute(sql);
 		return row;
 	},
+
+
 	// 첨부파일 Upload
 	async attfilesupload(req) {
 		const token = req.cookies.token;
