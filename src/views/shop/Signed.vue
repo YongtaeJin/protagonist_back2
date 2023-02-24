@@ -101,6 +101,8 @@ export default {
         },
         async save3(form) {
             await this.$axios.patch(`/api/shopinfo/attfiles/upload`, form);
+            this.shioinfofiles = await this.$axios.patch(`/api/shopinfo/attfiles`);
+            this.$toast.info(`저장 하였습니다.`);  
         },
 
     }

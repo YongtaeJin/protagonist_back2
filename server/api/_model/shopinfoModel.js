@@ -68,6 +68,7 @@ const shopinfoModel = {
 			  "       left outer join tb_shopinput c on a.i_shop = c.i_shop and c.i_userid = '" + mb_id + "' " +
 			  "	      left outer join tb_shopinput_file b on a.i_shop = b.i_shop and a.i_ser = b.i_ser and c.i_no = b.i_no " +
 			  "	where a.i_shop = '" + i_shop + "' " +
+			  "   and a.f_gubun = '1'" +
 			  "	order by a.i_shop, a.i_ser ";		
 		const [row] = await db.execute(sql);
 		return row;
@@ -81,7 +82,7 @@ const shopinfoModel = {
 		};
 		delete payload.f_yn;
 
-		console.log(payload);
+		// console.log(payload);
 		
 		const { i_shop, i_ser, f_yn, n_filename, i_no, t_att } = payload;		
 		const makeFolder = (dir) => {
@@ -93,13 +94,23 @@ const shopinfoModel = {
 
 		const { n_file } = req.files;
 		// UPLOAD 폴더 생성 (신청번호: 첫번재 i_shop)		
-		let fPath = "";
-		if (Array.isArray(i_shop)) {  fPath = `./server/upload/shopsigned/${i_shop[0]}/${mb_id}` } else { fPath = `./server/upload/shopsigned/${i_shop}/${mb_id}` } ;
+		let fPath = "";   // 서버 파일 저장 위치 Full Path  (Root 폴더 위치 부터)
+		let tPath = "";   // DB 저장 칼럼 상태 위치 
+		//req.files.mb_image.mv(`${MEMBER_PHOTO_PATH}/${fileName}.jpg`, (err) => {
+		if (Array.isArray(i_shop)) {  
+			fPath = `${UPLOAD_PATH}/shopsigned/${i_shop[0]}/${mb_id}` ;
+			tPath = `/upload/shopsigned/${i_shop[0]}/${mb_id}` ;
+		} else { 
+			fPath = `${UPLOAD_PATH}/shopsigned/${i_shop}/${mb_id}` 
+			tPath = `/upload/shopsigned/${i_shop}/${mb_id}` ;
+		} ;
 		makeFolder(fPath);
 
 		if (Array.isArray(i_shop)) {			
 			i_shop.forEach(async function(item, index) {
-				const newFile = `${fPath}/${n_filename[index]}${path.extname(n_file[index].name)}`;
+				const fileName = `${i_ser[index]}_jwt.getRandToken(16)`;
+				const newFile = `${fPath}/${fileName}${path.extname(n_file[index].name)}`;
+				const tPathFile = `${tPath}/${fileName}${path.extname(n_file[index].name)}`;
 				n_file[index].mv(newFile, (err)=>{
 					if ( err ) {
 						console.log('업로드 실패', err);
@@ -110,15 +121,18 @@ const shopinfoModel = {
 				const [[data]] = await  db.execute(sql);
 				if ( !data.cnt ) {
 					sql = "insert into tb_shopinput_file (i_shop, i_no, i_ser, n_file, t_att) " +
-						  " values ('" + i_shop[index] + "'," + i_no[index] + "," + i_ser[index] + ", '" + t_att[index] + "', '" + newFile + "')";
+						  " values ('" + i_shop[index] + "'," + i_no[index] + "," + i_ser[index] + ", '" + t_att[index] + "', '" + tPathFile + "')";
 				} else {
-					sql = "update tb_shopinput_file set n_file = '" + t_att[index] + "', t_att = '" + newFile + "'" +
+					sql = "update tb_shopinput_file set n_file = '" + t_att[index] + "', t_att = '" + tPathFile + "'" +
 						  " where i_shop = '" + i_shop[index] + "' and i_no = " + i_no[index] + " and i_ser = " + i_ser[index] ;
 				}
 				const [row] = await db.execute(sql);
 			});
 		} else {
-			const newFile = `${fPath}/${n_filename}${path.extname(n_file.name)}`;
+			//const fileName = jwt.getRandToken(16);
+			const fileName = `${i_ser}_jwt.getRandToken(16)`;
+			const newFile = `${fPath}/${fileName}${path.extname(n_file.name)}`;
+			const tPathFile = `${tPath}/${fileName}${path.extname(n_file.name)}`;
 			n_file.mv(newFile, (err)=>{
 				if ( err ) {
 					console.log('업로드 실패', err);
@@ -130,9 +144,9 @@ const shopinfoModel = {
 			const [[data]] = await db.execute(sql);
 			if ( !data.cnt ) {
 				sql = "insert into tb_shopinput_file (i_shop, i_no, i_ser, n_file, t_att) " +
-				      " values ('" + i_shop + "'," + i_no + "," + i_ser + ", '" + t_att + "', '" + newFile + "')";
+				      " values ('" + i_shop + "'," + i_no + "," + i_ser + ", '" + t_att + "', '" + tPathFile + "')";
 			} else {
-				sql = "update tb_shopinput_file set n_file = '" + t_att + "', t_att = '" + newFile + "'" +
+				sql = "update tb_shopinput_file set n_file = '" + t_att + "', t_att = '" + tPathFile + "'" +
 				      " where i_shop = '" + i_shop + "' and i_no = " + i_no + " and i_ser = " + i_ser ;
 			}
 			const [row] = await db.execute(sql);
@@ -141,70 +155,5 @@ const shopinfoModel = {
 		}
 	},
 	
-    async updateMember(req) {
-		// return {body : req.body, file:req.files};
-		const at = moment().format('LT');
-		const ip = getIp(req);
-
-		const payload = {
-			...req.body,
-			mb_update_at : at,
-			mb_update_ip : ip,
-		};
-
-		const admMode = payload.admMode;
-		const mb_id = payload.mb_id;
-		const deleteImage = payload.deleteImage;
-		delete payload.admMode;
-		delete payload.mb_id;
-		delete payload.deleteImage;
-
-		// 비밀번호가 변경 해야 한다
-		if(payload.mb_password) {
-			payload.mb_password = jwt.generatePassword(payload.mb_password);
-		} else {
-			delete payload.mb_password;
-		}
-
-		// 이미지 처리
-		delete payload.mb_image;
-		const mb_photo = payload.mb_photo || '';
-		const photoPathInfo = path.parse(mb_photo);
-		const oldName = photoPathInfo.name;
-		const oldFile = `${MEMBER_PHOTO_PATH}/${oldName}.jpg`;
-		const cachePath = `${MEMBER_PHOTO_PATH}/.cache`;
-
-		// 기존 이미지 삭제
-		if(deleteImage || (req.files && req.files.mb_image)) {
-			payload.mb_photo = '';
-			try {
-				fs.unlinkSync(oldFile);
-				const cacheDir = fs.readdirSync(cachePath);
-				for(const p of cacheDir) {
-					if(p.startsWith(oldName)) {
-						try {
-							fs.unlinkSync(`${cachePath}/${p}`);
-						} catch(e) {}
-					}
-				}
-			} catch(e) {}
-		}
-
-		// 이미지 업로드 되었으면 처리
-		if(req.files && req.files.mb_image) {
-			const newName = jwt.getRandToken(16);
-			payload.mb_photo = `/upload/memberPhoto/${newName}.jpg`;
-			const newFile = `${MEMBER_PHOTO_PATH}/${newName}.jpg`;
-			req.files.mb_image.mv(newFile, (err)=>{
-				if(err) {
-					console.log('Member Photo 업로드 실패', err);
-				}
-			})
-		}
-
-		const sql = sqlHelper.Update(TABLE.MEMBER, payload, {mb_id});
-		const [row] = await db.execute(sql.query, sql.values);
-		return await memberModel.getMemberBy({mb_id});
-	},
 }
 module.exports = shopinfoModel;
