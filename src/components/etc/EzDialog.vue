@@ -31,7 +31,7 @@ export default {
   },
   methods: {
     close() {
-      this.dialog = false;
+      this.dialog = false;      
 			this.$emit('onClose');
     },
     open() {

@@ -6,17 +6,38 @@ const jwt = require('../../plugins/jwt');
 const sendMailer = require('../../plugins/sendMailer');
 const sqlHelper = require('../../../util/sqlHelper');
 const TABLE = require('../../../util/TABLE');
-const { LV } = require('../../../util/level');
 const moment = require('../../../util/moment');
 const { getIp, deepCopy } = require('../../../util/lib');
+const { LV, isGrant } = require('../../../util/level');
+
+
+function clearShopmagField(shopmag) {
+	if (shopmag.d_date1) { shopmag.d_date1 = moment(shopmag.d_date1).format('L')};
+	if (shopmag.d_date2) { shopmag.d_date2 = moment(shopmag.d_date2).format('L')};
+}
 
 const shopinfoModel = {
+	// 사업LIST
+	async getShopMag(req) {
+		// 권한 확인
+		if (!isGrant(req, LV.MANAGER)) {
+			throw new Error('사용 권한이 없습니다.');
+		}
+		const sql = "select i_shop, n_shop, d_date1, d_date2, t_remark from tb_shopmag order by i_shop";
+		const [row] = await db.execute(sql);
+		row.forEach((data) => {
+			clearShopmagField(data);
+		});
+
+       	return row;		   
+	},
+
     // 공방신청 내용 조회
     async checkShopinfo(req) {       
 		const sql1 = "select i_shop from tb_shopmag where  now() between d_date1 and d_date2";
     	const [[row]] = await db.execute(sql1);
     	
-		const sql2 = "select a.i_shop, i_no, ifnull(i_userid, '" + req.user.mb_id + "') i_userid, f_persioninfo, d_persioninfo, i_regno, n_company, n_person, t_tel1, t_tel2,  i_presno,  i_post, t_addr1, t_addr2, f_saugup,  f_run, f_dart,  t_enarainfo " +
+		const sql2 = "select a.i_shop, i_no, ifnull(i_userid, '" + req.user.mb_id + "') i_userid, f_persioninfo, d_persioninfo, i_regno, n_company, n_person, t_tel1, t_tel2,  i_presno,  i_post, t_addr1, t_addr2, f_saugup, f_run, f_dart, t_enarainfo, t_enarainfopw " +
   					 "	from tb_shopmag a " +
        				 "       left outer join tb_shopinput b on a.i_shop = b.i_shop and b.i_userid = '" + req.user.mb_id +"'" +
  					 " where a.i_shop = '" + row.i_shop + "'"
@@ -156,6 +177,18 @@ const shopinfoModel = {
 			return row;
 		}
 	},
+	async duplicgateCheckShop({ field, value }) {
+		// SELECT COUNT(*) AS cnt FROM member WHERE mb_id=?;
+		const sql = sqlHelper.SelectSimple(
+			'tb_shopmag',
+			{ [field]: value },
+			['COUNT(*) AS cnt']
+		);
+		console.log(sql.query, sql.values)
+		const [[row]] = await db.execute(sql.query, sql.values);
+		return row;
+	},
+	
 	
 }
 module.exports = shopinfoModel;

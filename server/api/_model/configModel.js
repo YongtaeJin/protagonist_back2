@@ -52,7 +52,7 @@ const configModel = {
 		return row;
 	},
 	async getItems(req) {
-		const { all } = req.query;
+		const { all } = req.query;		
 		let where = {};
 		if (all == 'true') {
 			// 권한 확인

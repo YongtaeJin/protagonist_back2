@@ -4,6 +4,7 @@ const level = {
 		AWAIT: 1,
 		MEMBER: 2,
 		VIP: 4,
+		MANAGER: 7,
 		ADMIN: 9,
 		SUPER: 10
 	},
@@ -12,7 +13,9 @@ const level = {
 			return '최고관리자';
 		} else if (level.LV.ADMIN <= lv && lv < level.LV.SUPER) {
 			return '관리자';
-		} else if (level.LV.VIP <= lv && lv < level.LV.ADMIN) {
+		} else if (level.LV.MANAGER <= lv && lv < level.LV.ADMIN) {
+			return '매니져';
+		} else if (level.LV.VIP <= lv && lv < level.LV.MANAGER) {
 			return '우수회원';
 		} else if (level.LV.MEMBER <= lv && lv < level.LV.VIP) {
 			return '일반회원';

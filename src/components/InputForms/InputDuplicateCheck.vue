@@ -1,43 +1,40 @@
 <template>
-  <v-text-field
-		ref="field"
-    :value="value"
-    @input="onInput"
-    v-bind="$attrs"
-    :maxlength="$attrs.counter"
-		:error-messages="errMsg"
+	<v-text-field
+    	ref="field" :value="value" @input="onInput" v-bind="$attrs"
+    	:maxlength="$attrs.counter"
+        :error-messages="errMsg"
 		:success-messages="successMsg"
-  >
-    <template v-if="!isCheck" v-slot:append>
-      <v-tooltip top>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            v-on="on"
-            v-bind="attrs"
-            icon
-            small
-            tabindex="-1"
-            @click="check"
-            :loading="loading"
-          >
-            <v-icon>mdi-check</v-icon>
-          </v-btn>
-        </template>
+	>
+		<template v-if="!isCheck" v-slot:append>
+			<v-tooltip top>
+				<template v-slot:activator="{ on, attrs }">
+					<v-btn
+						v-on="on"
+						v-bind="attrs"
+						icon
+						small
+						tabindex="-1"
+						@click="check"
+						:loading="loading"
+					>
+						<v-icon>mdi-check</v-icon>
+					</v-btn>
+				</template>
 				{{ $attrs.label}} 중복검사
-      </v-tooltip>
-    </template>
-  </v-text-field>
+			</v-tooltip>
+		</template>
+  	</v-text-field>
 </template>
 
 <script>
 export default {
-  name: "InputDuplicateCheck",
-  model: {
-    prop: "value",
-    event: "input",
-  },
-  props: {
-    value: String,
+  	name: "InputDuplicateCheck",
+  	model: {
+		prop: "value",
+		event: "input",
+  	},
+  	props: {
+		value: String,
 		cbCheck: {
 			type: Function,
 			default : null,
@@ -46,43 +43,42 @@ export default {
 			type : String,
 			default : "",
 		}
-  },
+	},
 	watch : {
 		origin() {
 			this.isCheck = this.origin ? true : !this.cbCheck;
 		}
 	},
-  data() {
-    return {
-      isCheck: this.origin ? true : !this.cbCheck,
-      loading: false,
+  	data() {
+    	return {
+			isCheck: this.origin ? true : !this.cbCheck,
+			loading: false,
 			errMsg : "",
 			successMsg : "",
-    };
-  },
+    	};
+  	},
 	computed : {
 		isSend() {
-			return !!this.cbCheck && this.$refs.field.errorBucket.length === 0; 
+			return !!this.cbCheck && this.$refs.field.errorBucket.length === 0;
 		}
 	},
-  mounted() {
-    // console.log(this.$attrs);
-		// console.log(this.$refs.field);
-  },
-  methods: {
-    onInput(val) {
+  	mounted() {
+    
+  	},
+  	methods: {
+    	onInput(val) {
 			this.isCheck = this.origin ? this.origin === val : !this.cbCheck;
 			this.errMsg = "";
 			this.successMsg = "";
-      this.$emit("input", val);
-    },
+      		this.$emit("input", val);
+    	},
 		async check() {
 			if(!this.isSend) return;
 			this.loading = true;
 			this.errMsg = "";
 			this.successMsg = "";
 			const data = await this.cbCheck(this.value);
-			
+
 			if(!this.value) {
 				this.successMsg = "";
 			} else if(data.cnt == 0) {
@@ -101,9 +97,8 @@ export default {
 			}
 			return this.isCheck;
 		}
-  },
+	},
 };
 </script>
 
 <style>
-</style>

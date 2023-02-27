@@ -1,10 +1,13 @@
 const router = require('express').Router();
 const shopinfoModel = require('./_model/shopinfoModel');
-const { modelCall } = require('../../util/lib');
 const passport = require('passport');
 const jwt = require('../plugins/jwt');
+const { modelCall } = require('../../util/lib');
 
-
+router.get('/getShopMag', async (req, res)=> {	
+	const result = await modelCall(shopinfoModel.getShopMag, req);
+	res.json(result);
+}),
 router.post('/checkShopinfo', async (req, res)=> {
     const result = await modelCall(shopinfoModel.checkShopinfo, req);
 	res.json(result);
@@ -31,6 +34,10 @@ router.patch('/attfiles/upload', async (req, res)=> {
 	const result = await modelCall(shopinfoModel.attfilesupload, req);
 	res.json(result);
 }),
-
+    
+router.get('/duplicgateCheckShop/:field/:value', async (req, res)=> {	
+	const result = await modelCall(shopinfoModel.duplicgateCheckShop, req.params);
+	res.json(result);
+}),
 
 module.exports = router;
