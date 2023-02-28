@@ -9,6 +9,7 @@ const TABLE = require('../../../util/TABLE');
 const moment = require('../../../util/moment');
 const { getIp, deepCopy } = require('../../../util/lib');
 const { LV, isGrant } = require('../../../util/level');
+const { del } = require('vue');
 
 
 function clearShopmagField(shopmag) {
@@ -84,7 +85,7 @@ const shopinfoModel = {
 		const { f_gubun } = req.query;
 		
 		sql = "select a.i_shop, a.i_ser, a.f_yn, a.n_file n_filename, " +
-			  "			c.i_no, null n_file, b.n_file n_file2, b.t_att " +
+			  "			c.i_no, null n_file, b.n_file n_file2, b.t_att, a.t_remark " +
 			  "  from tb_shopmag_file a " +
 			  "       left outer join tb_shopinput c on a.i_shop = c.i_shop and c.i_userid = '" + mb_id + "' " +
 			  "	      left outer join tb_shopinput_file b on a.i_shop = b.i_shop and a.i_ser = b.i_ser and c.i_no = b.i_no " +
@@ -107,7 +108,7 @@ const shopinfoModel = {
 
 		// console.log(payload);
 		
-		const { i_shop, i_ser, f_yn, n_filename, i_no, t_att } = payload;		
+		const { i_shop, i_ser, f_yn, n_filename, i_no, t_att, f_del } = payload;		
 		const makeFolder = (dir) => {
 			if( !fs.existsSync(dir) )  { 				
 				fs.mkdirSync(dir, { recursive: true }, err => {});				
@@ -125,7 +126,7 @@ const shopinfoModel = {
 			tPath = `/upload/shopsigned/${i_shop[0]}/${mb_id}` ;
 		} else { 
 			fPath = `${UPLOAD_PATH}/shopsigned/${i_shop}/${mb_id}` 
-			tPath = `/upload/shopsigned/${i_shop}/${mb_id}` ;
+			tPath = `/upload/shopsigned/${i_shop}/${mb_id}` ;			
 		} ;
 		makeFolder(fPath);
 
@@ -177,18 +178,35 @@ const shopinfoModel = {
 			return row;
 		}
 	},
+
+	async attfilesdelete(req) {
+		// 파일정보 삭제 처리 
+		const { i_shop, i_no, i_ser } = req.params;
+		
+		const [[ {t_att } ]] = await db.execute("select t_att from tb_shopinput_file where i_shop = '" + i_shop + "' and i_no = " + i_no + " and i_ser = " + i_ser);
+		
+		const sql = sqlHelper.DeleteSimple('tb_shopinput_file', { i_shop, i_no, i_ser });
+		const [row] = await db.execute(sql.query, sql.values);		
+		if (row.affectedRows == 1) {
+			// 실제 파일 삭제 처리 			
+			let delFile = `${SERVER_PATH}${t_att}` ;
+			try {				
+				fs.unlinkSync(delFile);
+			}  catch(e) {}
+		}
+		return row.affectedRows == 1;
+	},
 	async duplicgateCheckShop({ field, value }) {
 		// SELECT COUNT(*) AS cnt FROM member WHERE mb_id=?;
 		const sql = sqlHelper.SelectSimple(
 			'tb_shopmag',
 			{ [field]: value },
 			['COUNT(*) AS cnt']
-		);
-		console.log(sql.query, sql.values)
+		);		
 		const [[row]] = await db.execute(sql.query, sql.values);
 		return row;
 	},
-	
+
 	
 }
 module.exports = shopinfoModel;

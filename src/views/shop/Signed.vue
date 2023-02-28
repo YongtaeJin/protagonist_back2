@@ -4,18 +4,12 @@
     </v-card>
     <v-card v-else>
         <v-toolbar>스마트공방 사업신청</v-toolbar>
-        <!--
-        <v-tabs v-model="tabs" background-color="primary" dark>
-            <v-tab active v-for="item in items" :key="item" style="flex: 1">
-                {{ item.name }}
-            </v-tab>
-        </v-tabs>
-        -->
+
         <v-tabs v-model="tabs" background-color="primary" dark>
             <v-tab value="tbapage_1" style="flex: 1" >개인정보 동의</v-tab>
             <v-tab value="tbapage_2" style="flex: 1" :disabled="!this.$store.state.user.shopinfo || !this.$store.state.user.shopinfo.f_persioninfo=='1'">회사 정보</v-tab>
-            <v-tab value="tbapage_3" style="flex: 1" :disabled="!this.$store.state.user.shopinfo || !this.$store.state.user.shopinfo.f_persioninfo=='1'">스마트공방 신청</v-tab>
-            <v-tab value="tbapage_4" style="flex: 1" :disabled="!this.$store.state.user.shopinfo || !this.$store.state.user.shopinfo.f_persioninfo=='1'">회사 추가 정보</v-tab>
+            <v-tab value="tbapage_3" style="flex: 1" :disabled="!this.istab2" >스마트공방 신청</v-tab>
+            <v-tab value="tbapage_4" style="flex: 1" :disabled="!this.istab3" >회사 추가 정보</v-tab>
         </v-tabs>
         
         <v-card-text>
@@ -32,7 +26,7 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 import { deepCopy } from "../../../util/lib";
 import Login from '../member/Login.vue'
 import SignedP01Form from './SignedP01Form.vue'
@@ -58,7 +52,11 @@ export default {
                 {id:'Addinfo', name:'회사 추가 정보', enable:'Y'},
             ],
             shioinfofiles: [],
-            shopinfofileadds: [],            
+            shopinfofileadds: [],          
+            istab2: false,  
+            istab3: false,
+            istab4: false,
+            filechk: { field: "f_gubun", value: "1"},
         }
     },
     mounted() {        
@@ -72,13 +70,28 @@ export default {
         }
     },
     methods: {
-        ...mapActions("user", ["checkShopInfo", "updateShopInfo"]),
+        ...mapActions("user", ["checkShopInfo", "updateShopInfo"]),        
         ...mapMutations("user", ["SET_SHOPINFO"]),
+        ...mapGetters("user", ["isShopinfochk"]),
+
+        inputFileChk() {
+            this.istab3 = true;
+            if (this.shioinfofiles) {
+                for(let ob in this.shioinfofiles) {                    
+                    if (this.shioinfofiles[ob].f_yn == '1' && !this.shioinfofiles[ob].t_att) {
+                        this.istab3 = false;
+                        return;
+                    }                    
+            	}
+            }
+        },
 
         async fetchData() {       
             const data = await this.checkShopInfo();            
             this.shioinfofiles = await this.$axios.patch(`/api/shopinfo/attfiles?f_gubun=1`);
             this.shopinfofileadds = await this.$axios.patch(`/api/shopinfo/attfiles?f_gubun=2`);
+            if (this.$store.state.user.shopinfo) { this.istab2 = await this.isShopinfochk(); }
+            this.inputFileChk();
         },        
         async save1(form) {
             if (!form.i_shop) {
@@ -90,6 +103,7 @@ export default {
                 this.shioinfofiles = await this.$axios.patch(`/api/shopinfo/attfiles?f_gubun=1`);
                 this.shopinfofileadds = await this.$axios.patch(`/api/shopinfo/attfiles?f_gubun=2`);
                 await this.checkShopInfo();
+                this.istab2 = await this.isShopinfochk()
                 this.$toast.info(`개인정보 동의 하였습니다.`);                            
             }
         },
@@ -97,6 +111,7 @@ export default {
             const data = await this.updateShopInfo(form);
             if ( data ) {
                 await this.checkShopInfo(); 
+                this.istab2 = await this.isShopinfochk()
                 this.$toast.info(`회사 정보 저장 하였습니다.`);                   
             }
         },
@@ -104,6 +119,7 @@ export default {
             await this.$axios.patch(`/api/shopinfo/attfiles/upload`, form);
             this.shioinfofiles = await this.$axios.patch(`/api/shopinfo/attfiles?f_gubun=1`);
             this.$toast.info(`스마트공방 신청 저장 하였습니다.`);  
+            this.inputFileChk();
         },
         async save4(form) {
             await this.$axios.patch(`/api/shopinfo/attfiles/upload`, form);

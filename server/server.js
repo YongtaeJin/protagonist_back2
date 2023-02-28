@@ -46,6 +46,7 @@ require('./plugins/pm2Bus');
 	app.use(cookieParser());
 
 	// 글로벌 세팅
+	global.SERVER_PATH = path.join(__dirname, '');
 	global.UPLOAD_PATH = path.join(__dirname, './upload');
 	global.MEMBER_PHOTO_PATH = path.join(__dirname, './upload/memberPhoto');	
 	fs.mkdirSync(MEMBER_PHOTO_PATH, { recursive: true });

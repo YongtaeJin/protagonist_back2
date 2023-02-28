@@ -25,6 +25,13 @@ export const getters = {
 	},
 	isSuper(state) {
 		return state.member && state.member.mb_level >= LV.SUPER;
+	},
+	isShopinfochk(state) {
+		for(let ob in state.shopinfo) {
+			// console.log(ob, state.shopinfo[ob]);
+			if (!state.shopinfo[ob]) { return 0 ;}
+		}
+		return 1;
 	}
 };
 export const actions = {

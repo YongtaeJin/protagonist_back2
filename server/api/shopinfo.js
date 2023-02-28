@@ -34,10 +34,18 @@ router.patch('/attfiles/upload', async (req, res)=> {
 	const result = await modelCall(shopinfoModel.attfilesupload, req);
 	res.json(result);
 }),
+
+// 첨부파일 delete
+router.delete('/attfiles/delete/:i_shop/:i_no/:i_ser', async(req, res)=>{
+	const result = await modelCall(shopinfoModel.attfilesdelete, req);
+	res.json(result);
+});
     
 router.get('/duplicgateCheckShop/:field/:value', async (req, res)=> {	
 	const result = await modelCall(shopinfoModel.duplicgateCheckShop, req.params);
 	res.json(result);
 }),
+
+
 
 module.exports = router;
