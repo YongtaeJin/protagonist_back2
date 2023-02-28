@@ -10,6 +10,12 @@ export const actions = {
 		return data;
 	},
 
+	async shopInfoSave({ commit }, form) {
+		const { $axios } = Vue.prototype;
+		const data = await $axios.post(`/api/shopinfo/shopInfoSave`, form);
+		return data;
+	},
+
 
 }
 

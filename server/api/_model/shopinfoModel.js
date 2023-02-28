@@ -24,7 +24,7 @@ const shopinfoModel = {
 		if (!isGrant(req, LV.MANAGER)) {
 			throw new Error('사용 권한이 없습니다.');
 		}
-		const sql = "select i_shop, n_shop, d_date1, d_date2, t_remark from tb_shopmag order by i_shop";
+		const sql = "select i_shop, n_shop, d_date1, d_date2, t_remark from tb_shopmag order by i_shop desc";
 		const [row] = await db.execute(sql);
 		row.forEach((data) => {
 			clearShopmagField(data);
@@ -32,13 +32,36 @@ const shopinfoModel = {
 
        	return row;		   
 	},
+	async getShopMagFile(req) {
+		// 권한 확인
+		//const { i_shop, i_no, i_ser } = req.params;
+	
+			console.log("getShopMagFile", req.query);
+		// console.log(req);
+		// const data = {
+		// 	mb_id : req.user.mb_id,
+		// 	// mb_password : await jwt.generatePassword(req.body.mb_password),
+		// };
+
+		// const sql = sqlHelper.SelectSimple("tb_shopmag_file", data);
+		// console.log(sql.query);
+		// console.log(sql.values);
+
+		// const sql = "select i_shop, n_shop, d_date1, d_date2, t_remark from tb_shopmag order by i_shop desc";
+		// const [row] = await db.execute(sql);
+		// row.forEach((data) => {
+		// 	clearShopmagField(data);
+		// });
+
+       	return 0;		   
+	},
 
     // 공방신청 내용 조회
     async checkShopinfo(req) {       
 		const sql1 = "select i_shop from tb_shopmag where  now() between d_date1 and d_date2";
     	const [[row]] = await db.execute(sql1);
     	
-		const sql2 = "select a.i_shop, i_no, ifnull(i_userid, '" + req.user.mb_id + "') i_userid, f_persioninfo, d_persioninfo, i_regno, n_company, n_person, t_tel1, t_tel2,  i_presno,  i_post, t_addr1, t_addr2, f_saugup, f_run, f_dart, t_enarainfo, t_enarainfopw " +
+		const sql2 = "select a.i_shop, a.t_remark, i_no, ifnull(i_userid, '" + req.user.mb_id + "') i_userid, f_persioninfo, d_persioninfo, i_regno, n_company, n_person, t_tel1, t_tel2,  i_presno,  i_post, t_addr1, t_addr2, f_saugup, f_run, f_dart, t_enarainfo, t_enarainfopw " +
   					 "	from tb_shopmag a " +
        				 "       left outer join tb_shopinput b on a.i_shop = b.i_shop and b.i_userid = '" + req.user.mb_id +"'" +
  					 " where a.i_shop = '" + row.i_shop + "'"
@@ -205,6 +228,17 @@ const shopinfoModel = {
 		);		
 		const [[row]] = await db.execute(sql.query, sql.values);
 		return row;
+	},
+	async shopInfoSave(req) {
+		const data = req.body;
+		const payload = {
+			...req.body,
+		};
+		const { i_shop } = payload;
+		sql = sqlHelper.InsertOrUpdate('tb_shopmag', payload, {i_shop});		
+		const [row] = await db.execute(sql.query, sql.values);
+		return row;
+
 	},
 
 	

@@ -3,8 +3,14 @@
         <login />
     </v-card>
     <v-card v-else>
-        <v-toolbar>스마트공방 사업신청</v-toolbar>
-
+        <v-toolbar>
+            <v-toolbar-title>스마트공방 사업신청</v-toolbar-title>
+            <v-spacer></v-spacer>
+            
+        </v-toolbar>  
+        ※ 스마트공방 신청 서류 안내 (아래 내용은 2023년 00월00일까지 작성 가능합니다.) <br>
+        ※ 첨부파일 내용은 공란없이 작성하셔야 합니다. <br>
+        ※ 필수사항 모두 파일 첨부하셔야 다음 화면으로 넘어갈 수 있습니다. <br> 
         <v-tabs v-model="tabs" background-color="primary" dark>
             <v-tab value="tbapage_1" style="flex: 1" >개인정보 동의</v-tab>
             <v-tab value="tbapage_2" style="flex: 1" :disabled="!this.$store.state.user.shopinfo || !this.$store.state.user.shopinfo.f_persioninfo=='1'">회사 정보</v-tab>

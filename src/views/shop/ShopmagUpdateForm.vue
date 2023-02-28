@@ -63,7 +63,6 @@ export default {
            return this.shopinfo ? this.shopinfo.i_shop : "";            
         },
     },
-    
 
     methods: {
         async save() {

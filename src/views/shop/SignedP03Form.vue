@@ -122,8 +122,6 @@ export default {
         }
       }
       this.$emit("save", formData);
-
-      //console.log("save")
     },
 
     async getFilename(files, item) {

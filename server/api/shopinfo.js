@@ -8,6 +8,10 @@ router.get('/getShopMag', async (req, res)=> {
 	const result = await modelCall(shopinfoModel.getShopMag, req);
 	res.json(result);
 }),
+router.get('/getShopMagFile', async (req, res)=> {	
+	const result = await modelCall(shopinfoModel.getShopMagFile, req);
+	res.json(result);
+}),
 router.post('/checkShopinfo', async (req, res)=> {
     const result = await modelCall(shopinfoModel.checkShopinfo, req);
 	res.json(result);
@@ -43,6 +47,11 @@ router.delete('/attfiles/delete/:i_shop/:i_no/:i_ser', async(req, res)=>{
     
 router.get('/duplicgateCheckShop/:field/:value', async (req, res)=> {	
 	const result = await modelCall(shopinfoModel.duplicgateCheckShop, req.params);
+	res.json(result);
+}),
+
+router.post('/shopInfoSave', async (req, res)=> {	
+	const result = await modelCall(shopinfoModel.shopInfoSave, req);
 	res.json(result);
 }),
 

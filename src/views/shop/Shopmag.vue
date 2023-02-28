@@ -18,7 +18,7 @@
         </v-tabs>
         <v-card-text>
             <v-tabs-items v-model="tabs"> 
-                <v-tab-item><shopmag-01-form @save="save2" :itemLists="this.itemShops" @edit="addShop"/></v-tab-item>                 
+                <v-tab-item><shopmag-01-form @save="save2" :itemLists="this.itemShops" @edit="addShop" @select="selectRow"/></v-tab-item>                 
                 <v-tab-item><shopmag-02-form /></v-tab-item>
 
             </v-tabs-items>            
@@ -61,6 +61,7 @@ export default {
             itemShops: [],
             itemShop: null,
             isNew: true,
+            idx: -1,
         }
     },
     mounted() {        
@@ -69,12 +70,22 @@ export default {
         }
     },
     watch: {
-        tabs() {
-            console.log("tabs_change:", this.tabs)
+        async tabs() {
+            console.log("tabs_change:", this.tabs);
+            if (this.tabs === 1) {   
+                if ( this.idx === -1 ) {                    
+                    if (this.itemShops) { this.idx = 0 }
+                }
+                if( this.idx > -1 ) {                                       
+                    await this.$axios.get(`/api/shopinfo/getShopMagFile?i_shop=${this.itemShops[this.idx].i_shop}`);  
+                }
+
+            }
+
         }
     },
     methods: {
-        ...mapActions("shop", ["duplicateCheckShop"]),
+        ...mapActions("shop", ["duplicateCheckShop", "shopInfoSave"]),
         ...mapMutations("user", ["SET_SHOPINFO"]),
 
         async fetchData() {
@@ -82,7 +93,7 @@ export default {
         },        
         async addShop(item) {
            if (item) {
-                this.isNew = false;                
+                this.isNew = false;  
                 this.itemShop = deepCopy(item);
             } else {                
                 this.isNew = true;
@@ -98,7 +109,19 @@ export default {
             return await this.duplicateCheckShop(payload);
         },
 
+        async selectRow(index, item) {
+            this.idx = index;           
+        },
+
         async save1(form) {
+            // 사업관리 추가 및 수정 처리 
+            const data = await this.shopInfoSave(form);
+            if (this.isNew) {
+                this.$toast.info(`${form.i_shop} 추가 하였습니다.`);                
+            } else {
+                this.$toast.info(`${form.i_shop} 수정 하였습니다.`);
+            }
+            this.fetchData();
             this.$refs.dialog.close();
         },
 

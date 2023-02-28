@@ -122,8 +122,6 @@ export default {
         }
       }
       this.$emit("save", formData);
-
-      //console.log("save")
     },
 
     async getFilename(files, item) {
@@ -163,9 +161,7 @@ export default {
           item.t_att = null;
         }
       }
-
-    }
-   
+    }   
   },  
 }
 </script>
