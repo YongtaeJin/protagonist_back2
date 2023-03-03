@@ -1,14 +1,17 @@
 <template>
     <v-container fluid>
-    <v-card v-if="!this.$store.state.user.member"  width="100%" elevation="10">
+    <v-card v-if="!this.$store.state.user.member" width="100%" elevation="10">
         <login />
     </v-card>
     <v-card v-else>
         <v-toolbar>
             <v-toolbar-title>사업관리</v-toolbar-title>
             <v-spacer></v-spacer>
-            <tooltip-btn fab small label="사업추가" @click="addShop">
+            <tooltip-btn v-if="this.tabs==0 &&  this.$store.state.user.member.mb_level >=9" fab small label="사업추가" @click="addShop">
                 <v-icon>mdi-plus</v-icon>
+            </tooltip-btn>
+            <tooltip-btn v-if="this.tabs==1" fab small label="첨부 서류 추가" @click="addFile">
+                <v-icon>mdi-arrow-up-bold-box-outline</v-icon>
             </tooltip-btn>
         </v-toolbar>
         
@@ -19,7 +22,7 @@
         <v-card-text>
             <v-tabs-items v-model="tabs"> 
                 <v-tab-item><shopmag-01-form @save="save2" :itemLists="this.itemShops" @edit="addShop" @select="selectRow"/></v-tab-item>                 
-                <v-tab-item><shopmag-02-form /></v-tab-item>
+                <v-tab-item><shopmag-02-form :addLists="this.fileAdds" @edit="addFile"/></v-tab-item>
 
             </v-tabs-items>            
         </v-card-text>
@@ -31,9 +34,10 @@
         </shopmag-update-form>
     </ez-dialog>
     <ez-dialog label="첨부서류" ref="dialog2" max-width="400" dark color="primary" persistent>
-        
+        <shopmag-att-file-form @save="save2" @onDelete="onDelete"
+            :addFileInfo="fileAdd" :isNew="isAddNew" :cbSerId="cbSerChk" :maxno="maxno">
+        </shopmag-att-file-form>
     </ez-dialog>
-
     </v-container>
 
 </template>
@@ -47,10 +51,11 @@ import EzDialog from '../../components/etc/EzDialog.vue';
 import Shopmag01Form from './Shopmag01Form.vue';
 import Shopmag02Form from './Shopmag02Form.vue';
 import ShopmagUpdateForm from './ShopmagUpdateForm.vue';
+import ShopmagAttFileForm from './ShopmagAttFileForm.vue';
 
 
 export default {
-  components: { Login, TooltipBtn, EzDialog, Shopmag01Form, Shopmag02Form, ShopmagUpdateForm },
+  components: { Login, TooltipBtn, EzDialog, Shopmag01Form, Shopmag02Form, ShopmagUpdateForm, ShopmagAttFileForm },
 
 	name :"ShopMag",
 	title : "사업관리",
@@ -60,9 +65,15 @@ export default {
             isLoading: false,
             itemShops: [],
             itemShop: null,
+            fileAdds: [],
+            fileAdd: null,
             isNew: true,
+            isAddNew: true,
             idx: -1,
+            i_shop_select: null,
+            maxno: 0,
         }
+        
     },
     mounted() {        
         if (this.$store.state.user.member ) {
@@ -71,25 +82,31 @@ export default {
     },
     watch: {
         async tabs() {
-            console.log("tabs_change:", this.tabs);
             if (this.tabs === 1) {   
                 if ( this.idx === -1 ) {                    
                     if (this.itemShops) { this.idx = 0 }
                 }
-                if( this.idx > -1 ) {                                       
-                    await this.$axios.get(`/api/shopinfo/getShopMagFile?i_shop=${this.itemShops[this.idx].i_shop}`);  
+                if( this.idx > -1 ) {     
+                    this.i_shop_select = this.itemShops[this.idx].i_shop;                    
+                    this.fileAdds = await this.$axios.get(`/api/shopinfo/getShopMagFile?i_shop=${ this.i_shop_select }`);
+                    this.getmaxno();
                 }
-
             }
-
         }
     },
     methods: {
-        ...mapActions("shop", ["duplicateCheckShop", "shopInfoSave"]),
+        ...mapActions("shop", ["duplicateCheckShop", "shopInfoSave", "shopAddFile", "shopAddFileDelete"]),
         ...mapMutations("user", ["SET_SHOPINFO"]),
 
+        getmaxno() {
+            if (this.fileAdds) {
+                for(let ob in this.fileAdds) {
+                    if (this.fileAdds[ob].i_sort > this.maxno) this.maxno = this.fileAdds[ob].i_sort;
+                }
+            }
+        }, 
         async fetchData() {
-            this.itemShops = await this.$axios.get("/api/shopinfo/getShopMag");            
+            this.itemShops = await this.$axios.get("/api/shopinfo/getShopMag");               
         },        
         async addShop(item) {
            if (item) {
@@ -125,13 +142,48 @@ export default {
             this.$refs.dialog.close();
         },
 
-        async addFile(item) {
-            this.$refs2.dialog.open();
+        async addFile(item) {    
+             if (item) {                
+                this.isAddNew = false;  
+                this.fileAdd = deepCopy(item);
+            } else {                
+                this.isAddNew = true;
+                this.fileAdd = null;
+            }            
+            this.$refs.dialog2.open();
         },        
 
+        async cbSerChk(value) {
+            const payload = {
+                field: "i_shop",
+                value,
+            };
+            return await this.duplicateCheckShop(payload);
+        },
+        
+
         async save2(form) {
+            console.log("save2")
+            form.append("isNew", this.isAddNew);
+            form.append("i_shop_select", this.i_shop_select);
+          
+            const data = await this.shopAddFile(form);
+            
+            if (this.isAddNew) {
+                this.$toast.info(`추가 하였습니다.`);
+            } else {
+                this.$toast.info(`수정 하였습니다.`);
+            }
+            this.fileAdds = await this.$axios.get(`/api/shopinfo/getShopMagFile?i_shop=${ this.i_shop_select }`);
             this.$refs.dialog2.close();
-        },  
+        },          
+
+        async onDelete(form) {
+            console.log("onDelete");
+            const data = await this.shopAddFileDelete(form);
+            this.fileAdds = await this.$axios.get(`/api/shopinfo/getShopMagFile?i_shop=${ this.i_shop_select }`);
+            this.$refs.dialog2.close();
+        },
 
     }
 }

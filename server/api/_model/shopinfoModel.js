@@ -10,6 +10,7 @@ const moment = require('../../../util/moment');
 const { getIp, deepCopy } = require('../../../util/lib');
 const { LV, isGrant } = require('../../../util/level');
 const { del } = require('vue');
+const { CONFIG } = require('../../../util/TABLE');
 
 
 function clearShopmagField(shopmag) {
@@ -21,7 +22,7 @@ const shopinfoModel = {
 	// 사업LIST
 	async getShopMag(req) {
 		// 권한 확인
-		if (!isGrant(req, LV.MANAGER)) {
+		if (!isGrant(req, LV.VIP)) {
 			throw new Error('사용 권한이 없습니다.');
 		}
 		const sql = "select i_shop, n_shop, d_date1, d_date2, t_remark from tb_shopmag order by i_shop desc";
@@ -34,26 +35,15 @@ const shopinfoModel = {
 	},
 	async getShopMagFile(req) {
 		// 권한 확인
-		//const { i_shop, i_no, i_ser } = req.params;
-	
-			console.log("getShopMagFile", req.query);
-		// console.log(req);
-		// const data = {
-		// 	mb_id : req.user.mb_id,
-		// 	// mb_password : await jwt.generatePassword(req.body.mb_password),
-		// };
-
-		// const sql = sqlHelper.SelectSimple("tb_shopmag_file", data);
-		// console.log(sql.query);
-		// console.log(sql.values);
-
-		// const sql = "select i_shop, n_shop, d_date1, d_date2, t_remark from tb_shopmag order by i_shop desc";
-		// const [row] = await db.execute(sql);
-		// row.forEach((data) => {
-		// 	clearShopmagField(data);
-		// });
-
-       	return 0;		   
+		//const sql = sqlHelper.SelectSimple("tb_shopmag_file", req.query, {i_shop, i_ser, f_gubun, f_yn, n_file, t_remark, t_sample});
+		const { i_shop } = req.query;
+		const sql = "select i_shop, i_ser, f_gubun, f_yn, n_file, t_remark, t_sample, i_sort" +
+		            "  from tb_shopmag_file where i_shop  = '" + i_shop + "' " +
+					" order by f_gubun, i_sort, i_ser";
+		
+		const [row] = await db.execute(sql);
+		
+       	return row;
 	},
 
     // 공방신청 내용 조회
@@ -241,6 +231,45 @@ const shopinfoModel = {
 
 	},
 
-	
+	async shopAddFile(req) {
+		const payload = {
+			...req.body,
+		};
+		const {  i_shop,  i_ser,  f_gubun, f_yn,  n_file,  t_remark,  t_sample,  i_sort,  isNew,  i_shop_select } = payload;
+
+		if(isNew == "true") {
+			const [[getser]] = await db.execute("select max(i_ser) ser from tb_shopmag_file where i_shop = '" + i_shop_select + "'");
+			const { ser } = getser;
+			if (!ser) { setser = 1  }  else { setser = ser + 1}
+			
+			sql = "insert into tb_shopmag_file " +
+			      " (i_shop,  i_ser,  f_gubun, f_yn,  n_file,  t_remark,  i_sort) " +
+				  " values ('" + i_shop_select + "' , " + setser + ", '" + f_gubun + "', '" + f_yn + "', '" + n_file + "', '" + t_remark + "'," + i_sort + ")";
+			
+		} else {
+			sql = "update tb_shopmag_file  " +
+			      "   set f_gubun = '" + f_gubun + "', " +
+				  "       f_yn = '" + f_yn + "', " +
+				  "       n_file = '" + n_file + "', " +
+				  "       t_remark = '" + t_remark + "', " +
+				  "       t_sample = '" + t_sample + "', " +			
+				  "       i_sort   = " + i_sort +
+				  " where i_shop = '" + i_shop + "' and i_ser = " + i_ser 
+		};
+		
+		const [row] = await db.execute(sql);
+		return row;
+	},
+	async shopAddFileDelete(req) {
+		const payload = {
+			...req.body,
+		};
+		const {  i_shop,  i_ser,  f_gubun, f_yn,  n_file,  t_remark,  t_sample,  i_sort,  isNew,  i_shop_select } = payload;
+		sql = "delete from tb_shopmag_file  " +
+		      " where i_shop = '" + i_shop + "' and i_ser = " + i_ser ;
+
+		const [row] = await db.execute(sql);
+		return row;
+	},
 }
 module.exports = shopinfoModel;

@@ -16,6 +16,17 @@ export const actions = {
 		return data;
 	},
 
+	async shopAddFile({ commit }, form) {
+		const { $axios } = Vue.prototype;
+		const data = await $axios.post(`/api/shopinfo/shopAddFile`, form);
+		return data;
+	},
+	async shopAddFileDelete({ commit }, form) {
+		const { $axios } = Vue.prototype;
+		const data = await $axios.post(`/api/shopinfo/shopAddFileDelete`, form);
+		return data;
+	},
+
 
 }
 

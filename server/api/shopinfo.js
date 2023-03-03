@@ -55,6 +55,14 @@ router.post('/shopInfoSave', async (req, res)=> {
 	res.json(result);
 }),
 
+router.post('/shopAddFile', async (req, res)=> {	
+	const result = await modelCall(shopinfoModel.shopAddFile, req);
+	res.json(result);
+}),
+router.post('/shopAddFileDelete', async (req, res)=> {	
+	const result = await modelCall(shopinfoModel.shopAddFileDelete, req);
+	res.json(result);
+}),
 
 
 module.exports = router;

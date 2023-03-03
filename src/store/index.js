@@ -31,14 +31,14 @@ const store = new Vuex.Store({
 					title : "사업관리",
 					icon : "mdi-store",
 					to : '',
-					grant : 7, 
+					grant : 5, 
 					newTab : false,
 					subItems : [
 						{
 							title : "사업등록",
 							icon : "",
 							to : '/shop/shopmag',							
-							grant : 7, 
+							grant : 5, 
 							newTab : false,
 							subItems : []
 						},						
