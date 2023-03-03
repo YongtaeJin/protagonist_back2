@@ -9,7 +9,8 @@
         <v-text-field label="사업명" v-model="form.n_shop" prepend-icon="mdi-briefcase"  />   
         <input-date label="사업시작일" v-model="form.d_date1" prepend-icon="mdi-calendar" />
         <input-date label="사업종료일" v-model="form.d_date2" prepend-icon="mdi-calendar" />
-        <v-textarea label="설명" v-model="form.t_remark" />
+        <v-textarea label="신청서 설명" v-model="form.t_remark" />
+        <v-textarea label="협약서 설명" v-model="form.t_remark2" />
         <v-btn type="submit" block color="primary" :loading="isLoading">{{isNew?'추  가':'수  정'}}</v-btn>
     </v-form>
 </template>
@@ -43,6 +44,7 @@ export default {
                 d_date1: "",
                 d_date2: "",
                 t_remark: "",
+                t_remark2: "",
             },            
         }
     },
@@ -85,7 +87,8 @@ export default {
                     n_shop: "",
                     d_date1: "",
                     d_date2: "",
-                    t_remark: ""
+                    t_remark: "",
+                    t_remark2: ""
                 }
             };     
             if (this.$refs.form) {

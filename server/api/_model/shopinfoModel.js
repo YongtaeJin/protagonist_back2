@@ -25,7 +25,7 @@ const shopinfoModel = {
 		if (!isGrant(req, LV.VIP)) {
 			throw new Error('사용 권한이 없습니다.');
 		}
-		const sql = "select i_shop, n_shop, d_date1, d_date2, t_remark from tb_shopmag order by i_shop desc";
+		const sql = "select i_shop, n_shop, d_date1, d_date2, t_remark, t_remark2 from tb_shopmag order by i_shop desc";
 		const [row] = await db.execute(sql);
 		row.forEach((data) => {
 			clearShopmagField(data);
@@ -36,9 +36,10 @@ const shopinfoModel = {
 	async getShopMagFile(req) {
 		// 권한 확인
 		//const sql = sqlHelper.SelectSimple("tb_shopmag_file", req.query, {i_shop, i_ser, f_gubun, f_yn, n_file, t_remark, t_sample});
-		const { i_shop } = req.query;
+		console.log(req.query);
+		const { i_shop, f_gubun } = req.query;
 		const sql = "select i_shop, i_ser, f_gubun, f_yn, n_file, t_remark, t_sample, i_sort" +
-		            "  from tb_shopmag_file where i_shop  = '" + i_shop + "' " +
+		            "  from tb_shopmag_file where i_shop  = '" + i_shop + "' and f_gubun = '" + f_gubun + "'" +
 					" order by f_gubun, i_sort, i_ser";
 		
 		const [row] = await db.execute(sql);

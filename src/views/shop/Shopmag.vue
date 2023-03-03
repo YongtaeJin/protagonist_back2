@@ -10,19 +10,23 @@
             <tooltip-btn v-if="this.tabs==0 &&  this.$store.state.user.member.mb_level >=9" fab small label="사업추가" @click="addShop">
                 <v-icon>mdi-plus</v-icon>
             </tooltip-btn>
-            <tooltip-btn v-if="this.tabs==1" fab small label="첨부 서류 추가" @click="addFile">
+            <tooltip-btn v-if="this.tabs>=1" fab small label="첨부 서류 추가" @click="addFile">
                 <v-icon>mdi-arrow-up-bold-box-outline</v-icon>
             </tooltip-btn>
         </v-toolbar>
         
         <v-tabs v-model="tabs" background-color="primary" dark>
             <v-tab value="tbapage_1" style="flex: 1" >사업 내역</v-tab>
-            <v-tab value="tbapage_2" style="flex: 1" >첨부 서류</v-tab>            
+            <v-tab value="tbapage_2" style="flex: 1" >신청 서류</v-tab>            
+            <v-tab value="tbapage_3" style="flex: 1" >추가 서류</v-tab>
+            <v-tab value="tbapage_4" style="flex: 1" >협약서 서류</v-tab>
         </v-tabs>
         <v-card-text>
             <v-tabs-items v-model="tabs"> 
                 <v-tab-item><shopmag-01-form @save="save2" :itemLists="this.itemShops" @edit="addShop" @select="selectRow"/></v-tab-item>                 
                 <v-tab-item><shopmag-02-form :addLists="this.fileAdds" @edit="addFile"/></v-tab-item>
+                <v-tab-item><shopmag-02-form :addLists="this.fileAddsB" @edit="addFile"/></v-tab-item>
+                <v-tab-item><shopmag-02-form :addLists="this.fileAddsC" @edit="addFile"/></v-tab-item>
 
             </v-tabs-items>            
         </v-card-text>
@@ -33,9 +37,9 @@
             :shopinfo="itemShop" :isNew="isNew" :cbShopId="cbShopIdChk">
         </shopmag-update-form>
     </ez-dialog>
-    <ez-dialog label="첨부서류" ref="dialog2" max-width="400" dark color="primary" persistent>
+    <ez-dialog label="첨부서류" ref="dialog2" max-width="450" dark color="primary" persistent>
         <shopmag-att-file-form @save="save2" @onDelete="onDelete"
-            :addFileInfo="fileAdd" :isNew="isAddNew" :cbSerId="cbSerChk" :maxno="maxno">
+            :addFileInfo="fileAdd" :isNew="isAddNew" :cbSerId="cbSerChk" :maxno="maxno" :fgubun="this.tabs">
         </shopmag-att-file-form>
     </ez-dialog>
     </v-container>
@@ -66,12 +70,15 @@ export default {
             itemShops: [],
             itemShop: null,
             fileAdds: [],
+            fileAddsB: [],
+            fileAddsC: [],
             fileAdd: null,
             isNew: true,
             isAddNew: true,
-            idx: -1,
+            idx: -1,          
             i_shop_select: null,
-            maxno: 0,
+            maxno: 0,            
+            fgubun: "0",
         }
         
     },
@@ -82,15 +89,15 @@ export default {
     },
     watch: {
         async tabs() {
-            if (this.tabs === 1) {   
+            if (this.tabs > 0) {   
                 if ( this.idx === -1 ) {                    
                     if (this.itemShops) { this.idx = 0 }
-                }
-                if( this.idx > -1 ) {     
-                    this.i_shop_select = this.itemShops[this.idx].i_shop;                    
-                    this.fileAdds = await this.$axios.get(`/api/shopinfo/getShopMagFile?i_shop=${ this.i_shop_select }`);
-                    this.getmaxno();
-                }
+                } 
+                this.i_shop_select = this.itemShops[this.idx].i_shop;
+                
+                if ( this.tabs === 1) this.fileAdds = await this.$axios.get(`/api/shopinfo/getShopMagFile?i_shop=${ this.i_shop_select }&f_gubun=1`);
+                if ( this.tabs === 2) this.fileAddsB = await this.$axios.get(`/api/shopinfo/getShopMagFile?i_shop=${ this.i_shop_select }&f_gubun=2`);
+                if ( this.tabs === 3) this.fileAddsC = await this.$axios.get(`/api/shopinfo/getShopMagFile?i_shop=${ this.i_shop_select }&f_gubun=3`);
             }
         }
     },
@@ -98,19 +105,39 @@ export default {
         ...mapActions("shop", ["duplicateCheckShop", "shopInfoSave", "shopAddFile", "shopAddFileDelete"]),
         ...mapMutations("user", ["SET_SHOPINFO"]),
 
-        getmaxno() {
-            if (this.fileAdds) {
-                for(let ob in this.fileAdds) {
-                    if (this.fileAdds[ob].i_sort > this.maxno) this.maxno = this.fileAdds[ob].i_sort;
+        getmaxno(flag) {
+            //console.log("getmaxno", flag);
+            this.maxno = 0;
+            if ( flag === 1 ) {
+                if (this.fileAdds) {
+                    for(let ob in this.fileAdds) {
+                        if (this.fileAdds[ob].i_sort > this.maxno) this.maxno = this.fileAdds[ob].i_sort;
+                    }
                 }
+                
+            } else if ( flag === 2 ) {
+                if (this.fileAddsB) {
+                    for(let ob in this.fileAddsB) {
+                        if (this.fileAddsB[ob].i_sort > this.maxno) this.maxno = this.fileAddsB[ob].i_sort;
+                    }
+                }
+            } else  if ( flag === 3 ) {
+                if (this.fileAddsC) {
+                    for(let ob in this.fileAddsC) {
+                        if (this.fileAddsC[ob].i_sort > this.maxno) this.maxno = this.fileAddsC[ob].i_sort;
+                    }
+                }                
+            } else {
+                this.maxno = 0;
             }
         }, 
+
         async fetchData() {
             this.itemShops = await this.$axios.get("/api/shopinfo/getShopMag");               
         },        
         async addShop(item) {
-           if (item) {
-                this.isNew = false;  
+           if (item) {             
+                this.isNew = false;                  
                 this.itemShop = deepCopy(item);
             } else {                
                 this.isNew = true;
@@ -132,7 +159,7 @@ export default {
 
         async save1(form) {
             // 사업관리 추가 및 수정 처리 
-            const data = await this.shopInfoSave(form);
+            const data = await this.shopInfoSave(form);           
             if (this.isNew) {
                 this.$toast.info(`${form.i_shop} 추가 하였습니다.`);                
             } else {
@@ -147,6 +174,7 @@ export default {
                 this.isAddNew = false;  
                 this.fileAdd = deepCopy(item);
             } else {                
+                this.getmaxno(this.tabs);                
                 this.isAddNew = true;
                 this.fileAdd = null;
             }            
@@ -163,7 +191,6 @@ export default {
         
 
         async save2(form) {
-            console.log("save2")
             form.append("isNew", this.isAddNew);
             form.append("i_shop_select", this.i_shop_select);
           
@@ -174,14 +201,17 @@ export default {
             } else {
                 this.$toast.info(`수정 하였습니다.`);
             }
-            this.fileAdds = await this.$axios.get(`/api/shopinfo/getShopMagFile?i_shop=${ this.i_shop_select }`);
+            if ( this.tabs === 1) this.fileAdds = await this.$axios.get(`/api/shopinfo/getShopMagFile?i_shop=${ this.i_shop_select }&f_gubun=1`);
+            if ( this.tabs === 2) this.fileAddsB = await this.$axios.get(`/api/shopinfo/getShopMagFile?i_shop=${ this.i_shop_select }&f_gubun=2`);
+            if ( this.tabs === 3) this.fileAddsC = await this.$axios.get(`/api/shopinfo/getShopMagFile?i_shop=${ this.i_shop_select }&f_gubun=3`);
             this.$refs.dialog2.close();
         },          
 
         async onDelete(form) {
-            console.log("onDelete");
             const data = await this.shopAddFileDelete(form);
-            this.fileAdds = await this.$axios.get(`/api/shopinfo/getShopMagFile?i_shop=${ this.i_shop_select }`);
+            if ( this.tabs === 1) this.fileAdds = await this.$axios.get(`/api/shopinfo/getShopMagFile?i_shop=${ this.i_shop_select }&f_gubun=1`);
+            if ( this.tabs === 2) this.fileAddsB = await this.$axios.get(`/api/shopinfo/getShopMagFile?i_shop=${ this.i_shop_select }&f_gubun=2`);
+            if ( this.tabs === 3) this.fileAddsC = await this.$axios.get(`/api/shopinfo/getShopMagFile?i_shop=${ this.i_shop_select }&f_gubun=3`);
             this.$refs.dialog2.close();
         },
 

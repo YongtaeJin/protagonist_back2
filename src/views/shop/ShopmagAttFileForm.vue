@@ -1,8 +1,9 @@
 <template>
     <v-form @submit.prevent="save" ref="form" v-model="valid" lazy-validation>
-        <v-radio-group label="구분 : " row v-model="form.f_gubun">
+        <v-radio-group label="구분 : " row v-model="form.f_gubun" readonly>
             <v-radio label="신청서" value="1"></v-radio>
             <v-radio label="추가정보" value="2"></v-radio>
+            <v-radio label="협약정보" value="3"></v-radio>
         </v-radio-group>
         <v-text-field label="순번 : " type="number" v-model="form.i_sort" />
         <v-radio-group label="필수 : " row v-model="form.f_yn">
@@ -37,6 +38,7 @@ export default {
         isNew : Boolean, 
         isLoading : Boolean,
         maxno : 0,
+        fgubun : null,
     },
     data() {
         return {
@@ -44,12 +46,12 @@ export default {
             form: {
                 i_shop: "",
                 i_ser: "",
-                f_gubun: 1,
-                f_yn: 1,
+                f_gubun: "",
+                f_yn: "",
                 n_file: "",
                 t_remark: "",
                 t_sample: "",
-                i_sort : 1,
+                i_sort : 0,
             },            
         }
     },
@@ -60,9 +62,10 @@ export default {
         this.form = null;
     },
     watch: {        
-        addFileInfo() {            
-            this.init();            
-        }
+        addFileInfo() { this.init(); },
+        fgubun() { this.init(); },
+        maxno() { this.init(); },
+        isNew() { this.init(); },
     },
     computed: {
         rules: () => validateRules,
@@ -85,14 +88,14 @@ export default {
             };
             this.$emit("save", formData);
         },
-        init() {
-            if (this.addFileInfo) {
+        init() {            
+            if (this.addFileInfo) {                
                 this.form = deepCopy(this.addFileInfo);
-            } else {
+            } else {                
                 this.form = {
                     i_shop: "",
                     i_ser: 0,
-                    f_gubun: '1',
+                    f_gubun: this.fgubun.toString(),
                     f_yn: '1',
                     n_file: "",
                     t_remark: "",
