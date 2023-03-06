@@ -11,8 +11,13 @@
             <v-radio label="선택" value="0"></v-radio>
         </v-radio-group>
         <v-text-field label="파일명 : " v-model="form.n_file"  />
-        <v-textarea label="설명 : " v-model="form.t_remark" />
-        
+        <div class="d-flex align-center">            
+            <v-text-field label="첨부(양식)" v-model="form.t_filenm" readonly @dblclick="downLoad()" />
+            <v-file-input label="첨부변경" v-model="form.t_image"
+               :prepend-icon="null" :multiple="false"  @change="getFilename($event)" /> 
+            <v-checkbox v-if="form.t_filenm" label="삭제" v-model="form.f_del" > </v-checkbox>
+        </div>
+        <v-textarea label="설명 : " v-model="form.t_remark" />        
         <v-btn type="submit" block color="primary" :loading="isLoading">{{isNew?'추  가':'수  정'}}</v-btn>
         <v-btn block @click="onDelete" :loading="isLoading" v-if=!isNew>삭 제</v-btn> 
     </v-form>
@@ -49,9 +54,12 @@ export default {
                 f_gubun: "",
                 f_yn: "",
                 n_file: "",
+                t_filenm: "",
                 t_remark: "",
-                t_sample: "",
+                t_sample: null,
                 i_sort : 0,
+                f_del: null,
+                t_image: null,
             },            
         }
     },
@@ -98,9 +106,12 @@ export default {
                     f_gubun: this.fgubun.toString(),
                     f_yn: '1',
                     n_file: "",
+                    t_filenm: "",
                     t_remark: "",
-                    t_sample: "",
+                    t_sample: null,
                     i_sort: this.maxno + 1,
+                    f_del: null,
+                    t_image: null,
                 }
             };     
             if (this.$refs.form) {
@@ -115,6 +126,32 @@ export default {
              if (res) {
                 this.$emit('onDelete', this.form);
              }
+        },
+        async getFilename(files, item) {
+            if (files) {        
+                this.form.t_sample = files.name;
+                this.form.f_del = null;
+            }
+        },
+        async downLoad() {
+            if(this.form.t_sample && this.form.t_filenm) {                
+                const fileName = `http://localhost:8080${this.form.t_sample}`;
+                const downFile = this.form.t_filenm;
+                try {
+                    const response = await fetch(fileName)
+                    const blob = await response.blob();
+                    const url = await URL.createObjectURL(blob)
+
+                    const a = document.createElement("a");
+                    a.href = url;        
+                    a.download = downFile;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                } catch(err) {
+                    console.log({ err })
+                }
+            }
         }
     }
 }

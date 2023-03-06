@@ -38,7 +38,7 @@ const shopinfoModel = {
 		//const sql = sqlHelper.SelectSimple("tb_shopmag_file", req.query, {i_shop, i_ser, f_gubun, f_yn, n_file, t_remark, t_sample});
 		console.log(req.query);
 		const { i_shop, f_gubun } = req.query;
-		const sql = "select i_shop, i_ser, f_gubun, f_yn, n_file, t_remark, t_sample, i_sort" +
+		const sql = "select i_shop, i_ser, f_gubun, f_yn, n_file, t_filenm, t_remark, t_sample, i_sort" +
 		            "  from tb_shopmag_file where i_shop  = '" + i_shop + "' and f_gubun = '" + f_gubun + "'" +
 					" order by f_gubun, i_sort, i_ser";
 		
@@ -52,7 +52,7 @@ const shopinfoModel = {
 		const sql1 = "select i_shop from tb_shopmag where  now() between d_date1 and d_date2";
     	const [[row]] = await db.execute(sql1);
     	
-		const sql2 = "select a.i_shop, a.t_remark, i_no, ifnull(i_userid, '" + req.user.mb_id + "') i_userid, f_persioninfo, d_persioninfo, i_regno, n_company, n_person, t_tel1, t_tel2,  i_presno,  i_post, t_addr1, t_addr2, f_saugup, f_run, f_dart, t_enarainfo, t_enarainfopw " +
+		const sql2 = "select a.i_shop, a.t_remark, a.t_remark2, i_no, ifnull(i_userid, '" + req.user.mb_id + "') i_userid, f_persioninfo, d_persioninfo, i_regno, n_company, n_person, t_tel1, t_tel2,  i_presno,  i_post, t_addr1, t_addr2, f_saugup, f_run, f_dart, t_enarainfo, t_enarainfopw " +
   					 "	from tb_shopmag a " +
        				 "       left outer join tb_shopinput b on a.i_shop = b.i_shop and b.i_userid = '" + req.user.mb_id +"'" +
  					 " where a.i_shop = '" + row.i_shop + "'"
@@ -99,7 +99,7 @@ const shopinfoModel = {
 		const { f_gubun } = req.query;
 		
 		sql = "select a.i_shop, a.i_ser, a.f_yn, a.n_file n_filename, " +
-			  "			c.i_no, null n_file, b.n_file n_file2, b.t_att, a.t_remark " +
+			  "			c.i_no, null n_file, b.n_file n_file2, b.t_att, a.t_remark, a.t_sample, a.t_filenm t_samplefile" +
 			  "  from tb_shopmag_file a " +
 			  "       left outer join tb_shopinput c on a.i_shop = c.i_shop and c.i_userid = '" + mb_id + "' " +
 			  "	      left outer join tb_shopinput_file b on a.i_shop = b.i_shop and a.i_ser = b.i_ser and c.i_no = b.i_no " +
@@ -236,24 +236,54 @@ const shopinfoModel = {
 		const payload = {
 			...req.body,
 		};
-		const {  i_shop,  i_ser,  f_gubun, f_yn,  n_file,  t_remark,  t_sample,  i_sort,  isNew,  i_shop_select } = payload;
+		const {  i_shop,  i_ser,  f_gubun, f_yn,  n_file, t_filenm, t_remark,  t_sample,  i_sort,  isNew,  i_shop_select, f_del } = payload;
+		let fPath = `${UPLOAD_PATH}/shopsigned/${i_shop}` ;
+		let tPath = `/upload/shopsigned/${i_shop}` ;
+		let tPathFile = "";
+		let tFilenm = "";
+		if ( req.files )  {
+			const { t_image } = req.files;
+			const fileName = `${i_ser}_` + jwt.getRandToken(16);
+			const newFile = `${fPath}/${fileName}${path.extname(t_image.name)}`;
+			tPathFile = `${tPath}/${fileName}${path.extname(t_image.name)}`;
+			tFilenm = t_sample;
 
+			t_image.mv(newFile, (err)=>{
+				if ( err ) {
+					console.log('업로드 실패', err);
+					return;
+				}
+			});	
+		} else {			
+			if (!f_del) {
+				tFilenm = t_filenm;
+				tPathFile = t_sample;
+			} else {
+				let delFile = `${SERVER_PATH}${t_sample}` ;
+				try {				
+					fs.unlinkSync(delFile);
+				}  catch(e) {}
+
+			}
+		} 
+		
 		if(isNew == "true") {
 			const [[getser]] = await db.execute("select max(i_ser) ser from tb_shopmag_file where i_shop = '" + i_shop_select + "'");
 			const { ser } = getser;
 			if (!ser) { setser = 1  }  else { setser = ser + 1}
 			
 			sql = "insert into tb_shopmag_file " +
-			      " (i_shop,  i_ser,  f_gubun, f_yn,  n_file,  t_remark,  i_sort) " +
-				  " values ('" + i_shop_select + "' , " + setser + ", '" + f_gubun + "', '" + f_yn + "', '" + n_file + "', '" + t_remark + "'," + i_sort + ")";
+			      " (i_shop,  i_ser,  f_gubun, f_yn,  n_file, t_filenm, t_remark,  i_sort, t_sample) " +
+				  " values ('" + i_shop_select + "' , " + setser + ", '" + f_gubun + "', '" + f_yn + "', '" + n_file + "', '" + tFilenm + "', '" + t_remark + "'," + i_sort + ", '" + tPathFile + "')";
 			
 		} else {
 			sql = "update tb_shopmag_file  " +
 			      "   set f_gubun = '" + f_gubun + "', " +
 				  "       f_yn = '" + f_yn + "', " +
 				  "       n_file = '" + n_file + "', " +
+				  "       t_filenm = '" + tFilenm + "', " +
 				  "       t_remark = '" + t_remark + "', " +
-				  "       t_sample = '" + t_sample + "', " +			
+				  "       t_sample = '" + tPathFile + "', " +			
 				  "       i_sort   = " + i_sort +
 				  " where i_shop = '" + i_shop + "' and i_ser = " + i_ser 
 		};

@@ -8,8 +8,8 @@
             <v-spacer></v-spacer>
         </v-toolbar>  
         
-            <v-card background-color="primary" dark>
-            <p v-html="memo"> </p>
+            <v-card background-color="primary" dark>            
+            <div v-text="memo" style="white-space:pre-line"></div>
             </v-card>
         
         <v-tabs v-model="tabs" background-color="primary" dark>

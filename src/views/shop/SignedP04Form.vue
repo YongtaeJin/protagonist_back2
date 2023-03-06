@@ -10,6 +10,11 @@
         <template v-slot:item="{ item, expand, isExpanded }">        
           <tr >            
             <td align=center :class="{red2: item.f_yn==1, green2: item.f_yn == 0}">{{f_ynchk(item.f_yn)}} </td>
+            <td align=center>
+              <v-btn v-if="item.t_sample" small fab  @click="downLoad(item)">
+                <v-icon>mdi-note</v-icon>
+              </v-btn>
+            </td>
             <td> {{ item.n_filename }} <v-icon v-if="item.t_remark" @click="expand(!isExpanded)">mdi-help-circle-outline</v-icon></td>            
             <td>
               <div class="d-flex align-center">
@@ -69,21 +74,24 @@ export default {
         i_no: null,
         n_file2: null,
         n_file: null,
-        t_att: null,       
+        t_att: null,
+        t_sample: null,
+        t_samplefile: null,
         f_del: null,
         t_remark: null,
       },
       
       headers: [
-       { text: '신청번호',  value: 'i_shop', sortable: false, align:' d-none' },
+        { text: '신청번호',  value: 'i_shop', sortable: false, align:' d-none' },
         { text: '파일순번', value: 'i_ser', sortable: false, align:' d-none' },
-        { text: '필수여부', value: 'f_yn', sortable: false, width: "120px", fixed: true, align:'center'},
+        { text: '필수여부', value: 'f_yn', sortable: false, width: "100px", fixed: true, align:'center'},
+        { text: '양식', value: 'f_sample', sortable: false, width: "60px", fixed: true, align:'center'},
         { text: '첨부파일명', value: 'n_filename', sortable: false, width: "200px" },
         { text: '신청no', value: 'i_no', sortable: false, align:' d-none' },
         { text: '파일명', value: 'n_file2', sortable: false, },
         { text: 'UP', value: 'n_file', sortable: false, width: "1%" },
         { text: '삭제', value: 'f_del', sortable: false, width: "50px" },
-        { text: 'DOWN', value: 't_att', sortable: false, width: "50px" },  
+        { text: 'DOWN', value: 't_att', sortable: false, width: "50px" },
       ],
       isSelecting: false,
       selectedFile: null,
@@ -161,7 +169,26 @@ export default {
           item.t_att = null;
         }
       }
-    }   
+    },
+    async downLoad(item) {
+      const fileName = `http://localhost:8080${item.t_sample}`;
+      const downFile = item.t_samplefile;
+    
+      try {
+        const response = await fetch(fileName)
+        const blob = await response.blob();
+        const url = await URL.createObjectURL(blob)
+
+        const a = document.createElement("a");
+        a.href = url;        
+        a.download = downFile;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      } catch(err) {
+        console.log({ err })
+      }
+    },
   },  
 }
 </script>

@@ -56,6 +56,12 @@ const routes = [
 		meta: { requireLogin: true },
 	},
 	{
+		path: '/shop/agree',
+		name: 'ShopArgee',
+		component: () => import(/* webpackChunkName: "ShopArgee" */ '../views/shop/Agree.vue'),
+		meta: { requireLogin: true },
+	},
+	{
 		path: '/no',
 		name: 'NoLogin',
 		component: () => import(/* webpackChunkName: "nologin" */ '../views/NotLogin.vue')

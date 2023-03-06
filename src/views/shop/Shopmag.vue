@@ -39,7 +39,7 @@
     </ez-dialog>
     <ez-dialog label="첨부서류" ref="dialog2" max-width="450" dark color="primary" persistent>
         <shopmag-att-file-form @save="save2" @onDelete="onDelete"
-            :addFileInfo="fileAdd" :isNew="isAddNew" :cbSerId="cbSerChk" :maxno="maxno" :fgubun="this.tabs">
+            :addFileInfo="fileAdd" :isNew="isAddNew" :cbSerId="cbSerChk"  :isLoading="isLoading" :maxno="maxno" :fgubun="this.tabs">
         </shopmag-att-file-form>
     </ez-dialog>
     </v-container>

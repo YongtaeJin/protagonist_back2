@@ -33,6 +33,7 @@ export default {
                 { text: '구분', value: 'f_gubun', width: "60px", fixed: true},
                 { text: '순번', value: 'i_sort', width: "50px", fixed: true,  align:'center'},                
                 { text: '명칭', value: 'n_file',  width: "150px", fixed: true, align:'center'},
+                { text: '파일명', value: 't_filenm',  width: "150px", fixed: true, align:'center', align:' d-none'},
                 { text: '필수', value: 'f_yn',  width: "50px", fixed: true, align:'center'}, 
                 { text: '비고', value: 't_remark', sortable: false, width:"45%"},
                 { text: '샘플', value: 't_sample', sortable: false, width:"35%", align:' d-none'},  
@@ -43,9 +44,12 @@ export default {
                 f_gubun: "",
                 f_yn: "",
                 n_file: "",
+                t_filenm: "",
                 t_remark: "",
                 t_sample: "",
                 i_sort: "",
+                f_del: "",
+                
             },
         }
     },
