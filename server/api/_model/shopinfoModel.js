@@ -85,6 +85,8 @@ const shopinfoModel = {
 		} else {
 			delete payload.d_persioninfo;
 		}
+		delete payload.t_remark;
+		delete payload.t_remark2;
 		sql = sqlHelper.InsertOrUpdate('tb_shopinput', payload, {i_shop, i_no});
 		
 		const [row] = await db.execute(sql.query, sql.values);

@@ -7,9 +7,18 @@
         <v-col sm=7>
             <v-data-table max-height="800" 
                 :headers="headers" :items="itemInputs" :items-per-page="20"  :footer-props="{'items-per-page-options': [10, 20, 30, 40, 50, 100, -1]}" 
-                
                 class="elevation-5" >
-
+                <template v-slot:item="{ item }">
+                    <tr  align=center>
+                        <td> {{ item.n_company }} </td>
+                        <td > {{ datachk(item.f_persioninfo) }} </td>
+                        <td > {{ datachk(item.chk1) }} </td>
+                        <td > {{ datachk(item.chk2) }} </td>
+                        <td > {{ datachk(item.chk3) }} </td>
+                        <td > {{ item.f_dochk }} </td>
+                        <td > {{ item.f_enarachk }} </td>
+                    </tr>
+                </template>
             </v-data-table>
         </v-col>
         <v-col sm=5>
@@ -45,6 +54,15 @@ export default {
         this.fetchData() ;
     },
     methods: {
+        datachk(data) {
+            let val = "";
+            if (data == "1" || data == "Y" ) { 
+                val = "●"
+            } else {
+                val = "○"
+            }
+            return  val;
+        },
         async fetchData() {
             this.itemInputs = await this.$axios.get(`/api/shopinfo/getShopInputMag`);
 
@@ -55,13 +73,4 @@ export default {
 
 <style>
 
-.v-data-table > .v-data-table__wrapper > table > tbody > tr > th, .v-data-table > .v-data-table__wrapper > table > thead > tr > th, .v-data-table > .v-data-table__wrapper > table > tfoot > tr > th 
-{
-    font-size: 0.40rem;
-    height: 35px;    
-}
-.v-data-table > .v-data-table__wrapper > table > tbody > tr > td, .v-data-table > .v-data-table__wrapper > table > thead > tr > td, .v-data-table > .v-data-table__wrapper > table > tfoot > tr > td {
-  font-size: 0.35rem;
-  height: 26px; 
-}
 </style>
