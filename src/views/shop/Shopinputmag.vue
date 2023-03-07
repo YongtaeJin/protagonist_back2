@@ -10,8 +10,8 @@
                 class="elevation-5" >
                 <template v-slot:item="{ item }">
                     <tr align=center >
-                        <td align=left> {{ item.n_company }} </td>
-                        <td :class="{greencol: item.f_persioninfo=='1', redcol: item.f_persioninfo != '1'}"> {{ datachk(item.f_persioninfo) }} </td>
+                        <td @click="clickItem(item, tabs)" align=left> {{ item.n_company }} </td>
+                        <td @click="clickItem(item, tabs)" :class="{greencol: item.f_persioninfo=='1', redcol: item.f_persioninfo != '1'}"> {{ datachk(item.f_persioninfo) }} </td>
                         <td @click="clickItem(item, 0)" :class="{greencol: item.chk1=='Y', redcol: item.chk1 != 'Y'}"> {{ datachk(item.chk1) }} </td>
                         <td @click="clickItem(item, 1)" :class="{greencol: item.chk2=='Y', redcol: item.chk2 != 'Y'}"> {{ datachk(item.chk2) }} </td>
                         <td @click="clickItem(item, 2)" :class="{greencol: item.chk3=='Y', redcol: item.chk3 != 'Y'}"> {{ datachk(item.chk3) }} </td>
@@ -28,52 +28,30 @@
                 <v-tab value="tbapage_3">추가서류</v-tab>
             </v-tabs>
             <v-card-text>
-                <v-tabs-items v-model="tabs"> 
+                <v-tabs-items v-model="tabs" class="elevation-2"> 
                     <v-tab-item>
-                        <table>
-                            <tr>
-                                <td>업체명</td><td>{{ itemInput.n_company }}</td>
-                            </tr>
-                            <tr>
-                            <tr>
-                                <td>사업자번호</td><td>{{ itemInput.i_regno }}</td>
-                            </tr>
-                            <tr>
-                                <td>대표자</td><td>{{ itemInput.n_person }}</td>
-                            </tr>
-                            <tr>
-                                <td>대표자주민번호</td><td>{{ itemInput.i_presno }}</td>
-                            </tr>
-                            <tr>
-                                <td>연락처(유선)</td><td>{{ itemInput.t_tel1 }}</td>
-                            </tr>
-                            <tr>
-                                <td>휴대폰</td><td>{{ itemInput.t_tel2 }}</td>
-                            </tr>
-                            <tr>
-                                <td>이메일</td><td>{{ itemInput.i_email }}</td>
-                            </tr>
-                            <tr>
-                                <td>사업자구분</td><td>{{ itemInput.f_saugup }}</td>
-                            </tr>
-                            <tr>
-                                <td>이전중진공사업</td><td>{{ itemInput.f_run }}</td>
-                            </tr>
-                            <tr>
-                                <td>3년 표준 재무제표</td><td>{{ itemInput.f_dart }}</td>
-                            </tr>
-                            <tr>
-                                <td>이나아도룸 아이디</td><td>{{ itemInput.t_enarainfo }}</td>
-                            </tr>
-                            <tr>
-                                <td>이나라도움 패스워드</td><td>{{ itemInput.t_enarainfopw }}</td>
-                            </tr>
+                        <table class="type03">
+                            <tr><th>업체명</th><td>{{ itemInput.n_company }}</td></tr>                            
+                            <tr><th>사업자번호</th><td>{{ itemInput.i_regno }}</td></tr>
+                            <tr><th>대표자</th><td>{{ itemInput.n_person }}</td></tr>
+                            <tr><th>대표자주민번호</th><td>{{ itemInput.i_presno }}</td></tr>
+                            <tr><th>연락처(유선)</th><td>{{ itemInput.t_tel1 }}</td></tr>
+                            <tr><th>휴대폰</th><td>{{ itemInput.t_tel2 }}</td></tr>
+                            <tr><th>이메일</th><td>{{ itemInput.i_email }}</td></tr>
+                            <tr><th>사업자구분</th><td>{{ itemInput.f_saugup }}</td></tr>
+                            <tr><th>이전중진공사업</th><td>{{ itemInput.f_run }}</td></tr>
+                            <tr><th>3년 표준 재무제표</th><td>{{ itemInput.f_dart }}</td></tr>
+                            <tr><th>이나아도룸 아이디</th><td>{{ itemInput.t_enarainfo }}</td></tr>
+                            <tr><th>이나라도움 패스워드</th><td>{{ itemInput.t_enarainfopw }}</td></tr>
+                            <tr><th>우편번호</th><td>{{ itemInput.i_post }}</td></tr>
+                            <tr><th>주소</th><td>{{ itemInput.t_addr1 }}</td></tr>
+                            <tr><th>세부 주소</th><td>{{ itemInput.t_addr2 }}</td></tr>
                         </table>
-                        
-                      
                     </v-tab-item>
-                    <v-tab-item>2ddd</v-tab-item>
-                    <v-tab-item>3ddd</v-tab-item>
+
+                    <v-tab-item><shopinputmag-03-form :fileLists="fileAdds"></shopinputmag-03-form></v-tab-item>                    
+
+                    <v-tab-item><shopinputmag-03-form :fileLists="fileAddsB"></shopinputmag-03-form></v-tab-item>
                 </v-tabs-items>
             </v-card-text>
         </v-col>
@@ -84,7 +62,9 @@
 
 <script>
 import { deepCopy } from "../../../util/lib";
+import Shopinputmag03Form from './Shopinputmag03Form.vue';
 export default {
+  components: { Shopinputmag03Form },
     name :"ShopInputMag",
 	title : "사업신청관리",
     data() {
@@ -104,7 +84,6 @@ export default {
             shopInput: [],
             fileAdds: [],
             fileAddsB: [],
-
             itemInput: {
                 n_company : null,
                 n_person : null,
@@ -117,7 +96,23 @@ export default {
                 f_dart : null,
                 t_enarainfo : null,
                 t_enarainfopw : null,
-            }            
+            },
+            fileHeaders: [
+                { text: '순번',           value: 'i_ser', sortable: false, align:'center', width: "55px"},
+                { text: '필수여부',       value: 'f_yn', sortable: false, align:'center', width: "75px"},
+                { text: '신청(추가)서류', value: 'n_filename', sortable: false, align:'center'}, 
+                { text: '첨부파일명',     value: 'n_file', sortable: false, align:'center'},
+                { text: '위치',           value: 't_att', sortable: false, align:' d-none', width: "98px"},           
+            ],
+            itemFiles: {
+                i_shop: null,
+                i_ser: null,
+                i_no: null,
+                f_yn: null,
+                n_filename: null,
+                n_file: null,
+                t_att: null,
+            },
         }
     },
     mounted() {     
@@ -154,9 +149,15 @@ export default {
          async clickItem(item, col) {
             this.tabs = col;            
             if (!this.itemInput.i_shop || this.itemInput.i_no != item.i_no) {
+                this.isLoading = true;
                 this.shopInput = await this.$axios.get(`/api/shopinfo/getShopInputMag1?i_shop=${ item.i_shop }&i_no=${ item.i_no }`);
                 this.itemInput = deepCopy(this.shopInput);
+                
+                this.fileAdds =  await this.$axios.get(`/api/shopinfo/getShopInputMag2?i_shop=${ item.i_shop }&i_no=${ item.i_no }&f_gubun=1`);
+                this.fileAddsB =  await this.$axios.get(`/api/shopinfo/getShopInputMag2?i_shop=${ item.i_shop }&i_no=${ item.i_no }&f_gubun=2`);
+                this.isLoading = false;
             }
+
         },
         async f_dochk(item) {
             if (item.f_dochk == "Y") {
@@ -177,10 +178,11 @@ export default {
 </script>
 
 <style>
+
 .v-data-table > .v-data-table__wrapper > table > tbody > tr > th, .v-data-table > .v-data-table__wrapper > table > thead > tr > th, .v-data-table > .v-data-table__wrapper > table > tfoot > tr > th 
 {
     font-size: 0.40rem;
-    height: 35px;    
+    height: 35px;        
 }
 .v-data-table > .v-data-table__wrapper > table > tbody > tr > td, .v-data-table > .v-data-table__wrapper > table > thead > tr > td, .v-data-table > .v-data-table__wrapper > table > tfoot > tr > td {
   font-size: 0.35rem;
@@ -196,4 +198,34 @@ export default {
 .bluecol {
   color: blue;
 }
+
+table.type03 {
+  border-collapse: collapse;
+  text-align: left;
+  line-height: 1;
+  border-top: 1px solid #ccc;
+  border-left: 3px solid #369;
+  margin : 20px 10px;
+  font-size: 0.40rem;
+}
+table.type03 th {
+  width: 160px;
+  padding: 10px;
+  font-weight: bold;
+  vertical-align: top;
+  color: white;
+  background: #153d73; 
+  border-right: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+
+}
+table.type03 td {
+  width: 349px;
+  padding: 10px;
+  vertical-align: top;
+  border-right: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+}
+
+
 </style>

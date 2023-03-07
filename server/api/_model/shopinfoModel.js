@@ -350,14 +350,26 @@ const shopinfoModel = {
 		
        	return row;		   
 	},
-	async getShopInputMag1(req) {
-		console.log(req.query);
-		const { i_shop, i_no } = req.query;
-		
+	async getShopInputMag1(req) {		
+		const { i_shop, i_no } = req.query;		
 		const sql = "select * from tb_shopinput where i_shop = '" + i_shop + "' and i_no = " + i_no;
-		const [[row]] = await db.execute(sql);		
-		console.log(row);
+		const [[row]] = await db.execute(sql);				
        	return row;		   		
+	},
+	async getShopInputMag2(req) {
+		const { i_shop, i_no, f_gubun } = req.query;	
+		
+		const sql = "select a.i_shop, a.i_ser, a.f_yn, a.n_file n_filename, " +
+					"       c.i_no, b.n_file, b.t_att " +
+					"  from tb_shopmag_file a " +
+					"       left outer join tb_shopinput c on a.i_shop = c.i_shop and c.i_no = " + i_no +
+					"       left outer join tb_shopinput_file b on a.i_shop = b.i_shop and a.i_ser = b.i_ser and c.i_no = b.i_no " +
+					" where a.i_shop = '" + i_shop + "' " +
+					"   and a.f_gubun = '" + f_gubun + "'" +
+					" order by a.i_shop, a.i_ser ";	
+		const [row] = await db.execute(sql);				
+       	return row;		   		
+	
 	},
 }
 module.exports = shopinfoModel;
