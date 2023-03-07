@@ -59,10 +59,13 @@ export default {
 </script>
 
 <style>
-.box {
-    position:absolute;
-    top:50%;
-    left:50%;
-    transform: translate(-50%, -50%);
+.v-data-table > .v-data-table__wrapper > table > tbody > tr > th, .v-data-table > .v-data-table__wrapper > table > thead > tr > th, .v-data-table > .v-data-table__wrapper > table > tfoot > tr > th 
+{
+    font-size: 0.40rem;
+    height: 35px;    
+}
+.v-data-table > .v-data-table__wrapper > table > tbody > tr > td, .v-data-table > .v-data-table__wrapper > table > thead > tr > td, .v-data-table > .v-data-table__wrapper > table > tfoot > tr > td {
+  font-size: 0.35rem;
+  height: 26px; 
 }
 </style>

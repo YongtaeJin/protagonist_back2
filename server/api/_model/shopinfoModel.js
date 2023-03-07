@@ -52,7 +52,7 @@ const shopinfoModel = {
 		const sql1 = "select i_shop from tb_shopmag where  now() between d_date1 and d_date2";
     	const [[row]] = await db.execute(sql1);
     	
-		const sql2 = "select a.i_shop, a.t_remark, a.t_remark2, i_no, ifnull(i_userid, '" + req.user.mb_id + "') i_userid, f_persioninfo, d_persioninfo, i_regno, n_company, n_person, t_tel1, t_tel2,  i_presno,  i_post, t_addr1, t_addr2, f_saugup, f_run, f_dart, t_enarainfo, t_enarainfopw " +
+		const sql2 = "select a.i_shop, a.t_remark, a.t_remark2, i_no, ifnull(i_userid, '" + req.user.mb_id + "') i_userid, f_persioninfo, d_persioninfo, i_regno, n_company, n_person, t_tel1, t_tel2,  i_presno, i_email, i_post, t_addr1, t_addr2, f_saugup, f_run, f_dart, t_enarainfo, t_enarainfopw " +
   					 "	from tb_shopmag a " +
        				 "       left outer join tb_shopinput b on a.i_shop = b.i_shop and b.i_userid = '" + req.user.mb_id +"'" +
  					 " where a.i_shop = '" + row.i_shop + "'"
@@ -348,8 +348,16 @@ const shopinfoModel = {
 					" where a.i_shop = '23-001' ";
 		const [row] = await db.execute(sql);
 		
-		console.log(req);
        	return row;		   
+	},
+	async getShopInputMag1(req) {
+		console.log(req.query);
+		const { i_shop, i_no } = req.query;
+		
+		const sql = "select * from tb_shopinput where i_shop = '" + i_shop + "' and i_no = " + i_no;
+		const [[row]] = await db.execute(sql);		
+		console.log(row);
+       	return row;		   		
 	},
 }
 module.exports = shopinfoModel;

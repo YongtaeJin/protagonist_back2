@@ -68,5 +68,8 @@ router.get('/getShopInputMag', async (req, res)=> {
 	const result = await modelCall(shopinfoModel.getShopInputMag, req);
 	res.json(result);
 }),
-
+router.get('/getShopInputMag1', async (req, res)=> {	
+	const result = await modelCall(shopinfoModel.getShopInputMag1, req);
+	res.json(result);
+}),
 module.exports = router;
