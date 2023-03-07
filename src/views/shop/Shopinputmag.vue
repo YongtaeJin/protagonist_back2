@@ -15,8 +15,8 @@
                         <td @click="clickItem(item, 0)" :class="{greencol: item.chk1=='Y', redcol: item.chk1 != 'Y'}"> {{ datachk(item.chk1) }} </td>
                         <td @click="clickItem(item, 1)" :class="{greencol: item.chk2=='Y', redcol: item.chk2 != 'Y'}"> {{ datachk(item.chk2) }} </td>
                         <td @click="clickItem(item, 2)" :class="{greencol: item.chk3=='Y', redcol: item.chk3 != 'Y'}"> {{ datachk(item.chk3) }} </td>
-                        <td @dblclick="f_dochk(item)" :class="{greencol: item.f_dochk=='1', redcol: item.f_dochk != 'Y'}"> {{ datachk2(item.f_dochk) }} </td>
-                        <td @dblclick="f_enarachk(item)" :class="{greencol: item.f_enarachk=='1', redcol: item.f_enarachk != 'Y'}"> {{ datachk2(item.f_enarachk) }} </td>
+                        <td @dblclick="f_dochk(item)" :class="{greencol: item.f_dochk=='Y', redcol: item.f_dochk != 'Y'}"> {{ datachk2(item.f_dochk) }} </td>
+                        <td @dblclick="f_enarachk(item)" :class="{greencol: item.f_enarachk=='Y', redcol: item.f_enarachk != 'Y'}"> {{ datachk2(item.f_enarachk) }} </td>
                     </tr>
                 </template>
             </v-data-table>
@@ -49,9 +49,9 @@
                         </table>
                     </v-tab-item>
 
-                    <v-tab-item><shopinputmag-03-form :fileLists="fileAdds"></shopinputmag-03-form></v-tab-item>                    
+                    <v-tab-item><shopinputmag-03-form :fileLists="fileAdds" :companyName="itemInput.n_company"></shopinputmag-03-form></v-tab-item>                    
 
-                    <v-tab-item><shopinputmag-03-form :fileLists="fileAddsB"></shopinputmag-03-form></v-tab-item>
+                    <v-tab-item><shopinputmag-03-form :fileLists="fileAddsB" :companyName="itemInput.n_company"></shopinputmag-03-form></v-tab-item>
                 </v-tabs-items>
             </v-card-text>
         </v-col>
