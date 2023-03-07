@@ -18,8 +18,15 @@ const lib = {
 			return { err : e.message };
 		}
 	},
-	getIp(req) {
-		return req.ip.replace('::ffff:', '');
+	getIp(req) {		
+		//return req.ip.replace('::ffff:', '');
+		var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;		
+		if (ip.substr(0, 7) == "::ffff:") {
+				ip = ip.substr(7);
+		} else {
+			ip = ip.replace('::ffff:', '');
+		}
+		return ip;	
 	},
 	findParentVm(vm, target) {
 		let parent = vm.$parent;
