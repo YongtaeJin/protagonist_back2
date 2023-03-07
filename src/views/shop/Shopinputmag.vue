@@ -4,7 +4,7 @@
         <v-toolbar-title>사업신청관리</v-toolbar-title>
     </v-toolbar>
     <v-row>
-        <v-col sm=7>
+        <v-col sm=6>
             <v-data-table height="500" max-height="800" 
                 :headers="headers" :items="itemInputs" :items-per-page="20"  :footer-props="{'items-per-page-options': [10, 20, 30, 40, 50, 100, -1]}" 
                 class="elevation-5" >
@@ -21,7 +21,7 @@
                 </template>
             </v-data-table>
         </v-col>
-        <v-col sm=5>
+        <v-col sm=6>
             <v-tabs v-model="tabs" background-color="primary" dark>
                 <v-tab value="tbapage_1">회사정보</v-tab>
                 <v-tab value="tbapage_2">신청서류</v-tab>            
@@ -125,6 +125,8 @@ export default {
             let val = "";
             if (data == "1" || data == "Y" ) { 
                 val = "등록완료"
+            } else if (data == "-" ) {
+                val = ""            
             } else {
                 val = "미등록"
             }

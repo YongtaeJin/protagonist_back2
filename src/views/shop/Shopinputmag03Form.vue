@@ -1,6 +1,6 @@
 <template>
     <v-form ref="form">
-        <v-toolbar background-color="primary" dark>
+        <v-toolbar background-color="primary" dark >
             <v-toolbar-title>일괄 내려받기 : </v-toolbar-title>
             <v-spacer></v-spacer>
             <v-checkbox label="회사명" v-model="f_downchk1" hide-details color="primary"/>

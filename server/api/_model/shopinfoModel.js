@@ -319,7 +319,7 @@ const shopinfoModel = {
 					"			length(trim(f_run)) + length(trim(f_dart)) + length(trim(t_enarainfo)) + length(trim(t_enarainfopw)) " +
 					"			, 0) > 0, 'Y', 'N') chk1, " +
 					"		if(b.f_f1y = c.f_u1y, 'Y', 'N') chk2, " +
-					"		if(b.f_f2y = c.f_u2y, 'Y', 'N') chk3, " +
+					"		if(b.f_f2y = 0, '-', if(b.f_f2y = c.f_u2y, 'Y', 'N')) chk3, " +
 					"		if(b.f_f3y = c.f_u3y, 'Y', 'N') chk4, " +
 					"		f_dochk, " +
 					"		f_enarachk	 " +				
