@@ -41,7 +41,23 @@ const store = new Vuex.Store({
 							grant : 5, 
 							newTab : false,
 							subItems : []
-						},						
+						},
+						{
+							title : "사업신청관리",
+							icon : "",
+							to : '/shop/shopinputmag',							
+							grant : 5, 
+							newTab : false,
+							subItems : []
+						},
+						{
+							title : "사업협약서관리",
+							icon : "",
+							to : '/shop/shopargeemag',							
+							grant : 5, 
+							newTab : false,
+							subItems : []
+						},		
 					]
 				},
 				{

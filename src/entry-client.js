@@ -17,7 +17,7 @@ function addStyle(href) {
 }
 
 addStyle('/css/style.css');
-addStyle('/css/ez-tiptap.min.css');
+// addStyle('/css/ez-tiptap.min.css');
 
 
 router.onReady(()=>{

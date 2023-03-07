@@ -1,6 +1,6 @@
 <template>
  	<v-app>
-		<v-navigation-drawer v-if="this.$store.state.user.member"  app v-model="drawer" :width="drawerWidth">
+		<v-navigation-drawer v-if="this.$store.state.user.member"  app v-model="drawer" :width="drawerWidth" disable-resize-watcher> 		
 			<site-navi  @close="toggleDrawer"/>
 		</v-navigation-drawer>
 

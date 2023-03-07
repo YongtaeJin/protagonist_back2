@@ -62,10 +62,21 @@ const routes = [
 		meta: { requireLogin: true },
 	},
 	{
+		path: '/shop/shopinputmag',
+		name: 'ShopInputMag',
+		component: () => import(/* webpackChunkName: "ShopInputMag" */ '../views/shop/Shopinputmag.vue'),
+	},
+	{
+		path: '/shop/shopargeemag',
+		name: 'ShopArgeeMag',
+		component: () => import(/* webpackChunkName: "ShopArgeeMag" */ '../views/shop/ShopArgeemag.vue'),
+	},
+	{
 		path: '/no',
 		name: 'NoLogin',
 		component: () => import(/* webpackChunkName: "nologin" */ '../views/NotLogin.vue')
 	},
+	
 	{
 		path: '*',
 		name: 'Error',

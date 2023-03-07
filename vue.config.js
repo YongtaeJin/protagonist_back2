@@ -57,7 +57,8 @@ module.exports = {
 			'/upload' : {
 				target : `http://localhost:${process.env.VUE_APP_SERVER_PORT}`
 			}
-		}
+		},
+		historyApiFallback: true,
 	},
 	configureWebpack: process.env.VUE_ENV === 'server' ? serverConfig : cilentConfig,
 }

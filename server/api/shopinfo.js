@@ -64,5 +64,9 @@ router.post('/shopAddFileDelete', async (req, res)=> {
 	res.json(result);
 }),
 
+router.get('/getShopInputMag', async (req, res)=> {	
+	const result = await modelCall(shopinfoModel.getShopInputMag, req);
+	res.json(result);
+}),
 
 module.exports = router;
