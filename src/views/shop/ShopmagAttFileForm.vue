@@ -135,7 +135,7 @@ export default {
         },
         async downLoad() {
             if(this.form.t_sample && this.form.t_filenm) {                
-                const fileName = `http://localhost:8080${this.form.t_sample}`;
+                const fileName = `http://protagonist.kro.kr:4000${this.form.t_sample}`;
                 const downFile = this.form.t_filenm;
                 try {
                     const response = await fetch(fileName)

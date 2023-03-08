@@ -30,7 +30,6 @@
 
 <script>
 import { deepCopy } from "../../../util/lib";
-
 export default {
     name: "Shopinputmag03Form",
     props: {        
@@ -63,7 +62,7 @@ export default {
             f_downchk2: 1,
         }
     },
-    created() {
+    created() {       
         this.init();
     },
      watch: {
@@ -81,7 +80,7 @@ export default {
             return data == 1  ? '필수' : '선택';
         },
         async downLoad(item) {
-            const fileName = `http://localhost:8080${item.t_att}`;
+            const fileName = `http://protagonist.kro.kr:4000${item.t_att}`;
             const downFile = item.n_file;
             
             try {
@@ -101,6 +100,7 @@ export default {
         },
         async alldownLoad() {
             const path = require('path');
+             
             // 일괄 다운르드
             let downFile = "";           
             let fileName = ""; // `http://localhost:8080${item.t_att}`; 
@@ -118,7 +118,7 @@ export default {
                             downFile = downFile + this.fileLists[ob].n_file;
                         }
                         downFile = downFile + path.extname(this.fileLists[ob].n_file);                        
-                        fileName = `http://localhost:8080${this.fileLists[ob].t_att}`; 
+                        fileName = `http://protagonist.kro.kr:4000${this.fileLists[ob].t_att}`; 
                         try {
                             const response = await fetch(fileName)
                             const blob = await response.blob();

@@ -21,7 +21,7 @@ const configModel = {
 			item.cf_val = JSON.parse(item.cf_val);
 		}
 		if (item.cf_client) {
-			$config.client[item.cf_key] = item.cf_val;
+			$config.client[item.cf_key] = item.cf_val;			
 		} else {
 			$config.server[item.cf_key] = item.cf_val;
 		}

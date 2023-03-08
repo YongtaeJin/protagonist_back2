@@ -140,7 +140,7 @@ export default {
     },
     
     async onButtonClick2(item) {        
-      const fileName = `http://localhost:8080${item.t_att}`;
+      const fileName = `http://protagonist.kro.kr:4000${item.t_att}`;
       const downFile = item.n_file2;
       try {
         const response = await fetch(fileName)
@@ -171,7 +171,7 @@ export default {
       }
     },
     async downLoad(item) {
-      const fileName = `http://localhost:8080${item.t_sample}`;
+      const fileName = `http://protagonist.kro.kr:4000${item.t_sample}`;
       const downFile = item.t_samplefile;
     
       try {
