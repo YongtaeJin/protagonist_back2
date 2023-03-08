@@ -30,6 +30,7 @@
 
 <script>
 import { deepCopy } from "../../../util/lib";
+import axios from 'axios';
 export default {
     name: "Shopinputmag03Form",
     props: {        
@@ -82,21 +83,37 @@ export default {
         async downLoad(item) {
             const fileName = `https://protagonist.kro.kr${item.t_att}`;
             const downFile = item.n_file;
-            
-            try {
-                const response = await fetch(fileName)
-                const blob = await response.blob();
-                const url = await URL.createObjectURL(blob)
 
-                const a = document.createElement("a");
-                a.href = url;        
-                a.download = downFile;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-            } catch(err) {
-                console.log({ err })
-            }
+            
+            axios({
+                url: `https://protagonist.kro.kr${item.t_att}`, // File URL Goes Here
+                method: 'GET',
+                responseType: 'blob',
+            }).then((res) => {
+                    var FILE = window.URL.createObjectURL(new Blob([res.data]));
+                    
+                    var docUrl = document.createElement('x');
+                    docUrl.href = FILE;
+                    docUrl.setAttribute('download', 'file.pdf');
+                    document.body.appendChild(docUrl);
+                    docUrl.click();
+            });
+            
+            
+            // try {
+            //     const response = await fetch(fileName)
+            //     const blob = await response.blob();
+            //     const url = await URL.createObjectURL(blob)
+
+            //     const a = document.createElement("a");
+            //     a.href = url;        
+            //     a.download = downFile;
+            //     document.body.appendChild(a);
+            //     a.click();
+            //     document.body.removeChild(a);
+            // } catch(err) {
+            //     console.log({ err })
+            // }
         },
         async alldownLoad() {
             const path = require('path');
