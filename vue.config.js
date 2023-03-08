@@ -59,6 +59,9 @@ module.exports = {
 			}
 		},
 		historyApiFallback: true,
+		images: {
+			disableStaticImages: true
+		},
 	},
 	configureWebpack: process.env.VUE_ENV === 'server' ? serverConfig : cilentConfig,
 	

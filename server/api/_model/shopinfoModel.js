@@ -371,5 +371,16 @@ const shopinfoModel = {
        	return row;		   		
 	
 	},
+	async getFileDown(req, res) {
+		
+
+		let fPath = `${SERVER_PATH}` ;
+		const { path } = req.query;		
+		let filePath = fPath + path;
+		
+		const file = fs.readFileSync(filePath);	
+		
+		return file;
+	},
 }
 module.exports = shopinfoModel;

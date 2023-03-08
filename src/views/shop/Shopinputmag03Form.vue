@@ -29,8 +29,10 @@
 </template>
 
 <script>
+
 import { deepCopy } from "../../../util/lib";
-import axios from 'axios';
+import { save } from 'save-file';
+
 export default {
     name: "Shopinputmag03Form",
     props: {        
@@ -81,32 +83,17 @@ export default {
             return data == 1  ? '필수' : '선택';
         },
         async downLoad(item) {
-            const fileName = `https://protagonist.kro.kr${item.t_att}`;
+             const disableAutoBOM = true;
+
             const downFile = item.n_file;
+            const fileBuffer = await this.$axios.get(`/api/shopinfo/getFileDown?path=${ item.t_att }`);
 
-            
-            axios({
-                url: `https://protagonist.kro.kr${item.t_att}`, // File URL Goes Here
-                method: 'GET',
-                responseType: 'blob',
-            }).then((res) => {
-                    var FILE = window.URL.createObjectURL(new Blob([res.data]));
-                    
-                    var docUrl = document.createElement('x');
-                    docUrl.href = FILE;
-                    docUrl.setAttribute('download', 'file.pdf');
-                    document.body.appendChild(docUrl);
-                    docUrl.click();
-            });
-            
-            
+            // save (fileBuffer, downFile, disableAutoBOM);
+
             // try {
-            //     const response = await fetch(fileName)
-            //     const blob = await response.blob();
-            //     const url = await URL.createObjectURL(blob)
-
+                
             //     const a = document.createElement("a");
-            //     a.href = url;        
+            //     a.href = fileBuffer;        
             //     a.download = downFile;
             //     document.body.appendChild(a);
             //     a.click();
@@ -114,6 +101,14 @@ export default {
             // } catch(err) {
             //     console.log({ err })
             // }
+     
+            const element = document.createElement('a');
+            element.setAttribute('href', 'data:text/plain;charset=utf-8, ' + fileBuffer);
+            element.setAttribute('download', downFile);
+            document.body.appendChild(element);
+            element.click();
+
+
         },
         async alldownLoad() {
             const path = require('path');
