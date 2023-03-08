@@ -80,7 +80,7 @@ export default {
             return data == 1  ? '필수' : '선택';
         },
         async downLoad(item) {
-            const fileName = `https://protagonist.kro.kr:4000${item.t_att}`;
+            const fileName = `https://protagonist.kro.kr${item.t_att}`;
             const downFile = item.n_file;
             
             try {
@@ -118,7 +118,7 @@ export default {
                             downFile = downFile + this.fileLists[ob].n_file;
                         }
                         downFile = downFile + path.extname(this.fileLists[ob].n_file);                        
-                        fileName = `https://protagonist.kro.kr:4000${this.fileLists[ob].t_att}`; 
+                        fileName = `https://protagonist.kro.kr${this.fileLists[ob].t_att}`; 
                         try {
                             const response = await fetch(fileName)
                             const blob = await response.blob();

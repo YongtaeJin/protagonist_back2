@@ -140,7 +140,7 @@ export default {
     },
     
     async onButtonClick2(item) {
-      const fileName = `https://protagonist.kro.kr:4000${item.t_att}`;
+      const fileName = `https://protagonist.kro.kr${item.t_att}`;
       const downFile = item.n_file2;
     
       try {
@@ -173,7 +173,7 @@ export default {
     },
 
     async downLoad(item) {
-      const fileName = `https://protagonist.kro.kr:4000${item.t_sample}`;
+      const fileName = `https://protagonist.kro.kr${item.t_sample}`;
       const downFile = item.t_samplefile;
     
       try {
