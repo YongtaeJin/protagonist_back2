@@ -3,7 +3,7 @@
         <v-toolbar background-color="primary" dark >
             <v-toolbar-title>일괄 내려받기 : </v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-checkbox label="회사명" v-model="f_downchk1" hide-details color="primary"/>
+            <!-- <v-checkbox label="회사명" v-model="f_downchk1" hide-details color="primary"/> -->
             <v-checkbox label="서류명" v-model="f_downchk2" hide-details color="primary"/>
             <v-spacer></v-spacer>
             <v-btn color="primary" @click="alldownLoad">다운로드</v-btn>
@@ -153,9 +153,23 @@ export default {
         async alldownLoad() {
 
             const path = require('path');
+            let f_filetype = '1';
 
-            const fsPromises = require('fs').promises;
-            await fsPromises.writeFile('file.txt', 'data to write')
+            if (this.f_downchk2) { f_filetype = '2'};
+
+            if (this.fileLists) {
+                // var t_att = this.fileLists[0].t_att;
+                // var t_path =  t_att.split("/").slice(0, -1).join("/");
+                // console.log(t_path);
+
+                const fileBuffer = await this.$axios.get(`/api/shopinfo/getFileDownZip?i_shop=${ this.fileLists[0].i_shop }&i_no=${ this.fileLists[0].i_no }&f_gubun=1&f_filetype=${f_filetype}`);
+                save (fileBuffer, `${this.companyName}.zip`);
+          
+                alert('File Donw load Click !!!!!'); 
+            }
+
+
+            // const fileBufferRes = await this.$axios.get(`/api/shopinfo/getFileDownZip`);
             return ;
              
             // 일괄 다운르드

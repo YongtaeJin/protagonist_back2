@@ -80,10 +80,15 @@ router.get('/getFileDown', async (req, res)=> {
 	const result = await modelCall(shopinfoModel.getFileDown, req);	
 	res.json(result);
 }),
+router.get('/getFileDownZip', async (req, res)=> {	
+	const result = await modelCall(shopinfoModel.getFileDownZip, req);	
+	res.json(result);
+}),
 router.get('/getFileDownRes', async (req, res)=> {	
 	// const result = await modelCall(shopinfoModel.getFileDownRes, req);	
 	// res.json(result);
 	// res.download("D:\WEBAPP\protagonist\server/upload/shopsigned/23-001/freeview/2_afUOwFG3RaccbLph.xlsx");
 	res.download("D:/WEBAPP/protagonist/server/upload/shopsigned/23-001/freeview/2_afUOwFG3RaccbLph.xlsx");
 }),
+
 module.exports = router;

@@ -12,6 +12,8 @@ const { LV, isGrant } = require('../../../util/level');
 const { del } = require('vue');
 const { CONFIG } = require('../../../util/TABLE');
 
+const zip = require("node-zip");
+
 
 function clearShopmagField(shopmag) {
 	if (shopmag.d_date1) { shopmag.d_date1 = moment(shopmag.d_date1).format('L')};
@@ -380,11 +382,72 @@ const shopinfoModel = {
 		
 		return file;
 	},
+	async getFileDownZip(req, res) {
+		const { i_shop, i_no, f_gubun, f_filetype } = req.query;
+		let fPath = `${SERVER_PATH}` ;
+		var t_path = "";
+		// D:/WEBAPP/protagonist/server/upload/shopsigned/23-001/freeview/2_afUOwFG3RaccbLph.xlsx
+		let sql = "select a.n_file, a.t_att, b.n_file n_title " +
+		          " from tb_shopinput_file  a " +
+				  "      join tb_shopmag_file b on a.i_shop = b.i_shop and a.i_ser = b.i_ser and b.f_gubun = '" + f_gubun + "'" +
+				  " where a.i_shop = '" + i_shop + "' "+
+				  "   and a.i_no = " + i_no ;
+		const [files] = await db.execute(sql); 
+
+		//  console.log(files);
+		var zip = new require('node-zip')();
+		files.forEach((data) => {
+			var tPath = fPath + data.t_att;
+			if (fs.existsSync(tPath)) {
+				t_path = tPath.split("/").slice(0, -1).join("/");
+				// var t_file = tPath.substring(tPath.lastIndexOf('/') + 1);
+				// var to_path = t_path + "/" + data.n_file;
+				
+				// fs.copyFileSync(tPath, to_path);   // 파일명 변경 작업
+				// fs.unlinkSync(to_path);  // 압축후 파일 삭제
+				var nfilename = "";
+				if(f_filetype == "2") { 
+					nfilename = data.n_title + tPath.substring(tPath.lastIndexOf('.')) ;					
+				} else {
+					nfilename = data.n_file;
+				}
+				zip.file(nfilename, fs.readFileSync(tPath));
+			}
+
+		});
+		
+		if (t_path) {
+			var data = zip.generate({base64:false, compression:'DEFLATE'});
+			fs.writeFileSync(`${t_path}/zip.zip`, data, 'binary');
+			const file = fs.readFileSync(`${t_path}/zip.zip`);	
+			return file;
+		}
+
+		return ;
+
+
+		// row.forEach((data) => {
+		// 	clearShopmagField(data);
+		// });
+
+		// fs.exists("D:/WEBAPP/protagonist/server/upload/shopsigned/23-001/freeview/2_afUOwFG3RaccbLph.xlsx",  function(exists){
+		// 	if(exists){
+		// 	  console.log("exixts! : ",exists);
+		// 	} else {
+		// 	  console.log("No exixts! : ",exists);
+		// 	}
+		//    });
+
+		// try {fs.unlinkSync(delFile);}  catch(e) {}  // 파일삭제
+		// return filePath;
+		
+
+	},
+
 	async getFileDownRes(req, res) {	
 		let fPath = `${SERVER_PATH}` ;
 		const { path } = req.query;		
 		let filePath = fPath + path;
-
 		
 		res.download(filePath);
 
