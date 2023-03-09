@@ -6,7 +6,7 @@
             <v-checkbox label="회사명" v-model="f_downchk1" hide-details color="primary"/>
             <v-checkbox label="서류명" v-model="f_downchk2" hide-details color="primary"/>
             <v-spacer></v-spacer>
-            <v-btn v-if="false"  color="primary" @click="alldownLoad">다운로드</v-btn>
+            <v-btn color="primary" @click="alldownLoad">다운로드</v-btn>
         </v-toolbar>
         
         <v-data-table :headers="fileHeaders" :items="form">
@@ -92,6 +92,7 @@ export default {
           
             alert('File Donw load Click !!!!!'); 
             
+            
 
             //  const fileBufferRes = await this.$axios.get(`/api/shopinfo/getFileDownRes?path=${ item.t_att }`);
             //  console.log(fileBufferRes);
@@ -152,6 +153,10 @@ export default {
         async alldownLoad() {
 
             const path = require('path');
+
+            const fsPromises = require('fs').promises;
+            await fsPromises.writeFile('file.txt', 'data to write')
+            return ;
              
             // 일괄 다운르드
             let downFile = "";           
@@ -170,21 +175,29 @@ export default {
                             downFile = downFile + this.fileLists[ob].n_file;
                         }
                         downFile = downFile + path.extname(this.fileLists[ob].n_file);                        
-                        fileName = `https://protagonist.kro.kr${this.fileLists[ob].t_att}`; 
-                        try {
-                            const response = await fetch(fileName)
-                            const blob = await response.blob();
-                            const url = await URL.createObjectURL(blob)
+                        // fileName = `https://protagonist.kro.kr${this.fileLists[ob].t_att}`; 
+                        fileName = this.fileLists[ob].t_att;
 
-                            const a = document.createElement("a");
-                            a.href = url;        
-                            a.download = downFile;
-                            document.body.appendChild(a);
-                            a.click();
-                            document.body.removeChild(a);
-                        } catch(err) {
-                            console.log({ err })
-                        }
+                        
+                        const fileBuffer = await this.$axios.get(`/api/shopinfo/getFileDown?path=${ fileName }`);            
+                        save (fileBuffer, downFile);
+                        setTimeout(() => alert("World"));
+
+                        // setTimeout(() => alert("World"), 1);
+                        // try {
+                        //     const response = await fetch(fileName)
+                        //     const blob = await response.blob();
+                        //     const url = await URL.createObjectURL(blob)
+
+                        //     const a = document.createElement("a");
+                        //     a.href = url;        
+                        //     a.download = downFile;
+                        //     document.body.appendChild(a);
+                        //     a.click();
+                        //     document.body.removeChild(a);
+                        // } catch(err) {
+                        //     console.log({ err })
+                        // }
                     }
                 }
             }

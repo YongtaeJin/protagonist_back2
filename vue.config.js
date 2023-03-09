@@ -60,6 +60,5 @@ module.exports = {
 		},
 		historyApiFallback: true,		
 	},
-	configureWebpack: process.env.VUE_ENV === 'server' ? serverConfig : cilentConfig,
-	
+	configureWebpack: process.env.VUE_ENV === 'server' ? serverConfig : cilentConfig
 }

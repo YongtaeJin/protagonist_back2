@@ -25,9 +25,11 @@
 
 <script>
 import { deepCopy } from '../../../util/lib';
+import { save } from 'save-file';
 import validateRules from "../../../util/validateRules";
 import InputDate from '../../components/InputForms/InputDate.vue';
 import InputDuplicateCheck from '../../components/InputForms/InputDuplicateCheck.vue';
+
 export default {
   components: { InputDate, InputDuplicateCheck },
     name: "ShopmagUpdateForm",
@@ -137,20 +139,25 @@ export default {
             if(this.form.t_sample && this.form.t_filenm) {                
                 const fileName = `https://protagonist.kro.kr${this.form.t_sample}`;
                 const downFile = this.form.t_filenm;
-                try {
-                    const response = await fetch(fileName)
-                    const blob = await response.blob();
-                    const url = await URL.createObjectURL(blob)
 
-                    const a = document.createElement("a");
-                    a.href = url;        
-                    a.download = downFile;
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                } catch(err) {
-                    console.log({ err })
-                }
+                const fileBuffer = await this.$axios.get(`/api/shopinfo/getFileDown?path=${ this.form.t_sample }`);            
+                save (fileBuffer, downFile);
+                
+                alert('File Donw load Click !!!!!'); 
+                // try {
+                //     const response = await fetch(fileName)
+                //     const blob = await response.blob();
+                //     const url = await URL.createObjectURL(blob)
+
+                //     const a = document.createElement("a");
+                //     a.href = url;        
+                //     a.download = downFile;
+                //     document.body.appendChild(a);
+                //     a.click();
+                //     document.body.removeChild(a);
+                // } catch(err) {
+                //     console.log({ err })
+                // }
             }
         }
     }
