@@ -6,9 +6,8 @@
             <v-checkbox label="회사명" v-model="f_downchk1" hide-details color="primary"/>
             <v-checkbox label="서류명" v-model="f_downchk2" hide-details color="primary"/>
             <v-spacer></v-spacer>
-            <v-btn color="primary" @click="alldownLoad">다운로드</v-btn>
+            <v-btn v-if="false"  color="primary" @click="alldownLoad">다운로드</v-btn>
         </v-toolbar>
-            
         
         <v-data-table :headers="fileHeaders" :items="form">
             <template v-slot:item="{ item }">        
@@ -32,7 +31,9 @@
 
 import { deepCopy } from "../../../util/lib";
 import { save } from 'save-file';
+import { saveAs } from 'file-saver';
 
+import axios from "axios";
 export default {
     name: "Shopinputmag03Form",
     props: {        
@@ -83,12 +84,33 @@ export default {
             return data == 1  ? '필수' : '선택';
         },
         async downLoad(item) {
-             const disableAutoBOM = true;
+            const disableAutoBOM = true;
 
-            const downFile = item.n_file;
-            const fileBuffer = await this.$axios.get(`/api/shopinfo/getFileDown?path=${ item.t_att }`);
+            const downFile = item.n_file;            
+            const fileBuffer = await this.$axios.get(`/api/shopinfo/getFileDown?path=${ item.t_att }`);            
+            save (fileBuffer, downFile);
+          
+            alert('File Donw load Click !!!!!'); 
+            
 
-            // save (fileBuffer, downFile, disableAutoBOM);
+            //  const fileBufferRes = await this.$axios.get(`/api/shopinfo/getFileDownRes?path=${ item.t_att }`);
+            //  console.log(fileBufferRes);
+            // res.download("D:\WEBAPP\protagonist\server/upload/shopsigned/23-001/freeview/2_afUOwFG3RaccbLph.xlsx");
+	        //res.download("D:/WEBAPP/protagonist/server/upload/shopsigned/23-001/freeview/2_afUOwFG3RaccbLph.xlsx");
+       
+          
+
+            //  const fs = require('fs');
+            // try { fs.writeFileSync(downFile, "aaaaaaaa", 'utf-8'); }
+            //     catch(e) { 
+            //         console.log(e);
+            //         alert('Failed to save the file !'); 
+            //         }
+            // await saveAs  (fileBuffer, downFile);
+          
+
+
+            //  const res = await this.$ezNotify.alert("저장 하였습니다.");
 
             // try {
                 
@@ -102,15 +124,33 @@ export default {
             //     console.log({ err })
             // }
      
-            const element = document.createElement('a');
-            element.setAttribute('href', 'data:text/plain;charset=utf-8, ' + fileBuffer);
-            element.setAttribute('download', downFile);
-            document.body.appendChild(element);
-            element.click();
+            // const element = document.createElement('a');
+            // element.setAttribute('href',  fileBuffer);
+            // element.setAttribute('download', downFile);
+            // document.body.appendChild(element);
+            // element.click();
+
+            // await axios({
+            //         url: 'https://protagonist.kro.kr/upload/shopsigned/23-001/freeview/2_iY4SbGs909QykRrD.pdf',
+            //         method: 'GET',
+            //         responseType: 'blob',
+            //     }).then((response) => {
+            //          var fileURL = window.URL.createObjectURL(new Blob([response.data]));
+            //          var fileLink = document.createElement('a');
+   
+            //          fileLink.href = fileURL;
+            //          fileLink.setAttribute('download', 'file.pdf');
+            //          document.body.appendChild(fileLink);
+   
+            //          fileLink.click();
+            //     });
+
+            // console.log("sdfsafsaf");
 
 
         },
         async alldownLoad() {
+
             const path = require('path');
              
             // 일괄 다운르드

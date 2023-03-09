@@ -58,10 +58,7 @@ module.exports = {
 				target : `http://localhost:${process.env.VUE_APP_SERVER_PORT}`
 			}
 		},
-		historyApiFallback: true,
-		images: {
-			disableStaticImages: true
-		},
+		historyApiFallback: true,		
 	},
 	configureWebpack: process.env.VUE_ENV === 'server' ? serverConfig : cilentConfig,
 	

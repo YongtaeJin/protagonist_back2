@@ -52,6 +52,7 @@
 
 <script>
 import { deepCopy } from "../../../util/lib";
+import { save } from 'save-file';
 import InputPost3 from '../../components/InputForms/InputPost3.vue';
 export default {
   components: { InputPost3 },
@@ -142,21 +143,25 @@ export default {
     async onButtonClick2(item) {
       const fileName = `https://protagonist.kro.kr${item.t_att}`;
       const downFile = item.n_file2;
-    
-      try {
-        const response = await fetch(fileName)
-        const blob = await response.blob();
-        const url = await URL.createObjectURL(blob)
 
-        const a = document.createElement("a");
-        a.href = url;        
-        a.download = downFile;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-      } catch(err) {
-        console.log({ err })
-      }
+      const fileBuffer = await this.$axios.get(`/api/shopinfo/getFileDown?path=${ item.t_att }`); 
+      save (fileBuffer, downFile);
+      alert('File Donw load Click !!!!!'); 
+    
+      // try {
+      //   const response = await fetch(fileName)
+      //   const blob = await response.blob();
+      //   const url = await URL.createObjectURL(blob)
+
+      //   const a = document.createElement("a");
+      //   a.href = url;        
+      //   a.download = downFile;
+      //   document.body.appendChild(a);
+      //   a.click();
+      //   document.body.removeChild(a);
+      // } catch(err) {
+      //   console.log({ err })
+      // }
     },
 
     async onButtonClick3(item) {
@@ -175,21 +180,25 @@ export default {
     async downLoad(item) {
       const fileName = `https://protagonist.kro.kr${item.t_sample}`;
       const downFile = item.t_samplefile;
-    
-      try {
-        const response = await fetch(fileName)
-        const blob = await response.blob();
-        const url = await URL.createObjectURL(blob)
 
-        const a = document.createElement("a");
-        a.href = url;        
-        a.download = downFile;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-      } catch(err) {
-        console.log({ err })
-      }
+      const fileBuffer = await this.$axios.get(`/api/shopinfo/getFileDown?path=${ item.t_sample }`); 
+      save (fileBuffer, downFile);
+      alert('File Donw load Click !!!!!'); 
+    
+      // try {
+      //   const response = await fetch(fileName)
+      //   const blob = await response.blob();
+      //   const url = await URL.createObjectURL(blob)
+
+      //   const a = document.createElement("a");
+      //   a.href = url;        
+      //   a.download = downFile;
+      //   document.body.appendChild(a);
+      //   a.click();
+      //   document.body.removeChild(a);
+      // } catch(err) {
+      //   console.log({ err })
+      // }
     },
    
   },  
