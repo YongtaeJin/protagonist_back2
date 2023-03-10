@@ -190,8 +190,7 @@ export default {
                 }
                 console.log(item)
                 // const data = await this.$axios.patch(`/api/shopinfo/getShopInputMag?i_shop=${item.i_shop}&i_no=${item.i_no}&f_dochk=${item.f_dochk}&f_enarachk=${item.f_enarachk}`);
-                const data = await this.$axios.patch(`/api/shopinfo/getShopInputMag?i_shop=${item.i_shop}&i_no=${item.i_no}&f_dochk=${item.f_dochk}`);
-               
+                const data = await this.$axios.patch(`/api/shopinfo/getShopInputMag?i_shop=${item.i_shop}&i_no=${item.i_no}&f_dochk=${item.f_dochk}`);               
             }             
         },
         async f_enarachk(item) {

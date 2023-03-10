@@ -18,6 +18,12 @@ const lib = {
 			return { err : e.message };
 		}
 	},
+	extractNumber(data) {
+		var regex  = /[^0-9]/g;
+		var rv = data.replace(regex, "");
+		return rv
+	},
+
 	getIp(req) {		
 		//return req.ip.replace('::ffff:', '');
 		var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;		

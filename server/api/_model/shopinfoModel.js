@@ -314,7 +314,7 @@ const shopinfoModel = {
 			throw new Error('사용 권한이 없습니다.');
 		}
 		const {i_shop, chkf_serarch, chkf_dochk, chkf_enara} = req.query;
-		console.log(req.query);
+		// console.log(req.query);
 		// var ls_comnm = chkf_serarch ? chkf_serarch : "%";
 		// console.log(ls_comnm);
 
@@ -467,7 +467,6 @@ const shopinfoModel = {
 		
 
 	},
-
 	async getFileDownRes(req, res) {	
 		let fPath = `${SERVER_PATH}` ;
 		const { path } = req.query;		
@@ -476,5 +475,30 @@ const shopinfoModel = {
 		res.download(filePath);
 
 	},
+	async getShopArgeeMag(req) {
+		// 권한 확인
+		if (!isGrant(req, LV.VIP)) {
+			throw new Error('사용 권한이 없습니다.');
+		}
+		const {i_shop, f_gubun } = req.query;
+		const sql = "select a.i_shop, a.i_no, a.n_company, "+
+			  "			max(b.rnum) rnum, "+
+			  "			max(if(b.rnum = 1, b.n_nm, '')) h1, max(if(b.rnum = 2, b.n_nm, '')) h2, max(if(b.rnum = 3, b.n_nm, '')) h3, max(if(b.rnum = 4, b.n_nm, '')) h4, max(if(b.rnum = 5, b.n_nm, '')) h5, max(if(b.rnum = 6, b.n_nm, '')) h6, max(if(b.rnum = 7, b.n_nm, '')) h7, max(if(b.rnum = 8, b.n_nm, '')) h8, max(if(b.rnum = 9, b.n_nm, '')) h9, max(if(b.rnum = 10, b.n_nm, '')) h10, " +
+			  "			max(if(b.rnum = 11, b.n_nm, '')) h11, max(if(b.rnum = 12, b.n_nm, '')) h12, max(if(b.rnum = 13, b.n_nm, '')) h13, max(if(b.rnum = 14, b.n_nm, '')) h14, max(if(b.rnum = 15, b.n_nm, '')) h15, max(if(b.rnum = 16, b.n_nm, '')) h16, max(if(b.rnum = 17, b.n_nm, '')) h17, max(if(b.rnum = 18, b.n_nm, '')) h18, max(if(b.rnum = 19, b.n_nm, '')) h19, max(if(b.rnum = 20, b.n_nm, '')) h20, " +
+						
+			  "			max(if(b.rnum = 1, c.t_att, '')) t1, max(if(b.rnum = 2, c.t_att, '')) t2, max(if(b.rnum = 3, c.t_att, '')) t3, max(if(b.rnum = 4, c.t_att, '')) t4, max(if(b.rnum = 5, c.t_att, '')) t5, max(if(b.rnum = 6, c.t_att, '')) t6, max(if(b.rnum = 7, c.t_att, '')) t7, max(if(b.rnum = 8, c.t_att, '')) t8, max(if(b.rnum = 9, c.t_att, '')) t9, max(if(b.rnum = 10, c.t_att, '')) t10, " +
+			  "			max(if(b.rnum = 11, c.t_att, '')) t11, max(if(b.rnum = 12, c.t_att, '')) t12, max(if(b.rnum = 13, c.t_att, '')) t13, max(if(b.rnum = 14, c.t_att, '')) t14, max(if(b.rnum = 15, c.t_att, '')) t15, max(if(b.rnum = 16, c.t_att, '')) t16, max(if(b.rnum = 17, c.t_att, '')) t17, max(if(b.rnum = 18, c.t_att, '')) t18, max(if(b.rnum = 19, c.t_att, '')) t19, max(if(b.rnum = 20, c.t_att, '')) t20 " +
+						
+			  "	from tb_shopinput a " +
+			  "			left outer  join  (select i_shop, i_ser, f_gubun,  @rownum := @rownum+1 AS rnum, n_nm " +
+			  "								from tb_shopmag_file, (SELECT @rownum := 0) AS R " +
+			  "							where i_shop = '23-001' and f_gubun = '3' order by i_sort) b on a.i_shop = b.i_shop " +
+			  "			left outer join tb_shopinput_file c on a.i_shop = c.i_shop and a.i_no = c.i_no and b.i_ser = c.i_ser " +
+			  "	where a.i_shop = '23-001' " +
+			  "	group by a.i_shop, a.i_no, a.n_company " +
+			  "	order by i_no " ;
+		const [row] = await db.execute(sql);				
+		return row;
+	}
 }
 module.exports = shopinfoModel;

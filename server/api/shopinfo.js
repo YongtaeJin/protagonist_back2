@@ -96,4 +96,9 @@ router.get('/getFileDownRes', async (req, res)=> {
 	res.download("D:/WEBAPP/protagonist/server/upload/shopsigned/23-001/freeview/2_afUOwFG3RaccbLph.xlsx");
 }),
 
+router.get('/getShopArgeeMag', async (req, res)=> {	
+	const result = await modelCall(shopinfoModel.getShopArgeeMag, req);
+	res.json(result);
+}),
+
 module.exports = router;
