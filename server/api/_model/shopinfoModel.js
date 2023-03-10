@@ -312,6 +312,11 @@ const shopinfoModel = {
 		if (!isGrant(req, LV.VIP)) {
 			throw new Error('사용 권한이 없습니다.');
 		}
+		const {i_shop, chkf_serarch, chkf_dochk, chkf_enara} = req.query;
+		console.log(req.query);
+		// var ls_comnm = chkf_serarch ? chkf_serarch : "%";
+		// console.log(ls_comnm);
+
 		const sql = "select a.i_shop, a.i_no, " +
 					"		coalesce(n_company, a.i_userid) n_company, " +
 					"		f_persioninfo, " +
@@ -334,7 +339,7 @@ const shopinfoModel = {
 					"								sum(case when f_gubun = '3' and f_yn = '1' then 1 else 0 end) f_f3y, " +
 					"								sum(case when f_gubun = '3' and f_yn = '0' then 1 else 0 end) f_f3n " +
 					"						from tb_shopmag_file  " +
-					"						where i_shop = '23-001' " +
+					"						where i_shop = '" + i_shop + "' " +
 					"						group by i_shop) b on a.i_shop = b.i_shop " +
 					"		left outer join (select c2.i_shop, c2.i_no, " +
 					"								sum(case when f_gubun = '1' and f_yn = '1' then 1 else 0 end) f_u1y, " +
@@ -345,11 +350,15 @@ const shopinfoModel = {
 					"								sum(case when f_gubun = '3' and f_yn = '0' then 1 else 0 end) f_u3n " +
 					"						from tb_shopmag_file c1 " +
 					"								join tb_shopinput_file c2 on  c1.i_shop = c2.i_shop and c1.i_ser = c2.i_ser " +
-					"						where c1.i_shop = '23-001' " + 
+					"						where c1.i_shop = '" + i_shop + "' " + 
 					"						group by c2.i_shop, c2.i_no) c on a.i_shop = b.i_shop and a.i_no = c.i_no " +
-					" where a.i_shop = '23-001' ";
+					" where a.i_shop = '" + i_shop + "' " +
+					"   and trim(coalesce(n_company, a.i_userid)) like '" + chkf_serarch + "%'" +
+					"   and coalesce(f_dochk, 'N') like '" + chkf_dochk + "'" +
+					"   and coalesce(f_enarachk, 'N') like '" + chkf_enara + "'";
+					
 		const [row] = await db.execute(sql);
-		
+		console.log(sql);
        	return row;		   
 	},
 	async getShopInputMag1(req) {		

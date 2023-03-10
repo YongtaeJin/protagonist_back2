@@ -2,6 +2,20 @@
     <v-container fluid>
     <v-toolbar>
         <v-toolbar-title>사업신청관리</v-toolbar-title>
+        <v-spacer/>
+        <v-text-field label="업체명 : " v-model="chkf_serarch" hide-details  single-lin  />
+        
+        <v-radio-group inline  label="공방서류 :" v-model="chkf_dochk" row hide-details class="small-radio no-space"   >
+            <v-radio label="전체" value="%" />
+            <v-radio label="완료" value="Y" />
+            <v-radio label="미완료" value="N" />
+        </v-radio-group>
+        <v-radio-group inline  label="공방서류 :" v-model="chkf_enara" row hide-details class="small-radio no-space"   >
+            <v-radio label="전체" value="%" />
+            <v-radio label="완료" value="Y" />
+            <v-radio label="미완료" value="N" />
+        </v-radio-group>
+        <v-btn color="primary"  @click="fetchData">조회</v-btn>
     </v-toolbar>
     <v-row>
         <v-col sm=6>
@@ -113,6 +127,9 @@ export default {
                 n_file: null,
                 t_att: null,
             },
+            chkf_dochk : "%",
+            chkf_enara : "%",
+            chkf_serarch : "",
         }
     },
     mounted() {     
@@ -146,7 +163,9 @@ export default {
         },
        
         async fetchData() {
-            this.itemInputs = await this.$axios.get(`/api/shopinfo/getShopInputMag`);
+            //this.itemInputs = await this.$axios.get(`/api/shopinfo/getShopInputMag`);
+            this.itemInputs = await this.$axios.get(`/api/shopinfo/getShopInputMag?i_shop=23-001&chkf_serarch=${this.chkf_serarch}&chkf_dochk=${this.chkf_dochk}&chkf_enara=${this.chkf_enara}`);
+            // this.itemInputs = await this.$axios.get(`/api/shopinfo/getShopInputMag?i_shop=23-001&chkf_serarch=${this.chkf_serarch}&chkf_dochk=${ this.chkf_dochk}&chkf_enara=${this.chkf_enara}`);
         },
          async clickItem(item, col) {
             this.tabs = col;            
@@ -229,5 +248,18 @@ table.type03 td {
   border-bottom: 1px solid #ccc;
 }
 
-
+.small-radio i {
+  font-size: 0.5rem;
+}
+.small-radio label {    
+  font-size: 0.35rem;
+  padding-left: 0px;
+  margin-left: -4px;
+}
+.small-radio .v-radio {
+  padding: 0px;
+}
+.small-radio [class*="__ripple"] {
+  left: 0;
+}
 </style>
