@@ -1,6 +1,6 @@
 <template>
  	<v-app>
-		<v-navigation-drawer v-if="this.$store.state.user.member"  app v-model="drawer" :width="drawerWidth" disable-resize-watcher> 		
+		<v-navigation-drawer v-if="this.$store.state.user.member"  app v-model="drawer" :width="drawerWidth" disable-resize-watcher > 		
 			<site-navi  @close="toggleDrawer"/>
 		</v-navigation-drawer>
 
@@ -58,7 +58,7 @@ export default {
 
 	computed : {
 		drawerWidth() {
-			return this.$vuetify.breakpoint.xs ? '100%' : '360';
+			return this.$vuetify.breakpoint.xs ? '100%' : '300';
 		}
 	},
 	methods : {		

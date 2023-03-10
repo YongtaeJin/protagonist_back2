@@ -1,12 +1,12 @@
 <template>
     <v-form ref="form">
         <v-toolbar background-color="primary" dark >
-            <v-toolbar-title>일괄 내려받기 : </v-toolbar-title>
+            <!-- <v-toolbar-title>일괄 내려받기 : </v-toolbar-title> -->
             <v-spacer></v-spacer>
             <!-- <v-checkbox label="회사명" v-model="f_downchk1" hide-details color="primary"/> -->
-            <v-checkbox label="서류명" v-model="f_downchk2" hide-details color="primary"/>
-            <v-spacer></v-spacer>
-            <v-btn color="primary" @click="alldownLoad">다운로드</v-btn>
+            <v-checkbox label="서류명" v-model="f_downchk2" hide-details color="primary" class="mx-4" />
+            <!-- <v-spacer></v-spacer> -->
+            <v-btn color="primary" @click="alldownLoad">일과 내려받기</v-btn>
         </v-toolbar>
         
         <v-data-table :headers="fileHeaders" :items="form">
@@ -63,7 +63,7 @@ export default {
                 t_att: "",
             },
             f_downchk1: 1,
-            f_downchk2: 1,
+            f_downchk2: 0,
         }
     },
     created() {       
@@ -87,10 +87,25 @@ export default {
             const disableAutoBOM = true;
 
             const downFile = item.n_file;            
+
+            // const res = await this.$ezNotify.confirm(
+            //     `${item.n_file} <br><br>내려받기 하시겠습니까 ?`,
+            //     item.n_filename,
+            //     // { width: 200 }
+            // );
+            // if (res) {
+                // const fileBuffer = await this.$axios.get(`/api/shopinfo/getFileDown?path=${ item.t_att }`);            
+                // save (fileBuffer, downFile);
+            // }
             const fileBuffer = await this.$axios.get(`/api/shopinfo/getFileDown?path=${ item.t_att }`);            
-            save (fileBuffer, downFile);
-          
-            alert('File Donw load Click !!!!!'); 
+            if (fileBuffer ) {
+                save (fileBuffer, downFile);
+                alert('File Donw load Click !!!!!'); 
+            } else {
+                await this.$ezNotify.alert("다운로드 실패 !!", "오류", {
+                    // icon: "mdi-video-4k-box",
+                });
+            }
             
             
 
@@ -163,9 +178,13 @@ export default {
                 // console.log(t_path);
 
                 const fileBuffer = await this.$axios.get(`/api/shopinfo/getFileDownZip?i_shop=${ this.fileLists[0].i_shop }&i_no=${ this.fileLists[0].i_no }&f_gubun=1&f_filetype=${f_filetype}`);
-                save (fileBuffer, `${this.companyName}.zip`);
-          
-                alert('File Donw load Click !!!!!'); 
+
+                if (fileBuffer ) {
+                    save (fileBuffer, `${this.companyName}.zip`);
+                    alert('File Donw load Click !!!!!'); 
+                } else {
+                   await this.$ezNotify.alert("다운로드 실패 !!", "오류" );
+                }
             }
 
 

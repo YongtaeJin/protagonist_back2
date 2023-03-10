@@ -141,9 +141,12 @@ export default {
                 const downFile = this.form.t_filenm;
 
                 const fileBuffer = await this.$axios.get(`/api/shopinfo/getFileDown?path=${ this.form.t_sample }`);            
-                save (fileBuffer, downFile);
-                
-                alert('File Donw load Click !!!!!'); 
+                if (fileBuffer) {
+                    save (fileBuffer, downFile);                
+                    alert('File Donw load Click !!!!!'); 
+                } else {
+                    await this.$ezNotify.alert("다운로드 실패 !!", "오류" );
+                }
                 // try {
                 //     const response = await fetch(fileName)
                 //     const blob = await response.blob();

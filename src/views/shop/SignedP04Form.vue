@@ -145,8 +145,12 @@ export default {
       const downFile = item.n_file2;
 
       const fileBuffer = await this.$axios.get(`/api/shopinfo/getFileDown?path=${ item.t_att }`); 
-      save (fileBuffer, downFile);
-      alert('File Donw load Click !!!!!'); 
+      if (fileBuffer) {
+        save (fileBuffer, downFile);
+        alert('File Donw load Click !!!!!'); 
+      } else {
+        await this.$ezNotify.alert("다운로드 실패 !!", "오류" );
+      }
       // try {
       //   const response = await fetch(fileName)
       //   const blob = await response.blob();
@@ -180,8 +184,12 @@ export default {
       const downFile = item.t_samplefile;
 
       const fileBuffer = await this.$axios.get(`/api/shopinfo/getFileDown?path=${ item.t_sample }`); 
-      save (fileBuffer, downFile);
-      alert('File Donw load Click !!!!!'); 
+      if (fileBuffer) {
+        save (fileBuffer, downFile);
+        alert('File Donw load Click !!!!!'); 
+      } else {
+        await this.$ezNotify.alert("다운로드 실패 !!", "오류" );
+      }
     
       // try {
       //   const response = await fetch(fileName)

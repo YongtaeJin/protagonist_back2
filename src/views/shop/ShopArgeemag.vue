@@ -2,7 +2,10 @@
     <div>
         Tet <br />
     
-      
+        {{ this.$vuetify.breakpoint.xs }}
+        <br>
+
+        {{ this.App.drawer }}
     </div>
 </template>
 
