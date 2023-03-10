@@ -55,7 +55,7 @@
                             <tr><th>사업자구분</th><td>{{ itemInput.f_saugup }}</td></tr>
                             <tr><th>이전중진공사업</th><td>{{ itemInput.f_run }}</td></tr>
                             <tr><th>3년 표준 재무제표</th><td>{{ itemInput.f_dart }}</td></tr>
-                            <tr><th>이나아도룸 아이디</th><td>{{ itemInput.t_enarainfo }}</td></tr>
+                            <tr><th>이나라도움 아이디</th><td>{{ itemInput.t_enarainfo }}</td></tr>
                             <tr><th>이나라도움 패스워드</th><td>{{ itemInput.t_enarainfopw }}</td></tr>
                             <tr><th>우편번호</th><td>{{ itemInput.i_post }}</td></tr>
                             <tr><th>주소</th><td>{{ itemInput.t_addr1 }}</td></tr>
@@ -146,7 +146,7 @@ export default {
                 val = ""            
             } else {
                 val = "미등록"
-            }
+            }            
             return  val;
         },
         datachk2(data) {
@@ -181,18 +181,29 @@ export default {
 
         },
         async f_dochk(item) {
-            if (item.f_dochk == "Y") {
-                item.f_dochk  = 'N' ;
-            } else {
-                item.f_dochk  = 'Y' ;
-            }                       
+            const res = await this.$ezNotify.confirm("처리 하시겠습니까  ?", "공방서류");
+            if (res ) {
+                if (item.f_dochk == "Y") {
+                    item.f_dochk  = 'N' ;
+                } else {
+                    item.f_dochk  = 'Y' ;
+                }
+                console.log(item)
+                // const data = await this.$axios.patch(`/api/shopinfo/getShopInputMag?i_shop=${item.i_shop}&i_no=${item.i_no}&f_dochk=${item.f_dochk}&f_enarachk=${item.f_enarachk}`);
+                const data = await this.$axios.patch(`/api/shopinfo/getShopInputMag?i_shop=${item.i_shop}&i_no=${item.i_no}&f_dochk=${item.f_dochk}`);
+               
+            }             
         },
         async f_enarachk(item) {
-            if (item.f_enarachk == "Y") {
-                item.f_enarachk  = 'N' ;
-            } else {
-                item.f_enarachk  = 'Y' ;
-            }           
+            const res = await this.$ezNotify.confirm("처리 하시겠습니까  ?", "이나라도움 등록");
+            if (res ) {
+                if (item.f_enarachk == "Y") {
+                    item.f_enarachk  = 'N' ;
+                } else {
+                    item.f_enarachk  = 'Y' ;
+                    const data = await this.$axios.patch(`/api/shopinfo/getShopInputMag?i_shop=${item.i_shop}&i_no=${item.i_no}&f_enarachk=${item.f_enarachk}`);
+                }           
+            }
         }
     },
 }

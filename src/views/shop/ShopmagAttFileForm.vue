@@ -10,6 +10,7 @@
             <v-radio label="필수" value="1"></v-radio>
             <v-radio label="선택" value="0"></v-radio>
         </v-radio-group>
+        <v-text-field label="별칭 : " v-model="form.n_nm" />
         <v-text-field label="파일명 : " v-model="form.n_file"  />
         <div class="d-flex align-center">            
             <v-text-field label="첨부(양식)" v-model="form.t_filenm" readonly @dblclick="downLoad()" />
@@ -55,6 +56,7 @@ export default {
                 i_ser: "",
                 f_gubun: "",
                 f_yn: "",
+                n_nm: "",
                 n_file: "",
                 t_filenm: "",
                 t_remark: "",
@@ -107,6 +109,7 @@ export default {
                     i_ser: 0,
                     f_gubun: this.fgubun.toString(),
                     f_yn: '1',
+                    n_nm: "",
                     n_file: "",
                     t_filenm: "",
                     t_remark: "",

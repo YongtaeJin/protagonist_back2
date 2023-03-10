@@ -40,7 +40,7 @@ const shopinfoModel = {
 		//const sql = sqlHelper.SelectSimple("tb_shopmag_file", req.query, {i_shop, i_ser, f_gubun, f_yn, n_file, t_remark, t_sample});
 		// console.log(req.query);
 		const { i_shop, f_gubun } = req.query;
-		const sql = "select i_shop, i_ser, f_gubun, f_yn, n_file, t_filenm, t_remark, t_sample, i_sort" +
+		const sql = "select i_shop, i_ser, f_gubun, f_yn, n_file, n_nm, t_filenm, t_remark, t_sample, i_sort" +
 		            "  from tb_shopmag_file where i_shop  = '" + i_shop + "' and f_gubun = '" + f_gubun + "'" +
 					" order by f_gubun, i_sort, i_ser";
 		
@@ -240,7 +240,7 @@ const shopinfoModel = {
 		const payload = {
 			...req.body,
 		};
-		const {  i_shop,  i_ser,  f_gubun, f_yn,  n_file, t_filenm, t_remark,  t_sample,  i_sort,  isNew,  i_shop_select, f_del } = payload;
+		const {  i_shop,  i_ser,  f_gubun, f_yn, n_nm, n_file, t_filenm, t_remark,  t_sample,  i_sort,  isNew,  i_shop_select, f_del } = payload;
 		let fPath = `${UPLOAD_PATH}/shopsigned/${i_shop}` ;
 		let tPath = `/upload/shopsigned/${i_shop}` ;
 		let tPathFile = "";
@@ -277,13 +277,14 @@ const shopinfoModel = {
 			if (!ser) { setser = 1  }  else { setser = ser + 1}
 			
 			sql = "insert into tb_shopmag_file " +
-			      " (i_shop,  i_ser,  f_gubun, f_yn,  n_file, t_filenm, t_remark,  i_sort, t_sample) " +
-				  " values ('" + i_shop_select + "' , " + setser + ", '" + f_gubun + "', '" + f_yn + "', '" + n_file + "', '" + tFilenm + "', '" + t_remark + "'," + i_sort + ", '" + tPathFile + "')";
+			      " (i_shop,  i_ser,  f_gubun, f_yn, n_nm, n_file, t_filenm, t_remark,  i_sort, t_sample) " +
+				  " values ('" + i_shop_select + "' , " + setser + ", '" + f_gubun + "', '" + f_yn + "', '" + n_nm + "', '" + n_file + "', '" + tFilenm + "', '" + t_remark + "'," + i_sort + ", '" + tPathFile + "')";
 			
 		} else {
 			sql = "update tb_shopmag_file  " +
 			      "   set f_gubun = '" + f_gubun + "', " +
 				  "       f_yn = '" + f_yn + "', " +
+				  "       n_nm = '" + n_nm + "', " +
 				  "       n_file = '" + n_file + "', " +
 				  "       t_filenm = '" + tFilenm + "', " +
 				  "       t_remark = '" + t_remark + "', " +
@@ -358,8 +359,22 @@ const shopinfoModel = {
 					"   and coalesce(f_enarachk, 'N') like '" + chkf_enara + "'";
 					
 		const [row] = await db.execute(sql);
-		console.log(sql);
+		// console.log(sql);
        	return row;		   
+	},
+	async getShopInputMagUpdate(req) {
+		const at = moment().format('LT');
+		
+		const { i_shop, i_no, f_dochk, f_enarachk } = req.query;
+		const dtime = at;
+		sql = "update tb_shopinput set ";
+		if(f_dochk) { sql = sql + " f_dochk = '" + f_dochk + "', d_docchk = now()"}
+		if(f_dochk && f_enarachk) { sql = sql + ', '}
+		if(f_enarachk) { sql = sql + " f_enarachk = '" + f_enarachk + "', d_enarachk = now()"}
+		sql = sql + " where i_shop = '" + i_shop + "' and i_no = " + i_no
+		// console.log(sql)
+		const [row] = await db.execute(sql);
+		return row;		
 	},
 	async getShopInputMag1(req) {		
 		const { i_shop, i_no } = req.query;		

@@ -6,6 +6,7 @@
                 <tr @dblclick="showRowInfo(item)" >
                     <td :class="{red2: item.f_gubun==1, green2: item.f_gubun == 2, blue2: item.f_gubun == 3}" > {{ f_gubunchk(item.f_gubun) }} </td>                     
                     <td :class="{red2: item.f_gubun==1, green2: item.f_gubun == 2, blue2: item.f_gubun == 3}" align=center> {{ item.i_sort }} </td>
+                    <td :class="{red2: item.f_gubun==1, green2: item.f_gubun == 2, blue2: item.f_gubun == 3}" align=center> {{ item.n_nm }} </td>
                     <td :class="{red2: item.f_yn==1, green2: item.f_yn == 0}"> {{ item.n_file }} </td>
                     <td align=center :class="{red2: item.f_yn==1, green2: item.f_yn == 0}"> {{ f_ynchk(item.f_yn) }} </td>
                     <td> {{ item.t_remark }} </td>
@@ -32,6 +33,7 @@ export default {
                 { text: '신청번호',  value: 'i_shop', width: "200px", fixed: true, align:'center', align:' d-none'},
                 { text: '구분', value: 'f_gubun', width: "60px", fixed: true},
                 { text: '순번', value: 'i_sort', width: "50px", fixed: true,  align:'center'},                
+                { text: '별칭', value: 'n_nm', width: "50px", fixed: true,  align:'center'},
                 { text: '명칭', value: 'n_file',  width: "150px", fixed: true, align:'center'},
                 { text: '파일명', value: 't_filenm',  width: "150px", fixed: true, align:'center', align:' d-none'},
                 { text: '필수', value: 'f_yn',  width: "50px", fixed: true, align:'center'}, 
@@ -43,6 +45,7 @@ export default {
                 i_ser: "",
                 f_gubun: "",
                 f_yn: "",
+                n_nm: "",
                 n_file: "",
                 t_filenm: "",
                 t_remark: "",
