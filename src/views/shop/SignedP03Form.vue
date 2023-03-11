@@ -88,7 +88,7 @@ export default {
         { text: '파일순번', value: 'i_ser', sortable: false, align:' d-none' },
         { text: '필수여부', value: 'f_yn', sortable: false, width: "100px", fixed: true, align:'center'},
         { text: '양식', value: 'f_sample', sortable: false, width: "60px", fixed: true, align:'center'},
-        { text: '첨부파일명', value: 'n_filename', sortable: false, width: "200px" },
+        { text: '첨부서류', value: 'n_filename', sortable: false, width: "200px" },
         { text: '신청no', value: 'i_no', sortable: false, align:' d-none' },
         { text: '파일명', value: 'n_file2', sortable: false, },
         { text: 'UP', value: 'n_file', sortable: false, width: "1%" },

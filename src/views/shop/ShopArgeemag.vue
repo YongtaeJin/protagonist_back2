@@ -12,11 +12,35 @@
         </v-radio-group>
         <v-btn color="primary"  @click="fetchData">조회</v-btn>
     </v-toolbar>
-    <!-- <v-data-table height="500" max-height="800" 
-                :headers="headers" :items-per-page="20"  :footer-props="{'items-per-page-options': [10, 20, 30, 40, 50, 100, -1]}" 
-                class="elevation-5" > -->
-    <v-data-table :headers="headers"  :items="itemArgee" >
 
+    <v-data-table :headers="headers"  :items="itemArgee" :items-per-page="20"  :footer-props="{'items-per-page-options': [10, 20, 30, 40, 50, 100, -1]}" 
+            class="elevation-1 mytable mytableTd">
+        <template v-slot:item="{ item }">
+            <tr >
+                <td v-if="item.rnum>0"> {{ item.n_company }}</td>
+                <td v-if="item.rnum>=1" :class="{greencol: item.t1}"> {{datachk(item.t1)}}</td>
+                <td v-if="item.rnum>=2" :class="{greencol: item.t2}"> {{datachk(item.t2)}}</td>
+                <td v-if="item.rnum>=3" :class="{greencol: item.t3}"> {{datachk(item.t3)}}</td>
+                <td v-if="item.rnum>=4" :class="{greencol: item.t4}"> {{datachk(item.t4)}}</td>
+                <td v-if="item.rnum>=5" :class="{greencol: item.t5}"> {{datachk(item.t5)}}</td>
+                <td v-if="item.rnum>=6" :class="{greencol: item.t6}"> {{datachk(item.t6)}}</td>
+                <td v-if="item.rnum>=7" :class="{greencol: item.t7}"> {{datachk(item.t7)}}</td>
+                <td v-if="item.rnum>=8" :class="{greencol: item.t8}"> {{datachk(item.t8)}}</td>
+                <td v-if="item.rnum>=9" :class="{greencol: item.t9}"> {{datachk(item.t9)}}</td>
+                <td v-if="item.rnum>=10" :class="{greencol: item.t10}"> {{datachk(item.t10)}}</td>
+                <td v-if="item.rnum>=11" :class="{greencol: item.t11}"> {{datachk(item.t11)}}</td>
+                <td v-if="item.rnum>=12" :class="{greencol: item.t12}"> {{datachk(item.t12)}}</td>
+                <td v-if="item.rnum>=13" :class="{greencol: item.t13}"> {{datachk(item.t13)}}</td>
+                <td v-if="item.rnum>=14" :class="{greencol: item.t14}"> {{datachk(item.t14)}}</td>
+                <td v-if="item.rnum>=15" :class="{greencol: item.t15}"> {{datachk(item.t15)}}</td>
+                <td v-if="item.rnum>=16" :class="{greencol: item.t16}"> {{datachk(item.t16)}}</td>
+                <td v-if="item.rnum>=17" :class="{greencol: item.t17}"> {{datachk(item.t17)}}</td>
+                <td v-if="item.rnum>=18" :class="{greencol: item.t18}"> {{datachk(item.t18)}}</td>
+                <td v-if="item.rnum>=19" :class="{greencol: item.t19}"> {{datachk(item.t19)}}</td>
+                <td v-if="item.rnum>=20" :class="{greencol: item.t20}"> {{datachk(item.t20)}}</td>
+                <td @dblclick="f_argeechk(item)" :class="{greencol: item.f_argeechk}"> {{ argeechk(item.f_argeechk) }}</td>
+            </tr>
+        </template>
     </v-data-table>
     </v-container>
 
@@ -28,29 +52,33 @@ export default {
     name :"ShopArgeeMag",
 	title : "사업협약서관리",
     data() {
-        return {
-            
-            headers: [
-                // { text: `업체명`,  value: 'n_company', sortable: false},
-                // { text: '협약서', value: 't1', sortable: false, align:'center'},
-                // { text: '수료증', value: 't2', sortable: false, align:'center'},
-                // { text: '신청서', value: 't3', sortable: false, align:'center'},
-                // { text: '확약서', value: 't4', sortable: false, align:'center'},
-                // { text: '서약서', value: 't5', sortable: false, align:'center'},
-                // { text: '정보동의', value: 't6', sortable: false, align:'center'},
-            ],
+        return {            
+            headers: [],
             itemArgee: [],
             chkf_arfe : "%",
             chkf_serarch: "",
-            rnum: 5,
-           
+            rnum: null,           
         }
     },
     created() {
+        this.rnum = 1;
         this.init() ;
     },
     methods: {
+        datachk(data) {
+            let val = "";
+            if (data) { 
+                val = "완료"
+            } else {
+                val = "미완료"
+            }
+            return  val;
+        },
+        argeechk(data) {
+            return data=="Y" ? "확인" : "미확인";
+        },
         async init() {
+            this.rnum = 1;
             this.fetchData();
             
         },
@@ -62,21 +90,17 @@ export default {
             head.sortable = false;
             head.align = 'center';
             this.headers.push( { ...head });
-
-            this.itemArgee = await this.$axios.get(`/api/shopinfo/getShopArgeeMag?i_shop=23-001`);
-            // const data = await this.$axios.get(`/api/shopinfo/getShopArgeeMag?i_shop=23-001`);
+            this.itemArgee = await this.$axios.get(`/api/shopinfo/getShopArgeeMag?i_shop=23-001&f_serarch=${this.chkf_serarch}&chkf_arfe=${this.chkf_arfe}`);
+            
             if (this.itemArgee) {
-                const rnum = this.itemArgee[0].rnum;              
+                this.rnum = this.itemArgee[0].rnum;              
                 for(let i=0; i<Object.keys(this.itemArgee[0]).length; i++){
                     let name = Object.keys(this.itemArgee[0])[i];
                     let value = this.itemArgee[0][name];                    
                     
                     if(name[0] =='h') {
-                        if (rnum >= extractNumber(name)) {
-                            
-                            
-                            head.text = value;
-                            // head.value = `t${extractNumber(name)}`;                            
+                        if (this.rnum >= extractNumber(name)) {
+                            head.text = value;                            
                             head.value = 't' + extractNumber(name);
                             head.sortable = false;
                             head.align = 'center';
@@ -84,14 +108,40 @@ export default {
                         }
                     }
                 }
-            }
-   
-        },
-    }
+                head.text = "확인";                            
+                head.value = 'f_argeechk';
+                head.sortable = false;
+                head.align = 'center';
+                this.headers.push( { ...head });
 
+            }
+        
+        },
+        async f_argeechk(item) {
+            const res = await this.$ezNotify.confirm("처리 하시겠습니까  ?", "협약서");
+            if (res ) {
+                if (item.f_argeechk == "Y") {
+                    item.f_argeechk  = 'N' ;
+                } else {
+                    item.f_argeechk  = 'Y' ;
+                    const data = await this.$axios.patch(`/api/shopinfo/getShopInputMag?i_shop=${item.i_shop}&i_no=${item.i_no}&f_argeechk=${item.f_argeechk}`);
+                }           
+            }
+        }
+
+    },
+    
 }
 </script>
 
 <style>
-
+.mytable table th {
+    background-color: lightgoldenrodyellow;
+    border-bottom: none !important;
+ }
+ .mytableTd table td {
+    /* color: blue; */
+    text-align: center;
+    border-bottom: none !important;
+ }
 </style>

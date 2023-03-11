@@ -10,8 +10,8 @@
             <v-radio label="필수" value="1"></v-radio>
             <v-radio label="선택" value="0"></v-radio>
         </v-radio-group>
-        <v-text-field label="별칭 : " v-model="form.n_nm" />
-        <v-text-field label="파일명 : " v-model="form.n_file"  />
+        <v-text-field label="명칭 : " v-model="form.n_nm" />
+        <v-text-field label="첨부서류 : " v-model="form.n_file"  />
         <div class="d-flex align-center">            
             <v-text-field label="첨부(양식)" v-model="form.t_filenm" readonly @dblclick="downLoad()" />
             <v-file-input label="첨부변경" v-model="form.t_image"

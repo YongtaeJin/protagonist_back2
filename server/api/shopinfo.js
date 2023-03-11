@@ -100,5 +100,14 @@ router.get('/getShopArgeeMag', async (req, res)=> {
 	const result = await modelCall(shopinfoModel.getShopArgeeMag, req);
 	res.json(result);
 }),
+router.get('/getShopArgeeInDetail', async (req, res)=> {	
+	const result = await modelCall(shopinfoModel.getShopArgeeInDetail, req);
+	res.json(result);
+}),
+router.get('/getShopArgeeInChk', async (req, res)=> {	
+	const result = await modelCall(shopinfoModel.getShopArgeeInChk, req);
+	res.json(result);
+}),
+
 
 module.exports = router;

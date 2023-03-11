@@ -31,9 +31,7 @@
 
 import { deepCopy } from "../../../util/lib";
 import { save } from 'save-file';
-import { saveAs } from 'file-saver';
 
-import axios from "axios";
 export default {
     name: "Shopinputmag03Form",
     props: {        
@@ -48,7 +46,7 @@ export default {
             fileHeaders : [
                 { text: '순번',           value: 'i_ser', sortable: false, align:'center', width: "55px"},
                 { text: '필수여부',       value: 'f_yn', sortable: false, align:'center', width: "75px"},
-                { text: '신청(추가)서류', value: 'n_filename', sortable: false, }, 
+                { text: '첨부서류',       value: 'n_filename', sortable: false, }, 
                 { text: '첨부파일명',     value: 'n_file', sortable: false, },
                 { text: 'DOWN',          value: 't_att', sortable: false, align:'center', width: "75px"}, 
                 

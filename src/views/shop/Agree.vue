@@ -3,10 +3,12 @@
         <login />
     </v-card>
     <v-card v-else>
-        <v-card>
-            사업신청 접수 중
+        <v-card v-if="!chk" class="d-flex justify-center align-center" :height="500">
+            <p style="font-size:200%">
+                서류 심사 중 입니다 ...
+            </p>
         </v-card>
-        <v-card>
+        <v-card v-else>
             <v-toolbar>
                 <v-toolbar-title>스마트공방 협약신청</v-toolbar-title>
                 <v-spacer></v-spacer>
@@ -30,6 +32,7 @@ export default {
         return {   
             shioinfofiles: [],
             memo: "",
+            chk: 0,
         }
     },
     created() {
@@ -44,6 +47,8 @@ export default {
         async init() {
             const data = await this.checkShopInfo(); 
             this.memo = this.$store.state.user.shopinfo.t_remark2;
+            const chk = await this.$axios.get(`/api/shopinfo/getShopArgeeInChk?i_shop=${this.$store.state.user.shopinfo.i_shop}`);
+            if (chk.cnt) this.chk = chk.cnt;
         },
         async fetchData() {
             this.shioinfofiles = await this.$axios.patch(`/api/shopinfo/attfiles?f_gubun=3`);   
@@ -68,4 +73,4 @@ export default {
   font-size: 0.35rem;
   height: 26px; 
 }
-</style>
+</style=>

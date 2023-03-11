@@ -365,12 +365,15 @@ const shopinfoModel = {
 	async getShopInputMagUpdate(req) {
 		const at = moment().format('LT');
 		
-		const { i_shop, i_no, f_dochk, f_enarachk } = req.query;
+		const { i_shop, i_no, f_dochk, f_enarachk, f_argeechk } = req.query;
+		if(!f_dochk && !f_enarachk && !f_argeechk) { return }
+		
 		const dtime = at;
 		sql = "update tb_shopinput set ";
 		if(f_dochk) { sql = sql + " f_dochk = '" + f_dochk + "', d_docchk = now()"}
 		if(f_dochk && f_enarachk) { sql = sql + ', '}
 		if(f_enarachk) { sql = sql + " f_enarachk = '" + f_enarachk + "', d_enarachk = now()"}
+		if(f_argeechk) { sql = sql + " f_argeechk = '" + f_argeechk + "', d_argee = now()"}
 		sql = sql + " where i_shop = '" + i_shop + "' and i_no = " + i_no
 		// console.log(sql)
 		const [row] = await db.execute(sql);
@@ -480,8 +483,8 @@ const shopinfoModel = {
 		if (!isGrant(req, LV.VIP)) {
 			throw new Error('사용 권한이 없습니다.');
 		}
-		const {i_shop, f_gubun } = req.query;
-		const sql = "select a.i_shop, a.i_no, a.n_company, "+
+		const {i_shop, f_gubun, f_serarch, chkf_arfe } = req.query;
+		const sql = "select a.i_shop, a.i_no, a.n_company, a.f_argeechk, "+
 			  "			max(b.rnum) rnum, "+
 			  "			max(if(b.rnum = 1, b.n_nm, '')) h1, max(if(b.rnum = 2, b.n_nm, '')) h2, max(if(b.rnum = 3, b.n_nm, '')) h3, max(if(b.rnum = 4, b.n_nm, '')) h4, max(if(b.rnum = 5, b.n_nm, '')) h5, max(if(b.rnum = 6, b.n_nm, '')) h6, max(if(b.rnum = 7, b.n_nm, '')) h7, max(if(b.rnum = 8, b.n_nm, '')) h8, max(if(b.rnum = 9, b.n_nm, '')) h9, max(if(b.rnum = 10, b.n_nm, '')) h10, " +
 			  "			max(if(b.rnum = 11, b.n_nm, '')) h11, max(if(b.rnum = 12, b.n_nm, '')) h12, max(if(b.rnum = 13, b.n_nm, '')) h13, max(if(b.rnum = 14, b.n_nm, '')) h14, max(if(b.rnum = 15, b.n_nm, '')) h15, max(if(b.rnum = 16, b.n_nm, '')) h16, max(if(b.rnum = 17, b.n_nm, '')) h17, max(if(b.rnum = 18, b.n_nm, '')) h18, max(if(b.rnum = 19, b.n_nm, '')) h19, max(if(b.rnum = 20, b.n_nm, '')) h20, " +
@@ -492,13 +495,40 @@ const shopinfoModel = {
 			  "	from tb_shopinput a " +
 			  "			left outer  join  (select i_shop, i_ser, f_gubun,  @rownum := @rownum+1 AS rnum, n_nm " +
 			  "								from tb_shopmag_file, (SELECT @rownum := 0) AS R " +
-			  "							where i_shop = '23-001' and f_gubun = '3' order by i_sort) b on a.i_shop = b.i_shop " +
+			  "							where i_shop = '" + i_shop + "' and f_gubun = '3' order by i_sort) b on a.i_shop = b.i_shop " +
 			  "			left outer join tb_shopinput_file c on a.i_shop = c.i_shop and a.i_no = c.i_no and b.i_ser = c.i_ser " +
-			  "	where a.i_shop = '23-001' " +
-			  "	group by a.i_shop, a.i_no, a.n_company " +
+			  "	where a.i_shop = '" + i_shop + "' " +
+			  "   and trim(coalesce(n_company, a.i_userid)) like '" + f_serarch + "%'" +
+			  "   and coalesce(f_argeechk, 'N') like '" + chkf_arfe + "'" +			  
+			  "	group by a.i_shop, a.i_no, a.n_company, a.f_argeechk " +
 			  "	order by i_no " ;
 		const [row] = await db.execute(sql);				
 		return row;
-	}
+	},
+	async getShopArgeeInDetail(req) {		
+		const { i_shop, i_no } = req.query;		
+		const sql = "select a.i_shop, b.f_gubun, b.n_nm, b.n_file, b.i_sort, b.f_yn, c.i_no, c.n_file, c.t_att " +
+					" from tb_shopinput a " +
+					"      left outer join tb_shopmag_file b on a.i_shop = b.i_shop and b.f_gubun = '3' " +
+					"      left outer join tb_shopinput_file c on a.i_shop = c.i_shop and a.i_no = c.i_no and b.i_ser = c.i_ser " +
+					" where a.i_shop = '" + i_shop + "' " +
+					"   and a.i_no = " + i_no +
+					" order by b.i_sort ";
+		const [row] = await db.execute(sql);
+       	return row;		   		
+	},
+	async getShopArgeeInChk(req) {		
+		const { i_shop } = req.query;		
+		
+		const { mb_id } = req.user;
+		console.log(mb_id);
+		const sql = "select  count(*) as cnt " +
+					" from tb_shopinput a " +
+					" where a.i_shop = '" + i_shop + "' " +
+					"   and a.i_userid = '" + mb_id + "' " +
+					"   and a.f_dochk = 'Y' and a.f_enarachk = 'Y' ";
+		const [[row]] = await db.execute(sql);
+       	return row;		   		
+	},
 }
 module.exports = shopinfoModel;
