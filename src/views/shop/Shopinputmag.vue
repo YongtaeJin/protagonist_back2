@@ -21,7 +21,7 @@
         <v-col sm=6>
             <v-data-table height="500" max-height="800" 
                 :headers="headers" :items="itemInputs" :items-per-page="20"  :footer-props="{'items-per-page-options': [10, 20, 30, 40, 50, 100, -1]}" 
-                class="elevation-5" >
+                class="elevation-5 mytable" >
                 <template v-slot:item="{ item }">
                     <tr align=center >
                         <td @click="clickItem(item, tabs)" align=left> {{ item.n_company }} </td>

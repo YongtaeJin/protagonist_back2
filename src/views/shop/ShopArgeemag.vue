@@ -14,10 +14,11 @@
     </v-toolbar>
 
     <v-data-table :headers="headers"  :items="itemArgee" :items-per-page="20"  :footer-props="{'items-per-page-options': [10, 20, 30, 40, 50, 100, -1]}" 
+            
             class="elevation-1 mytable mytableTd">
-        <template v-slot:item="{ item }">
+        <template v-slot:item="{ item }">            
             <tr >
-                <td v-if="item.rnum>0"> {{ item.n_company }}</td>
+                <td @dblclick="showRowInfo(item)"> {{ item.n_company }}</td>                
                 <td v-if="item.rnum>=1" :class="{greencol: item.t1}"> {{datachk(item.t1)}}</td>
                 <td v-if="item.rnum>=2" :class="{greencol: item.t2}"> {{datachk(item.t2)}}</td>
                 <td v-if="item.rnum>=3" :class="{greencol: item.t3}"> {{datachk(item.t3)}}</td>
@@ -42,13 +43,21 @@
             </tr>
         </template>
     </v-data-table>
+    <ez-dialog label="협약서 서류 확인" ref="dialog" max-width="800" dark color="primary" persistent>
+        <shop-argeemag-01-form :fileLists="fileItem">
+
+        </shop-argeemag-01-form>
+    </ez-dialog>
     </v-container>
 
 </template>
 
 <script>
 import { deepCopy, extractNumber } from "../../../util/lib";
+import EzDialog from '../../components/etc/EzDialog.vue';
+import ShopArgeemag01Form from './ShopArgeemag01Form.vue';
 export default {
+  components: { EzDialog, ShopArgeemag01Form },
     name :"ShopArgeeMag",
 	title : "사업협약서관리",
     data() {
@@ -57,7 +66,8 @@ export default {
             itemArgee: [],
             chkf_arfe : "%",
             chkf_serarch: "",
-            rnum: null,           
+            rnum: null,   
+            fileItem:[],        
         }
     },
     created() {
@@ -113,9 +123,7 @@ export default {
                 head.sortable = false;
                 head.align = 'center';
                 this.headers.push( { ...head });
-
-            }
-        
+            }        
         },
         async f_argeechk(item) {
             const res = await this.$ezNotify.confirm("처리 하시겠습니까  ?", "협약서");
@@ -127,6 +135,10 @@ export default {
                     const data = await this.$axios.patch(`/api/shopinfo/getShopInputMag?i_shop=${item.i_shop}&i_no=${item.i_no}&f_argeechk=${item.f_argeechk}`);
                 }           
             }
+        },
+        async showRowInfo(item) {
+            this.fileItem = deepCopy(item);            
+            this.$refs.dialog.open();
         }
 
     },

@@ -6,6 +6,7 @@
       <v-data-table :headers="headers" :items="form" item-key="n_filename"
         :expanded.sync="expanded"
         :single-expand="singleExpand"
+        class="mytable"
       >
         <template v-slot:item="{ item, expand, isExpanded }">        
           <tr >            

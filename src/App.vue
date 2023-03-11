@@ -71,6 +71,11 @@ export default {
 </script>
 
 <style>
+.mytable table th {
+    background-color: lightgoldenrodyellow;
+    border-bottom: none !important;
+ }
+ 
 .v-data-table > .v-data-table__wrapper > table > tbody > tr > th, .v-data-table > .v-data-table__wrapper > table > thead > tr > th, .v-data-table > .v-data-table__wrapper > table > tfoot > tr > th 
 {
     font-size: 0.40rem;

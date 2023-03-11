@@ -507,7 +507,7 @@ const shopinfoModel = {
 	},
 	async getShopArgeeInDetail(req) {		
 		const { i_shop, i_no } = req.query;		
-		const sql = "select a.i_shop, b.f_gubun, b.n_nm, b.n_file, b.i_sort, b.f_yn, c.i_no, c.n_file, c.t_att " +
+		const sql = "select a.i_shop, b.i_ser, b.f_gubun, b.n_nm, b.n_file, b.i_sort, if(f_yn = '1', '필수', '선낵') f_yn, c.i_no, c.n_file n_filename, c.t_att " +
 					" from tb_shopinput a " +
 					"      left outer join tb_shopmag_file b on a.i_shop = b.i_shop and b.f_gubun = '3' " +
 					"      left outer join tb_shopinput_file c on a.i_shop = c.i_shop and a.i_no = c.i_no and b.i_ser = c.i_ser " +
@@ -518,10 +518,8 @@ const shopinfoModel = {
        	return row;		   		
 	},
 	async getShopArgeeInChk(req) {		
-		const { i_shop } = req.query;		
-		
-		const { mb_id } = req.user;
-		console.log(mb_id);
+		const { i_shop } = req.query;				
+		const { mb_id } = req.user;		
 		const sql = "select  count(*) as cnt " +
 					" from tb_shopinput a " +
 					" where a.i_shop = '" + i_shop + "' " +

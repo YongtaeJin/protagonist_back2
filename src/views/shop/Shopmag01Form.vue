@@ -1,6 +1,6 @@
 <template>
     <v-form @submit.prevent="save" ref="form" v-model="valid" lazy-validation @@submit.prevent="edit">
-        <v-data-table :headers="headers" :items="form" @dblclick:row="showRowInfo" @click:row="selectRow">
+        <v-data-table :headers="headers" :items="form" @dblclick:row="showRowInfo" @click:row="selectRow" class="mytable">
         </v-data-table>
     </v-form>
     

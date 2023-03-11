@@ -1,6 +1,6 @@
 <template>
     <v-form @submit.prevent="save" ref="form" v-model="valid" lazy-validation @@submit.prevent="edit">
-        <v-data-table :headers="headers" :items="form"  >
+        <v-data-table :headers="headers" :items="form" class="mytable" >
             <template v-slot:item="{ item }">    
                 <!-- <tr @dblclick:row="showRowInfo" > -->
                 <tr @dblclick="showRowInfo(item)" >

@@ -9,7 +9,7 @@
             <v-btn color="primary" @click="alldownLoad">일과 내려받기</v-btn>
         </v-toolbar>
         
-        <v-data-table :headers="fileHeaders" :items="form">
+        <v-data-table :headers="fileHeaders" :items="form" class="mytable">
             <template v-slot:item="{ item }">        
                 <tr>
                     <td align=center> {{ item.i_ser }} </td>
