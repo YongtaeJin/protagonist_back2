@@ -19,27 +19,27 @@
         <template v-slot:item="{ item }">            
             <tr >
                 <td @dblclick="showRowInfo(item)"><u>{{ item.n_company }}</u></td>
-                <td v-if="item.rnum>=1" :class="{greencol: item.t1}"> {{datachk(item.t1)}}</td>
-                <td v-if="item.rnum>=2" :class="{greencol: item.t2}"> {{datachk(item.t2)}}</td>
-                <td v-if="item.rnum>=3" :class="{greencol: item.t3}"> {{datachk(item.t3)}}</td>
-                <td v-if="item.rnum>=4" :class="{greencol: item.t4}"> {{datachk(item.t4)}}</td>
-                <td v-if="item.rnum>=5" :class="{greencol: item.t5}"> {{datachk(item.t5)}}</td>
-                <td v-if="item.rnum>=6" :class="{greencol: item.t6}"> {{datachk(item.t6)}}</td>
-                <td v-if="item.rnum>=7" :class="{greencol: item.t7}"> {{datachk(item.t7)}}</td>
-                <td v-if="item.rnum>=8" :class="{greencol: item.t8}"> {{datachk(item.t8)}}</td>
-                <td v-if="item.rnum>=9" :class="{greencol: item.t9}"> {{datachk(item.t9)}}</td>
-                <td v-if="item.rnum>=10" :class="{greencol: item.t10}"> {{datachk(item.t10)}}</td>
-                <td v-if="item.rnum>=11" :class="{greencol: item.t11}"> {{datachk(item.t11)}}</td>
-                <td v-if="item.rnum>=12" :class="{greencol: item.t12}"> {{datachk(item.t12)}}</td>
-                <td v-if="item.rnum>=13" :class="{greencol: item.t13}"> {{datachk(item.t13)}}</td>
-                <td v-if="item.rnum>=14" :class="{greencol: item.t14}"> {{datachk(item.t14)}}</td>
-                <td v-if="item.rnum>=15" :class="{greencol: item.t15}"> {{datachk(item.t15)}}</td>
-                <td v-if="item.rnum>=16" :class="{greencol: item.t16}"> {{datachk(item.t16)}}</td>
-                <td v-if="item.rnum>=17" :class="{greencol: item.t17}"> {{datachk(item.t17)}}</td>
-                <td v-if="item.rnum>=18" :class="{greencol: item.t18}"> {{datachk(item.t18)}}</td>
-                <td v-if="item.rnum>=19" :class="{greencol: item.t19}"> {{datachk(item.t19)}}</td>
-                <td v-if="item.rnum>=20" :class="{greencol: item.t20}"> {{datachk(item.t20)}}</td>
-                <td @dblclick="f_argeechk(item)" :class="{greencol: item.f_argeechk}"> <u>{{ argeechk(item.f_argeechk) }}</u></td>
+                <td v-if="item.rnum>=1" align=center :class="{greencol: item.t1}"> {{datachk(item.t1)}}</td>
+                <td v-if="item.rnum>=2" align=center :class="{greencol: item.t2}"> {{datachk(item.t2)}}</td>
+                <td v-if="item.rnum>=3" align=center :class="{greencol: item.t3}"> {{datachk(item.t3)}}</td>
+                <td v-if="item.rnum>=4" align=center :class="{greencol: item.t4}"> {{datachk(item.t4)}}</td>
+                <td v-if="item.rnum>=5" align=center :class="{greencol: item.t5}"> {{datachk(item.t5)}}</td>
+                <td v-if="item.rnum>=6" align=center :class="{greencol: item.t6}"> {{datachk(item.t6)}}</td>
+                <td v-if="item.rnum>=7" align=center :class="{greencol: item.t7}"> {{datachk(item.t7)}}</td>
+                <td v-if="item.rnum>=8" align=center :class="{greencol: item.t8}"> {{datachk(item.t8)}}</td>
+                <td v-if="item.rnum>=9" align=center :class="{greencol: item.t9}"> {{datachk(item.t9)}}</td>
+                <td v-if="item.rnum>=10" align=center :class="{greencol: item.t10}"> {{datachk(item.t10)}}</td>
+                <td v-if="item.rnum>=11" align=center :class="{greencol: item.t11}"> {{datachk(item.t11)}}</td>
+                <td v-if="item.rnum>=12" align=center :class="{greencol: item.t12}"> {{datachk(item.t12)}}</td>
+                <td v-if="item.rnum>=13" align=center :class="{greencol: item.t13}"> {{datachk(item.t13)}}</td>
+                <td v-if="item.rnum>=14" align=center :class="{greencol: item.t14}"> {{datachk(item.t14)}}</td>
+                <td v-if="item.rnum>=15" align=center :class="{greencol: item.t15}"> {{datachk(item.t15)}}</td>
+                <td v-if="item.rnum>=16" align=center :class="{greencol: item.t16}"> {{datachk(item.t16)}}</td>
+                <td v-if="item.rnum>=17" align=center :class="{greencol: item.t17}"> {{datachk(item.t17)}}</td>
+                <td v-if="item.rnum>=18" align=center :class="{greencol: item.t18}"> {{datachk(item.t18)}}</td>
+                <td v-if="item.rnum>=19" align=center :class="{greencol: item.t19}"> {{datachk(item.t19)}}</td>
+                <td v-if="item.rnum>=20" align=center :class="{greencol: item.t20}"> {{datachk(item.t20)}}</td>
+                <td @dblclick="f_argeechk(item)" align=center  :class="{greencol: item.f_argeechk}"> <u>{{ argeechk(item.f_argeechk) }}</u></td>
             </tr>
         </template>
     </v-data-table>
