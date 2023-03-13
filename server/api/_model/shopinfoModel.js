@@ -33,6 +33,17 @@ const shopinfoModel = {
 	
        	return row;		
 	},
+	async patchShopUserList(req) {
+		const {mb_id, mb_level} = req.query;
+		// 권한 확인
+		if (!isGrant(req, LV.VIP)) {
+			throw new Error('사용 권한이 없습니다.');
+		}
+		const sql = "update member set mb_level = if('" + mb_level + "'='일반', 5, 2) where mb_id = '" + mb_id + "'";		
+		const [row] = await db.execute(sql);
+	
+       	return row;		
+	},
 	// 사업LIST
 	async getShopMag(req) {
 		// 권한 확인

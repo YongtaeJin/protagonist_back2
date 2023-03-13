@@ -9,6 +9,11 @@ router.get('/getShopUserList', async (req, res)=> {
 	const result = await modelCall(shopinfoModel.getShopUserList, req);
 	res.json(result);
 }),
+router.patch('/patchShopUserList', async (req, res)=> {	
+	const result = await modelCall(shopinfoModel.patchShopUserList, req);
+	res.json(result);
+}),
+
 router.get('/getShopMag', async (req, res)=> {	
 	const result = await modelCall(shopinfoModel.getShopMag, req);
 	res.json(result);

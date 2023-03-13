@@ -7,8 +7,20 @@
         </v-toolbar>
         
         <v-data-table :headers="headers" class="mytable"
-            :items="items" :items-per-page="20"  :footer-props="{'items-per-page-options': [10, 20, 30, 40, 50, 100, -1]}" 
-        />
+            :items="items" :items-per-page="20"  :footer-props="{'items-per-page-options': [10, 20, 30, 40, 50, 100, -1]}" >
+            <template v-slot:item="{ item }">
+                <tr>
+                    <td>{{ item.mb_id }}</td>
+                    <td>{{ item.mb_name }}</td>
+                    <td>{{ item.mb_email }}</td>
+                    <td  @dblclick="levleChange(item)"><u>{{ item.mb_level }}</u></td>
+                    <td>{{ item.chkpw }}</td>
+                </tr>
+            </template>
+
+        </v-data-table>
+            
+        
     </v-form>
 </template>
 
@@ -39,6 +51,16 @@ export default {
         async fetchData(){
             this.items = await this.$axios.get(`/api/shopinfo/getShopUserList?f_serarch=${this.f_serarch}`);
         },
+        async levleChange(item) {
+            let lev = item.mb_level=="관리자"?'일반':'관리자';
+            const res = await this.$ezNotify.confirm(`${item.mb_name} 등급 변경 하시겠습니까 ?`, lev);
+            if(res) {
+                const data = await this.$axios.patch(`/api/shopinfo/patchShopUserList?mb_id=${item.mb_id}&mb_level=${item.mb_level}`);
+                if (data.changedRows === 1) {
+                    item.mb_level = lev;
+                }
+            }
+        }
     }
 }
 </script>
