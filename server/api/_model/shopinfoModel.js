@@ -7,10 +7,7 @@ const sendMailer = require('../../plugins/sendMailer');
 const sqlHelper = require('../../../util/sqlHelper');
 const TABLE = require('../../../util/TABLE');
 const moment = require('../../../util/moment');
-const { getIp, deepCopy } = require('../../../util/lib');
 const { LV, isGrant } = require('../../../util/level');
-const { del } = require('vue');
-const { CONFIG } = require('../../../util/TABLE');
 
 const zip = require("node-zip");
 
@@ -388,7 +385,7 @@ const shopinfoModel = {
 	async getShopInputMag2(req) {
 		const { i_shop, i_no, f_gubun } = req.query;	
 		
-		const sql = "select a.i_shop, a.i_ser, a.f_yn, a.n_file n_filename, " +
+		const sql = "select a.i_shop, a.i_ser, a.f_gubun, a.f_yn, a.n_file n_filename, " +
 					"       c.i_no, b.n_file, b.t_att, b.f_noact " +
 					"  from tb_shopmag_file a " +
 					"       left outer join tb_shopinput c on a.i_shop = c.i_shop and c.i_no = " + i_no +
@@ -398,7 +395,6 @@ const shopinfoModel = {
 					" order by a.i_shop, a.i_ser ";	
 		const [row] = await db.execute(sql);				
        	return row;		   		
-	
 	},
 	async ShopInputMag2Save(req) {
 		const { i_shop, i_no, i_ser, f_noact } = req.query;	
@@ -406,6 +402,14 @@ const shopinfoModel = {
 		            " where i_shop = '" + i_shop + "' and i_no = " + i_no + " and i_ser = " + i_ser;
 		const [row] = await db.execute(sql);				
        	return row;		   		
+		
+		// 메일발송 test
+		// try {
+		// 	await sendMailer('관리자?', 'freview@nate.com', '제목', '본문');
+		// 	console.log("mail 보냄!!!!");
+		// } catch (e) {
+		// 	return { err : `email 발송 실패 !!`}
+		// }
 	
 	},
 	async getFileDown(req, res) {		
@@ -492,7 +496,7 @@ const shopinfoModel = {
 			throw new Error('사용 권한이 없습니다.');
 		}
 		const {i_shop, f_gubun, f_serarch, chkf_arfe } = req.query;
-		const sql = "select a.i_shop, a.i_no, a.n_company, a.f_argeechk, "+
+		const sql = "select a.i_shop, a.i_no, trim(coalesce(a.n_company, a.i_userid)) n_company, a.f_argeechk, "+
 			  "			max(b.rnum) rnum, "+
 			  "			max(if(b.rnum = 1, b.n_nm, '')) h1, max(if(b.rnum = 2, b.n_nm, '')) h2, max(if(b.rnum = 3, b.n_nm, '')) h3, max(if(b.rnum = 4, b.n_nm, '')) h4, max(if(b.rnum = 5, b.n_nm, '')) h5, max(if(b.rnum = 6, b.n_nm, '')) h6, max(if(b.rnum = 7, b.n_nm, '')) h7, max(if(b.rnum = 8, b.n_nm, '')) h8, max(if(b.rnum = 9, b.n_nm, '')) h9, max(if(b.rnum = 10, b.n_nm, '')) h10, " +
 			  "			max(if(b.rnum = 11, b.n_nm, '')) h11, max(if(b.rnum = 12, b.n_nm, '')) h12, max(if(b.rnum = 13, b.n_nm, '')) h13, max(if(b.rnum = 14, b.n_nm, '')) h14, max(if(b.rnum = 15, b.n_nm, '')) h15, max(if(b.rnum = 16, b.n_nm, '')) h16, max(if(b.rnum = 17, b.n_nm, '')) h17, max(if(b.rnum = 18, b.n_nm, '')) h18, max(if(b.rnum = 19, b.n_nm, '')) h19, max(if(b.rnum = 20, b.n_nm, '')) h20, " +
@@ -515,7 +519,7 @@ const shopinfoModel = {
 	},
 	async getShopArgeeInDetail(req) {		
 		const { i_shop, i_no } = req.query;		
-		const sql = "select a.i_shop, b.i_ser, b.f_gubun, b.n_nm, b.n_file, b.i_sort, if(f_yn = '1', '필수', '선낵') f_yn, c.i_no, c.n_file n_filename, c.t_att " +
+		const sql = "select a.i_shop, b.i_ser, b.f_gubun, b.n_nm, b.n_file, b.i_sort, if(f_yn = '1', '필수', '선낵') f_yn, c.i_no, c.f_noact, c.n_file n_filename, c.t_att " +
 					" from tb_shopinput a " +
 					"      left outer join tb_shopmag_file b on a.i_shop = b.i_shop and b.f_gubun = '3' " +
 					"      left outer join tb_shopinput_file c on a.i_shop = c.i_shop and a.i_no = c.i_no and b.i_ser = c.i_ser " +
@@ -535,6 +539,49 @@ const shopinfoModel = {
 					"   and a.f_dochk = 'Y' and a.f_enarachk = 'Y' ";
 		const [[row]] = await db.execute(sql);
        	return row;		   		
+	},
+	async getShopDocChkMail(req) {		
+		const title = 'Protagonist';
+		const { i_shop, i_no, f_gubun } = req.query;				
+		sql = "select a.i_shop, a.i_ser, b.i_no, b.f_noact, c.i_userid, u.mb_email, a.n_nm, a.n_file, b.f_noact,  b.n_file n_file2 " +
+			  "  from tb_shopmag_file a " +
+			  "       left outer join tb_shopinput_file b on a.i_shop = b.i_shop and a.i_ser = b.i_ser and b.i_no = " + i_no +
+			  "       left outer join tb_shopinput c on b.i_shop = c.i_shop and b.i_no = c.i_no " +
+       		  "       left outer join member u on c.i_userid = u.mb_id " +
+			  " where a.i_shop  = '" + i_shop + "' " +
+			  "   and a.f_gubun = '" + f_gubun + "' " +
+			  " order by a.i_sort ";
+		
+		const [rows] = await db.execute(sql);
+		let body = "<p>상기 제목 관련 하여 아래와 같이 첨부 서류 확인 결과 전달 드립니다.</p>";
+
+		if (f_gubun == "1") {
+			body = body + "<p></p><p>공방 신청 서류</p>"
+		} else if (f_gubun == "2") {
+			body = body + "<p></p><p>공방 추가 서류</p>"
+		} else if(f_gubun == "3") {
+			body = body + "<p></p><p>협약서 서류</p>"
+		}
+
+
+		let to_email = "";
+		rows.forEach((data) => {
+			if (!to_email) to_email = data.mb_email;
+			let n_status = data.f_noact=='Y' ? "접수" : data.f_noact=='N' ? "반려" : data.f_noact=='I' ? '검토' : data.f_noact=='R' ? '검토' : '미등록';
+			body = body + `<p ${data.f_noact=='Y'?'':'style="color:red"'}>${data.n_file} : 서류${n_status}</p>`;
+		});
+		body = body + `<p>반려된 첨부서류에 대해서 재 등록 부탁 드립니다.</p>`;
+		body = body + `<p></p>.</p>감사 합니다.`
+		// if (!to_email) {
+		// 	return  { err: '이메일 주소 미확인 !!' }
+		// }
+		try {
+			await sendMailer(`${title} 스마트공방 관리자`, to_email, '스마트공방 신청 서류 확인 안내', body);
+		} catch (e) {
+			console.log(e);
+			return { err: `email 발송에 필패 하였습니다.\n관리자에게 문의 주세요.` }
+		}
+       	return 'ok';
 	},
 }
 module.exports = shopinfoModel;

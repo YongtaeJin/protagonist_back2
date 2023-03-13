@@ -21,11 +21,13 @@ function sendMailer() {
 			if(instance == null) {
 				instance = async(from, to, subject, html) => {
 					const info = await transPorter.sendMail({
-						form : `${from} <${NODEMAILER_USER}>`,
+						// from : `"스마트공방 관리자" <${NODEMAILER_USER}>`,
+						from : `${from} <${NODEMAILER_USER}>`,
 						to,
 						subject,
 						html,
 					});
+					console.log("form:", NODEMAILER_USER);
 					console.log("SendMailer Info", info);
 					return info;
 				};

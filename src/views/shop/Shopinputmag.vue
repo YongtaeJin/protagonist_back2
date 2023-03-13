@@ -29,8 +29,8 @@
                         <td @click="clickItem(item, 0)" :class="{greencol: item.chk1=='Y', redcol: item.chk1 != 'Y'}"> {{ datachk(item.chk1) }} </td>
                         <td @click="clickItem(item, 1)" :class="{greencol: item.chk2=='Y', redcol: item.chk2 != 'Y'}"> {{ datachk(item.chk2) }} </td>
                         <td @click="clickItem(item, 2)" :class="{greencol: item.chk3=='Y', redcol: item.chk3 != 'Y'}"> {{ datachk(item.chk3) }} </td>
-                        <td @dblclick="f_dochk(item)" :class="{greencol: item.f_dochk=='Y', redcol: item.f_dochk != 'Y'}"> {{ datachk2(item.f_dochk) }} </td>
-                        <td @dblclick="f_enarachk(item)" :class="{greencol: item.f_enarachk=='Y', redcol: item.f_enarachk != 'Y'}"> {{ datachk2(item.f_enarachk) }} </td>
+                        <td @dblclick="f_dochk(item)" :class="{greencol: item.f_dochk=='Y', redcol: item.f_dochk != 'Y'}"> <u>{{ datachk2(item.f_dochk) }}</u> </td>
+                        <td @dblclick="f_enarachk(item)" :class="{greencol: item.f_enarachk=='Y', redcol: item.f_enarachk != 'Y'}"> <u>{{ datachk2(item.f_enarachk) }}</u> </td>
                     </tr>
                 </template>
             </v-data-table>
@@ -63,9 +63,9 @@
                         </table>
                     </v-tab-item>
 
-                    <v-tab-item><shopinputmag-03-form @process="saveDocProcess" :fileLists="fileAdds" :companyName="itemInput.n_company"></shopinputmag-03-form></v-tab-item>
+                    <v-tab-item><shopinputmag-03-form @process="saveDocProcess" @mailSend="mailSend" :fileLists="fileAdds" :companyName="itemInput.n_company"></shopinputmag-03-form></v-tab-item>
 
-                    <v-tab-item><shopinputmag-03-form @process="saveDocProcess" :fileLists="fileAddsB" :companyName="itemInput.n_company"></shopinputmag-03-form></v-tab-item>
+                    <v-tab-item><shopinputmag-03-form @process="saveDocProcess" @mailSend="mailSend"  :fileLists="fileAddsB" :companyName="itemInput.n_company"></shopinputmag-03-form></v-tab-item>
                 </v-tabs-items>
             </v-card-text>
         </v-col>
@@ -213,6 +213,15 @@ export default {
                 }
             }
         },
+        async mailSend() {
+            const res = await this.$ezNotify.confirm("서류처리 내역 메일 발송 하시 겠습니까 ?.", "메일발송");
+            if (res) {
+                const data = await this.$axios.get(`/api/shopinfo/getShopDocChkMail?i_shop=${this.itemInput.i_shop}&i_no=${this.itemInput.i_no}&f_gubun=${this.tabs}`);
+                if(data == "ok") {
+                    await this.$ezNotify.alert("서류처리 내역 메일 발송 하였습니다..", "");
+                }
+            }
+        }
     },
 }
 </script>

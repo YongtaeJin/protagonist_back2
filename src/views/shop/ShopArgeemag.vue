@@ -18,7 +18,7 @@
             class="elevation-1 mytable mytableTd">
         <template v-slot:item="{ item }">            
             <tr >
-                <td @dblclick="showRowInfo(item)"> {{ item.n_company }}</td>                
+                <td @dblclick="showRowInfo(item)"><u>{{ item.n_company }}</u></td>
                 <td v-if="item.rnum>=1" :class="{greencol: item.t1}"> {{datachk(item.t1)}}</td>
                 <td v-if="item.rnum>=2" :class="{greencol: item.t2}"> {{datachk(item.t2)}}</td>
                 <td v-if="item.rnum>=3" :class="{greencol: item.t3}"> {{datachk(item.t3)}}</td>
@@ -39,12 +39,12 @@
                 <td v-if="item.rnum>=18" :class="{greencol: item.t18}"> {{datachk(item.t18)}}</td>
                 <td v-if="item.rnum>=19" :class="{greencol: item.t19}"> {{datachk(item.t19)}}</td>
                 <td v-if="item.rnum>=20" :class="{greencol: item.t20}"> {{datachk(item.t20)}}</td>
-                <td @dblclick="f_argeechk(item)" :class="{greencol: item.f_argeechk}"> {{ argeechk(item.f_argeechk) }}</td>
+                <td @dblclick="f_argeechk(item)" :class="{greencol: item.f_argeechk}"> <u>{{ argeechk(item.f_argeechk) }}</u></td>
             </tr>
         </template>
     </v-data-table>
-    <ez-dialog label="협약서 서류 확인" ref="dialog" max-width="800" dark color="primary" persistent>
-        <shop-argeemag-01-form :fileLists="fileItem">
+    <ez-dialog label="협약서 서류 확인" ref="dialog" max-width="800"  color="primary" persistent>
+        <shop-argeemag-01-form @process="saveDocProcess" @mailSend="mailSend" :fileLists="fileItem" :companyName="this.n_company">
 
         </shop-argeemag-01-form>
     </ez-dialog>
@@ -67,7 +67,8 @@ export default {
             chkf_arfe : "%",
             chkf_serarch: "",
             rnum: null,   
-            fileItem:[],        
+            fileItem:[],
+            n_company: null,
         }
     },
     created() {
@@ -137,8 +138,27 @@ export default {
             }
         },
         async showRowInfo(item) {
+            this.n_company = item.n_company;
             this.fileItem = deepCopy(item);            
             this.$refs.dialog.open();
+        },
+        async saveDocProcess(item) {
+            for (let ob in item) {
+                if(item[ob].f_edit) {
+                    const data = this.$axios.patch(`/api/shopinfo/ShopInputMag2Save?i_shop=${item[ob].i_shop}&i_no=${item[ob].i_no}&i_ser=${item[ob].i_ser}&f_noact=${item[ob].f_noact}`);
+                }
+            }
+        },
+        async mailSend(item) {
+            if (item) {
+                const res = await this.$ezNotify.confirm("서류처리 내역 메일 발송 하시 겠습니까 ?.", "메일발송");
+                if (res) {
+                    const data = await this.$axios.get(`/api/shopinfo/getShopDocChkMail?i_shop=${item[0].i_shop}&i_no=${item[0].i_no}&f_gubun=${item[0].f_gubun}`);
+                    if(data == "ok") {
+                        await this.$ezNotify.alert("서류처리 내역 메일 발송 하였습니다..", "");
+                    }
+                }
+            }
         }
 
     },
@@ -147,13 +167,5 @@ export default {
 </script>
 
 <style>
-.mytable table th {
-    background-color: lightgoldenrodyellow;
-    border-bottom: none !important;
- }
- .mytableTd table td {
-    /* color: blue; */
-    text-align: center;
-    border-bottom: none !important;
- }
+
 </style>

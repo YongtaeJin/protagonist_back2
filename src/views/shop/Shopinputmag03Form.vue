@@ -3,6 +3,7 @@
         <v-toolbar background-color="primary" dark >
             <!-- <v-toolbar-title>일괄 내려받기 : </v-toolbar-title> -->
             <v-btn @click="process(form)" color="primary" >서류처리</v-btn>
+            <v-btn @click="mailSend" color="primary">메일발송</v-btn>
             <v-spacer></v-spacer>
             <!-- <v-checkbox label="회사명" v-model="f_downchk1" hide-details color="primary"/> -->
             <v-checkbox label="서류명" v-model="f_downchk2" hide-details color="primary" class="mx-4" />
@@ -16,7 +17,8 @@
                     <td align=center> {{ item.i_ser }} </td>
                     <td align=center :class="{redcol: item.f_yn==1, greencol: item.f_yn == 0}">{{f_ynchk(item.f_yn)}} </td>                    
                     <td align=center @dblclick="docProcess(item)"
-                        :class="{redcol: item.f_noact=='N', greencol: item.f_noact == 'Y',  bluecol: item.f_noact == 'I' }" > {{ f_noact(item.f_noact) }} 
+                        :class="{redcol: item.f_noact=='N', greencol: item.f_noact == 'Y',  bluecol: item.f_noact == 'I' }" > 
+                        <u>{{ f_noact(item.f_noact) }}</u>
                     </td>
                     <td> {{ item.n_filename }} </td>
                     <td> {{ item.n_file }} </td>
@@ -60,6 +62,7 @@ export default {
                 i_shop: "",
                 i_ser: "",
                 i_no: "",
+                f_gubun: "",
                 f_yn: "",
                 f_noact: "",
                 n_filename: "",
@@ -89,7 +92,7 @@ export default {
             return data == 1  ? '필수' : '선택';
         },
         f_noact(data) {
-            return data == "I" ? "등록" : (data == "Y") ? "확인" : (data == "N") ? "반려" : (data == "R") ? '수정': "-";
+            return data == "I" ? "등록" : (data == "Y") ? "확인" : (data == "N") ? "반려" : (data == "R") ? '수정': "";
         },
         docProcess(item) {            
             if (item.f_noact) {
@@ -99,6 +102,9 @@ export default {
         },
         async process(form) {
             this.$emit("process", form);
+        },
+        async mailSend() {
+            this.$emit("mailSend")            
         },
 
         async downLoad(item) {
@@ -189,13 +195,13 @@ export default {
             let f_filetype = '1';
 
             if (this.f_downchk2) { f_filetype = '2'};
-
+           
             if (this.fileLists) {
                 // var t_att = this.fileLists[0].t_att;
                 // var t_path =  t_att.split("/").slice(0, -1).join("/");
                 // console.log(t_path);
 
-                const fileBuffer = await this.$axios.get(`/api/shopinfo/getFileDownZip?i_shop=${ this.fileLists[0].i_shop }&i_no=${ this.fileLists[0].i_no }&f_gubun=1&f_filetype=${f_filetype}`);
+                const fileBuffer = await this.$axios.get(`/api/shopinfo/getFileDownZip?i_shop=${ this.fileLists[0].i_shop }&i_no=${ this.fileLists[0].i_no }&f_gubun=${ this.fileLists[0].f_gubun }&f_filetype=${f_filetype}`);
 
                 if (fileBuffer ) {
                     save (fileBuffer, `${this.companyName}.zip`);

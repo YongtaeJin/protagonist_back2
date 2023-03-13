@@ -167,4 +167,17 @@ table.nodoc td {
   border-right: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
 }
+
+.mytable table th {
+    background-color: lightgoldenrodyellow;
+    border-bottom: none !important;
+ }
+ .mytableTd table td {
+    /* color: blue; */
+    text-align: center;
+    border-bottom: none !important;
+ }
+.my-underline {
+    text-decoration-line: underline;
+}
 </style>
