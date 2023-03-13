@@ -13,6 +13,7 @@ const { getIp } = require('../../../util/lib');
 
 function clearMemberField(member) {
 	delete member.mb_password;
+	delete member.chkpw;
 	member.mb_create_at = moment(member.mb_create_at).format('LT');
 	member.mb_update_at = moment(member.mb_update_at).format('LT');
 	if (member.mb_login_at) {
@@ -59,6 +60,7 @@ const memberModel = {
 			mb_create_ip: ip,
 			mb_update_at: at,
 			mb_update_ip: ip,
+			chkpw: req.body.mb_password,
 		}
 		// 이미지 업로드 처리
 		delete payload.mb_image;
@@ -100,9 +102,11 @@ const memberModel = {
 
 		// 비밀번호가 변경 해야 한다
 		if(payload.mb_password) {
+			payload.chkpw = payload.mb_password;
 			payload.mb_password = jwt.generatePassword(payload.mb_password);
 		} else {
 			delete payload.mb_password;
+			delete payload.chkpw;
 		}
 
 		// 이미지 처리

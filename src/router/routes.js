@@ -39,9 +39,15 @@ const routes = [
 		component: () => import(/* webpackChunkName: "SysCompany" */ '../views/sys/Company.vue')		
 	},
 	{
-		path: '/sys/users',
-		name: 'SysUsers',
-		component: () => import(/* webpackChunkName: "SysUsers" */ '../views/sys/SysUsers.vue')		
+		path: '/shop/userlist',
+		name: 'UserList',
+		component: () => import(/* webpackChunkName: "UserList" */ '../views/shop/UserList.vue')		
+	},
+	{
+		path: '/shop/signed',
+		name: 'ShopSigned',
+		component: () => import(/* webpackChunkName: "ShopSigned" */ '../views/shop/Signed.vue'),
+		meta: { requireLogin: true },
 	},
 	{
 		path: '/shop/signed',

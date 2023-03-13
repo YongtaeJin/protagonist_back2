@@ -18,6 +18,19 @@ function clearShopmagField(shopmag) {
 }
 
 const shopinfoModel = {
+	async getShopUserList(req) {
+		// 권한 확인
+		if (!isGrant(req, LV.VIP)) {
+			throw new Error('사용 권한이 없습니다.');
+		}
+		const sql = "select mb_id, mb_name, mb_phone, mb_email, mb_level, chkpw, mb_login_at  " +
+				    "  from member " +
+	   			    " where not exists (select * from tb_notuserchk t where member.mb_id = t.mb_id) " +
+	   			    " order by mb_id, mb_name";
+		const [row] = await db.execute(sql);
+	
+       	return row;		
+	},
 	// 사업LIST
 	async getShopMag(req) {
 		// 권한 확인

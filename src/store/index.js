@@ -35,6 +35,14 @@ const store = new Vuex.Store({
 					newTab : false,
 					subItems : [
 						{
+							title : "사용자정보",
+							icon : "",
+							to : '/shop/userlist',							
+							grant : 5, 
+							newTab : false,
+							subItems : []
+						},
+						{
 							title : "사업등록",
 							icon : "",
 							to : '/shop/shopmag',							

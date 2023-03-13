@@ -4,6 +4,11 @@ const passport = require('passport');
 const jwt = require('../plugins/jwt');
 const { modelCall } = require('../../util/lib');
 
+
+router.get('/getShopUserList', async (req, res)=> {	
+	const result = await modelCall(shopinfoModel.getShopUserList, req);
+	res.json(result);
+}),
 router.get('/getShopMag', async (req, res)=> {	
 	const result = await modelCall(shopinfoModel.getShopMag, req);
 	res.json(result);
