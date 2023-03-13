@@ -63,9 +63,9 @@
                         </table>
                     </v-tab-item>
 
-                    <v-tab-item><shopinputmag-03-form :fileLists="fileAdds" :companyName="itemInput.n_company"></shopinputmag-03-form></v-tab-item>                    
+                    <v-tab-item><shopinputmag-03-form @process="saveDocProcess" :fileLists="fileAdds" :companyName="itemInput.n_company"></shopinputmag-03-form></v-tab-item>
 
-                    <v-tab-item><shopinputmag-03-form :fileLists="fileAddsB" :companyName="itemInput.n_company"></shopinputmag-03-form></v-tab-item>
+                    <v-tab-item><shopinputmag-03-form @process="saveDocProcess" :fileLists="fileAddsB" :companyName="itemInput.n_company"></shopinputmag-03-form></v-tab-item>
                 </v-tabs-items>
             </v-card-text>
         </v-col>
@@ -123,6 +123,7 @@ export default {
                 i_ser: null,
                 i_no: null,
                 f_yn: null,
+                f_noact: null,
                 n_filename: null,
                 n_file: null,
                 t_att: null,
@@ -203,7 +204,15 @@ export default {
                     const data = await this.$axios.patch(`/api/shopinfo/getShopInputMag?i_shop=${item.i_shop}&i_no=${item.i_no}&f_enarachk=${item.f_enarachk}`);
                 }           
             }
-        }
+        },
+        async saveDocProcess(item) {
+            for (let ob in item) {
+                if(item[ob].f_edit) {
+                    console.log(item[ob]);
+                    const data = this.$axios.patch(`/api/shopinfo/ShopInputMag2Save?i_shop=${item[ob].i_shop}&i_no=${item[ob].i_no}&i_ser=${item[ob].i_ser}&f_noact=${item[ob].f_noact}`);
+                }
+            }
+        },
     },
 }
 </script>

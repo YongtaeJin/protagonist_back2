@@ -108,6 +108,9 @@ router.get('/getShopArgeeInChk', async (req, res)=> {
 	const result = await modelCall(shopinfoModel.getShopArgeeInChk, req);
 	res.json(result);
 }),
-
+router.patch('/ShopInputMag2Save', async (req, res)=> {	
+	const result = await modelCall(shopinfoModel.ShopInputMag2Save, req);
+	res.json(result);
+}),
 
 module.exports = router;

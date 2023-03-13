@@ -9,7 +9,7 @@
         class="mytable"
       >
         <template v-slot:item="{ item, expand, isExpanded }">        
-          <tr >            
+          <tr>            
             <td align=center :class="{red2: item.f_yn==1, green2: item.f_yn == 0}">{{f_ynchk(item.f_yn)}} </td>
             <td align=center>
               <v-btn v-if="item.t_sample" small fab  @click="downLoad(item)">
@@ -18,12 +18,14 @@
             </td>
             <!-- <td align=center> <v-icon v-if="item.t_sample">mdi-note</v-icon></td> -->
             <td> {{ item.n_filename }} <v-icon v-if="item.t_remark" @click="expand(!isExpanded)">mdi-help-circle-outline</v-icon></td>            
+            <td align=center :class="{red2: item.f_noact=='N', green2: item.f_noact == 'Y'}"> {{ f_noact(item.f_noact) }} </td>
             <td>
               <div class="d-flex align-center">
                 {{ item.n_file2 }} <v-spacer/>
+                
               </div>
             </td>
-            <td align=center width="50px">                 
+            <td align=center width="50px">
                 <v-file-input  v-model="item.n_file" :multiple="false"
                   @change="getFilename($event, item)"
                   color="primary accent-4" hide-details prepend-icon="mdi-file-upload" />
@@ -46,7 +48,7 @@
       </v-data-table>
     </v-flex>    
     </v-layout>
-    <v-btn  color="primary" type="submit" block> 저 장 </v-btn>
+    <v-btn  color="primary" type="submit" block>저 장 </v-btn>
   </v-form>
 
 </template>
@@ -78,6 +80,7 @@ export default {
         n_file2: null,
         n_file: null,
         t_att: null,
+        f_noact: null,
         t_sample: null,
         t_samplefile: null,
         f_del: null,
@@ -91,6 +94,7 @@ export default {
         { text: '양식', value: 'f_sample', sortable: false, width: "60px", fixed: true, align:'center'},
         { text: '첨부서류', value: 'n_filename', sortable: false, width: "200px" },
         { text: '신청no', value: 'i_no', sortable: false, align:' d-none' },
+        { text: '확인', value: 'f_noact', sortable: false, align:'center', width: "55px"},
         { text: '파일명', value: 'n_file2', sortable: false, },
         { text: 'UP', value: 'n_file', sortable: false, width: "1%" },
         { text: '삭제', value: 'f_del', sortable: false, width: "50px" },
@@ -119,6 +123,9 @@ export default {
     },
     f_ynchk(data) {
       return data == 1  ? '필수' : '선택';
+    },
+    f_noact(data) {
+      return data == 'I' ? '○' : (data == 'Y') ? '●' : (data == 'N') ? '●' : '';
     },
     async save() {     
       // 한번에 저장 하기 위해 아래 와 같이 전달 해야 함...  (첨부파일 동시 Upload 문제 때문에 주석 처리)

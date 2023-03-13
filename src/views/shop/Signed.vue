@@ -150,4 +150,21 @@ export default {
   font-size: 0.35rem;
   height: 26px; 
 }
+table.nodoc {
+  border-collapse: collapse;
+  text-align: left;
+  line-height: 1;
+  border-top: 1px solid #ccc;
+  border-left: 3px solid #369;
+  margin : 20px 10px;
+  font-size: 0.40rem;
+}
+table.nodoc td {
+  font-weight: bold;
+  vertical-align: top;
+  color: white;
+  background: #153d73; 
+  border-right: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+}
 </style>

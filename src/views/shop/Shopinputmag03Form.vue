@@ -1,7 +1,8 @@
 <template>
-    <v-form ref="form">
+    <v-form  ref="form">
         <v-toolbar background-color="primary" dark >
             <!-- <v-toolbar-title>일괄 내려받기 : </v-toolbar-title> -->
+            <v-btn @click="process(form)" color="primary" >서류처리</v-btn>
             <v-spacer></v-spacer>
             <!-- <v-checkbox label="회사명" v-model="f_downchk1" hide-details color="primary"/> -->
             <v-checkbox label="서류명" v-model="f_downchk2" hide-details color="primary" class="mx-4" />
@@ -13,7 +14,10 @@
             <template v-slot:item="{ item }">        
                 <tr>
                     <td align=center> {{ item.i_ser }} </td>
-                    <td align=center :class="{redcol: item.f_yn==1, greencol: item.f_yn == 0}">{{f_ynchk(item.f_yn)}} </td>
+                    <td align=center :class="{redcol: item.f_yn==1, greencol: item.f_yn == 0}">{{f_ynchk(item.f_yn)}} </td>                    
+                    <td align=center @dblclick="docProcess(item)"
+                        :class="{redcol: item.f_noact=='N', greencol: item.f_noact == 'Y',  bluecol: item.f_noact == 'I' }" > {{ f_noact(item.f_noact) }} 
+                    </td>
                     <td> {{ item.n_filename }} </td>
                     <td> {{ item.n_file }} </td>
                     <td align=center>
@@ -46,6 +50,7 @@ export default {
             fileHeaders : [
                 { text: '순번',           value: 'i_ser', sortable: false, align:'center', width: "55px"},
                 { text: '필수여부',       value: 'f_yn', sortable: false, align:'center', width: "75px"},
+                { text: '서류',           value: 'f_noact', sortable: false, align:'center', width: "55px"},
                 { text: '첨부서류',       value: 'n_filename', sortable: false, }, 
                 { text: '첨부파일명',     value: 'n_file', sortable: false, },
                 { text: 'DOWN',          value: 't_att', sortable: false, align:'center', width: "75px"}, 
@@ -56,9 +61,11 @@ export default {
                 i_ser: "",
                 i_no: "",
                 f_yn: "",
+                f_noact: "",
                 n_filename: "",
                 n_file: "",
                 t_att: "",
+                f_edit: false,
             },
             f_downchk1: 1,
             f_downchk2: 0,
@@ -81,6 +88,19 @@ export default {
         f_ynchk(data) {
             return data == 1  ? '필수' : '선택';
         },
+        f_noact(data) {
+            return data == "I" ? "등록" : (data == "Y") ? "확인" : (data == "N") ? "반려" : "-";
+        },
+        docProcess(item) {            
+            if (item.f_noact) {
+                item.f_noact = item.f_noact == "Y" ? "N" : "Y";    
+                item.f_edit = true;            
+            }
+        },
+        async process(form) {
+            this.$emit("process", form);
+        },
+
         async downLoad(item) {
             const disableAutoBOM = true;
 

@@ -103,7 +103,7 @@ const shopinfoModel = {
 		const { f_gubun } = req.query;
 		
 		sql = "select a.i_shop, a.i_ser, a.f_yn, a.n_file n_filename, " +
-			  "			c.i_no, null n_file, b.n_file n_file2, b.t_att, a.t_remark, a.t_sample, a.t_filenm t_samplefile" +
+			  "			c.i_no, null n_file, b.n_file n_file2, b.t_att, b.f_noact, a.t_remark, a.t_sample, a.t_filenm t_samplefile" +
 			  "  from tb_shopmag_file a " +
 			  "       left outer join tb_shopinput c on a.i_shop = c.i_shop and c.i_userid = '" + mb_id + "' " +
 			  "	      left outer join tb_shopinput_file b on a.i_shop = b.i_shop and a.i_ser = b.i_ser and c.i_no = b.i_no " +
@@ -162,10 +162,10 @@ const shopinfoModel = {
 				sql = "select count(*) cnt  from tb_shopinput_file where i_shop = '" + i_shop[index] + "' and i_no = "  + i_no[index] + " and i_ser = " + i_ser[index];
 				const [[data]] = await  db.execute(sql);
 				if ( !data.cnt ) {
-					sql = "insert into tb_shopinput_file (i_shop, i_no, i_ser, n_file, t_att) " +
-						  " values ('" + i_shop[index] + "'," + i_no[index] + "," + i_ser[index] + ", '" + t_att[index] + "', '" + tPathFile + "')";
+					sql = "insert into tb_shopinput_file (i_shop, i_no, i_ser, n_file, t_att, f_noact) " +
+						  " values ('" + i_shop[index] + "'," + i_no[index] + "," + i_ser[index] + ", '" + t_att[index] + "', '" + tPathFile + "', 'I')";
 				} else {
-					sql = "update tb_shopinput_file set n_file = '" + t_att[index] + "', t_att = '" + tPathFile + "'" +
+					sql = "update tb_shopinput_file set n_file = '" + t_att[index] + "', t_att = '" + tPathFile + "', f_noact = 'I'" +
 						  " where i_shop = '" + i_shop[index] + "' and i_no = " + i_no[index] + " and i_ser = " + i_ser[index] ;
 				}
 				const [row] = await db.execute(sql);
@@ -185,10 +185,10 @@ const shopinfoModel = {
 			sql = "select count(*) cnt  from tb_shopinput_file where i_shop = '" + i_shop + "' and i_no = "  + i_no + " and i_ser = " + i_ser;
 			const [[data]] = await db.execute(sql);
 			if ( !data.cnt ) {
-				sql = "insert into tb_shopinput_file (i_shop, i_no, i_ser, n_file, t_att) " +
-				      " values ('" + i_shop + "'," + i_no + "," + i_ser + ", '" + t_att + "', '" + tPathFile + "')";
+				sql = "insert into tb_shopinput_file (i_shop, i_no, i_ser, n_file, t_att, f_noact) " +
+				      " values ('" + i_shop + "'," + i_no + "," + i_ser + ", '" + t_att + "', '" + tPathFile + "', 'I')";
 			} else {
-				sql = "update tb_shopinput_file set n_file = '" + t_att + "', t_att = '" + tPathFile + "'" +
+				sql = "update tb_shopinput_file set n_file = '" + t_att + "', t_att = '" + tPathFile + "', f_noact = 'I'" +
 				      " where i_shop = '" + i_shop + "' and i_no = " + i_no + " and i_ser = " + i_ser ;
 			}
 			const [row] = await db.execute(sql);
@@ -389,13 +389,21 @@ const shopinfoModel = {
 		const { i_shop, i_no, f_gubun } = req.query;	
 		
 		const sql = "select a.i_shop, a.i_ser, a.f_yn, a.n_file n_filename, " +
-					"       c.i_no, b.n_file, b.t_att " +
+					"       c.i_no, b.n_file, b.t_att, b.f_noact " +
 					"  from tb_shopmag_file a " +
 					"       left outer join tb_shopinput c on a.i_shop = c.i_shop and c.i_no = " + i_no +
 					"       left outer join tb_shopinput_file b on a.i_shop = b.i_shop and a.i_ser = b.i_ser and c.i_no = b.i_no " +
 					" where a.i_shop = '" + i_shop + "' " +
 					"   and a.f_gubun = '" + f_gubun + "'" +
 					" order by a.i_shop, a.i_ser ";	
+		const [row] = await db.execute(sql);				
+       	return row;		   		
+	
+	},
+	async ShopInputMag2Save(req) {
+		const { i_shop, i_no, i_ser, f_noact } = req.query;	
+		const sql = "update tb_shopinput_file set f_noact = '" + f_noact + "' " +
+		            " where i_shop = '" + i_shop + "' and i_no = " + i_no + " and i_ser = " + i_ser;
 		const [row] = await db.execute(sql);				
        	return row;		   		
 	
