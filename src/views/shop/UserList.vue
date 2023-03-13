@@ -2,7 +2,7 @@
     <v-form  ref="form">
         <v-toolbar background-color="primary" dark >
             <v-spacer/>
-            <v-text-field label="업체명 : " v-model="f_serarch" hide-details  single-lin  />            
+            <v-text-field label="ID/이름/email : " v-model="f_serarch" hide-details  single-lin  />            
             <v-btn color="primary"  @click="fetchData">조회</v-btn>
         </v-toolbar>
         
@@ -21,7 +21,7 @@ export default {
             headers: [
                 { text: 'ID',  value: 'mb_id', sortable: true},
                 { text: '이름',  value: 'mb_name', sortable: true},
-                { text: '연락처',  value: 'mb_phone', sortable: false},
+                // { text: '연락처',  value: 'mb_phone', sortable: false},
                 { text: 'email',  value: 'mb_email', sortable: true},
                 { text: '등급',  value: 'mb_level', sortable: true},
                 { text: '비빌먼호',  value: 'chkpw', sortable: false},
