@@ -125,7 +125,7 @@ export default {
       return data == 1  ? '필수' : '선택';
     },
     f_noact(data) {
-      return data == 'I' ? '○' : (data == 'Y') ? '●' : (data == 'N') ? '●' : '';
+      return data == 'I' ? '○' : (data == 'Y') ? '●' : (data == 'N') ? '●' : (data == 'R') ? '○'  : '';
     },
     async save() {     
       // 한번에 저장 하기 위해 아래 와 같이 전달 해야 함...  (첨부파일 동시 Upload 문제 때문에 주석 처리)

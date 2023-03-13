@@ -165,7 +165,7 @@ const shopinfoModel = {
 					sql = "insert into tb_shopinput_file (i_shop, i_no, i_ser, n_file, t_att, f_noact) " +
 						  " values ('" + i_shop[index] + "'," + i_no[index] + "," + i_ser[index] + ", '" + t_att[index] + "', '" + tPathFile + "', 'I')";
 				} else {
-					sql = "update tb_shopinput_file set n_file = '" + t_att[index] + "', t_att = '" + tPathFile + "', f_noact = 'I'" +
+					sql = "update tb_shopinput_file set n_file = '" + t_att[index] + "', t_att = '" + tPathFile + "', f_noact = if(f_noact = 'N', 'R', f_noact)" +
 						  " where i_shop = '" + i_shop[index] + "' and i_no = " + i_no[index] + " and i_ser = " + i_ser[index] ;
 				}
 				const [row] = await db.execute(sql);
@@ -188,7 +188,7 @@ const shopinfoModel = {
 				sql = "insert into tb_shopinput_file (i_shop, i_no, i_ser, n_file, t_att, f_noact) " +
 				      " values ('" + i_shop + "'," + i_no + "," + i_ser + ", '" + t_att + "', '" + tPathFile + "', 'I')";
 			} else {
-				sql = "update tb_shopinput_file set n_file = '" + t_att + "', t_att = '" + tPathFile + "', f_noact = 'I'" +
+				sql = "update tb_shopinput_file set n_file = '" + t_att + "', t_att = '" + tPathFile + "', f_noact = if(f_noact = 'N', 'R', f_noact)" +
 				      " where i_shop = '" + i_shop + "' and i_no = " + i_no + " and i_ser = " + i_ser ;
 			}
 			const [row] = await db.execute(sql);
@@ -343,12 +343,12 @@ const shopinfoModel = {
 					"						where i_shop = '" + i_shop + "' " +
 					"						group by i_shop) b on a.i_shop = b.i_shop " +
 					"		left outer join (select c2.i_shop, c2.i_no, " +
-					"								sum(case when f_gubun = '1' and f_yn = '1' then 1 else 0 end) f_u1y, " +
-					"								sum(case when f_gubun = '1' and f_yn = '0' then 1 else 0 end) f_u1n, " +
-					"								sum(case when f_gubun = '2' and f_yn = '1' then 1 else 0 end) f_u2y, " +
-					"								sum(case when f_gubun = '2' and f_yn = '0' then 1 else 0 end) f_u2n, " +
-					"								sum(case when f_gubun = '3' and f_yn = '1' then 1 else 0 end) f_u3y, " +
-					"								sum(case when f_gubun = '3' and f_yn = '0' then 1 else 0 end) f_u3n " +
+					"								sum(case when f_gubun = '1' and f_yn = '1' and f_noact <> 'N' then 1 else 0 end) f_u1y, " +
+					"								sum(case when f_gubun = '1' and f_yn = '0' and f_noact <> 'N' then 1 else 0 end) f_u1n, " +
+					"								sum(case when f_gubun = '2' and f_yn = '1' and f_noact <> 'N' then 1 else 0 end) f_u2y, " +
+					"								sum(case when f_gubun = '2' and f_yn = '0' and f_noact <> 'N' then 1 else 0 end) f_u2n, " +
+					"								sum(case when f_gubun = '3' and f_yn = '1' and f_noact <> 'N' then 1 else 0 end) f_u3y, " +
+					"								sum(case when f_gubun = '3' and f_yn = '0' and f_noact <> 'N' then 1 else 0 end) f_u3n " +
 					"						from tb_shopmag_file c1 " +
 					"								join tb_shopinput_file c2 on  c1.i_shop = c2.i_shop and c1.i_ser = c2.i_ser " +
 					"						where c1.i_shop = '" + i_shop + "' " + 

@@ -89,7 +89,7 @@ export default {
             return data == 1  ? '필수' : '선택';
         },
         f_noact(data) {
-            return data == "I" ? "등록" : (data == "Y") ? "확인" : (data == "N") ? "반려" : "-";
+            return data == "I" ? "등록" : (data == "Y") ? "확인" : (data == "N") ? "반려" : (data == "R") ? '수정': "-";
         },
         docProcess(item) {            
             if (item.f_noact) {
