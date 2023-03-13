@@ -19,13 +19,15 @@ function clearShopmagField(shopmag) {
 
 const shopinfoModel = {
 	async getShopUserList(req) {
+		const {f_serarch} = req.query;
 		// 권한 확인
 		if (!isGrant(req, LV.VIP)) {
 			throw new Error('사용 권한이 없습니다.');
 		}
-		const sql = "select mb_id, mb_name, mb_phone, mb_email, mb_level, chkpw, mb_login_at  " +
+		const sql = "select mb_id, mb_name, mb_phone, mb_email, if(mb_level=2,'일반', '관리자') mb_level, chkpw, mb_login_at  " +
 				    "  from member " +
 	   			    " where not exists (select * from tb_notuserchk t where member.mb_id = t.mb_id) " +
+					"   and (mb_id like '%" + f_serarch + "%' or mb_name like '%" + f_serarch + "%' or mb_email like '%" + f_serarch + "%')" +
 	   			    " order by mb_id, mb_name";
 		const [row] = await db.execute(sql);
 	

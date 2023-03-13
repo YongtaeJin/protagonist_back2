@@ -1,8 +1,11 @@
 <template>
     <v-form  ref="form">
         <v-toolbar background-color="primary" dark >
-
+            <v-spacer/>
+            <v-text-field label="업체명 : " v-model="f_serarch" hide-details  single-lin  />            
+            <v-btn color="primary"  @click="fetchData">조회</v-btn>
         </v-toolbar>
+        
         <v-data-table :headers="headers" class="mytable"
             :items="items" :items-per-page="20"  :footer-props="{'items-per-page-options': [10, 20, 30, 40, 50, 100, -1]}" 
         />
@@ -25,6 +28,7 @@ export default {
                 // { text: '업체명',  value: 'mb_login_at', sortable: false},
             ],
             items: [],
+            f_serarch: "",
         }
     },
     
@@ -33,7 +37,7 @@ export default {
     },
     methods: {
         async fetchData(){
-            this.items = await this.$axios.get(`/api/shopinfo/getShopUserList`);
+            this.items = await this.$axios.get(`/api/shopinfo/getShopUserList?f_serarch=${this.f_serarch}`);
         },
     }
 }
