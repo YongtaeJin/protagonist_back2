@@ -134,11 +134,21 @@ export default {
         }
     },
     mounted() {     
+        window.addEventListener('beforeunload', this.leave)
     },
+    
+    beforeUnmount() {
+        window.removeEventListener('beforeunload', this.leave)
+    },
+
     created() {
         this.fetchData() ;
     },
     methods: {
+        leave(event) {
+		    event.preventDefault();
+		    event.returnValue = '';
+	    },
         datachk(data) {
             let val = "";
             if (data == "1" || data == "Y" ) { 

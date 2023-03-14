@@ -68,6 +68,7 @@ export default {
         }
     },
     mounted() {        
+        window.addEventListener('beforeunload', this.leave);
         if (this.$store.state.user.member ) {
             this.fetchData();
             if(this.$store.state.user.shopinfo) {
@@ -77,11 +78,18 @@ export default {
             }
         }
     },
+    beforeUnmount() {
+        window.removeEventListener('beforeunload', this.leave)
+    },
     methods: {
         ...mapActions("user", ["checkShopInfo", "updateShopInfo"]),        
         ...mapMutations("user", ["SET_SHOPINFO"]),
         ...mapGetters("user", ["isShopinfochk"]),
 
+        leave(event) {
+		    event.preventDefault();
+		    event.returnValue = '';
+	    },
         inputFileChk() {
             this.istab3 = true;
             if (this.shioinfofiles) {

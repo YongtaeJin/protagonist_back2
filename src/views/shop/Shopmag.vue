@@ -86,6 +86,10 @@ export default {
         if (this.$store.state.user.member ) {
             this.fetchData();
         }
+        window.addEventListener('beforeunload', this.leave)
+    },
+    beforeUnmount() {
+        window.removeEventListener('beforeunload', this.leave)
     },
     watch: {
         async tabs() {
@@ -105,6 +109,10 @@ export default {
         ...mapActions("shop", ["duplicateCheckShop", "shopInfoSave", "shopAddFile", "shopAddFileDelete"]),
         ...mapMutations("user", ["SET_SHOPINFO"]),
 
+        leave(event) {
+		    event.preventDefault();
+		    event.returnValue = '';
+	    },
         getmaxno(flag) {
             //console.log("getmaxno", flag);
             this.maxno = 0;

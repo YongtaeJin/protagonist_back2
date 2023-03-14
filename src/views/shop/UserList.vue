@@ -47,7 +47,18 @@ export default {
     created() {
         this.fetchData() ;
     },
+    mounted() {
+        window.addEventListener('beforeunload', this.leave)
+    },
+    
+    beforeUnmount() {
+        window.removeEventListener('beforeunload', this.leave)
+    },
     methods: {
+        leave(event) {
+		    event.preventDefault();
+		    event.returnValue = '';
+	    },
         async fetchData(){
             this.items = await this.$axios.get(`/api/shopinfo/getShopUserList?f_serarch=${this.f_serarch}`);
         },

@@ -75,7 +75,18 @@ export default {
         this.rnum = 1;
         this.init() ;
     },
+    mounted() {
+        window.addEventListener('beforeunload', this.leave)
+    },
+    
+    beforeUnmount() {
+        window.removeEventListener('beforeunload', this.leave)
+    },
     methods: {
+        leave(event) {
+		    event.preventDefault();
+		    event.returnValue = '';
+	    },
         datachk(data) {
             let val = "";
             if (data) { 
