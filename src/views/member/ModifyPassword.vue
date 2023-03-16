@@ -9,8 +9,8 @@
 					<input-password
 						v-model="form.password"
 						label="비밀번호"
-						prepend-icon="mdi-lock"
-						:rules="rules.password()"
+						prepend-icon="mdi-lock"						
+						:rules="rules.password2({len:3})"
 					/>
 					<input-password
 						v-model="confirmPw"
