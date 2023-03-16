@@ -71,12 +71,13 @@ export default {
         window.addEventListener('beforeunload', this.leave);
         if (this.$store.state.user.member ) {
             this.fetchData();
-            if(this.$store.state.user.shopinfo) {
+            if(this.$store.state.user.shopinfo.f_persioninfo) {
                this.tabs = 1;
             } else {
                 this.tabs = 0;
             }
         }
+
     },
     beforeUnmount() {
         window.removeEventListener('beforeunload', this.leave)

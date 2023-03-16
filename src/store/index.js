@@ -69,30 +69,46 @@ const store = new Vuex.Store({
 					]
 				},
 				{
-					title : "스마트공방",
-					icon : "mdi-store-plus",
-					to : '',
+					title : "스마트공방 사업신청",
+					icon : "mdi-store",
+					to : '/shop/signed',
 					grant : 2, 
 					newTab : false,
-					subItems : [
-						{
-							title : "사업신청",
-							icon : "",
-							to : '/shop/signed',							
-							grant : 2, 
-							newTab : false,
-							subItems : []
-						},
-						{
-							title : "협약신청",
-							icon : "",
-							to : '/shop/agree',							
-							grant : 2, 
-							newTab : false,
-							subItems : []
-						},
-					]
+					subItems : []
 				},
+				{
+					title : "스마트공방 협약신청",
+					icon : "mdi-store-plus",
+					to : '/shop/agree',
+					grant : 2, 
+					newTab : false,
+					subItems : []
+				},
+				// {
+				// 	title : "스마트공방",
+				// 	icon : "mdi-store-plus",
+				// 	to : '',
+				// 	grant : 2, 
+				// 	newTab : false,
+				// 	subItems : [
+				// 		{
+				// 			title : "사업신청",
+				// 			icon : "",
+				// 			to : '/shop/signed',							
+				// 			grant : 2, 
+				// 			newTab : false,
+				// 			subItems : []
+				// 		},
+				// 		{
+				// 			title : "협약신청",
+				// 			icon : "",
+				// 			to : '/shop/agree',							
+				// 			grant : 2, 
+				// 			newTab : false,
+				// 			subItems : []
+				// 		},
+				// 	]
+				// },
 			]
 		},
 	},
