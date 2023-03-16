@@ -28,7 +28,7 @@ const store = new Vuex.Store({
 					subItems : []
 				},
 				{
-					title : "사업관리",
+					title : "관리자",
 					icon : "mdi-store",
 					to : '',
 					grant : 5, 

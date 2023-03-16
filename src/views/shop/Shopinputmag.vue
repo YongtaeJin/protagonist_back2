@@ -5,12 +5,13 @@
         <v-spacer/>
         <v-text-field label="업체명 : " v-model="chkf_serarch" hide-details  single-lin  />
         
-        <v-radio-group inline  label="공방서류 :" v-model="chkf_dochk" row hide-details class="small-radio no-space"   >
+        <v-radio-group inline  label="공방서류:" v-model="chkf_dochk" row hide-details class="small-radio no-space"   >
             <v-radio label="전체" value="%" />
             <v-radio label="완료" value="Y" />
             <v-radio label="미완료" value="N" />
         </v-radio-group>
-        <v-radio-group inline  label="공방서류 :" v-model="chkf_enara" row hide-details class="small-radio no-space"   >
+        
+        <v-radio-group inline  label="e나라도움:" v-model="chkf_enara" row hide-details class="small-radio no-space"   >
             <v-radio label="전체" value="%" />
             <v-radio label="완료" value="Y" />
             <v-radio label="미완료" value="N" />
@@ -87,11 +88,11 @@ export default {
             isLoading: false,
             headers: [
                 { text: '업체명',  value: 'n_company', sortable: false},
-                { text: '정보동의', value: 'f_persioninfo', sortable: false, align:'center', width: "75px"},
-                { text: '회사정보', value: 'chk1', sortable: false, align:'center', width: "75px"}, 
-                { text: '신청서류', value: 'chk2', sortable: false, align:'center', width: "75px"},
-                { text: '추가정보', value: 'chk3', sortable: false, align:'center', width: "75px"},
-                { text: '공방서류', value: 'f_dochk', sortable: false, align:'center', width: "75px"},  
+                { text: '정보동의', value: 'f_persioninfo', sortable: false, align:'center', width: "80px"},
+                { text: '회사정보', value: 'chk1', sortable: false, align:'center', width: "80px"}, 
+                { text: '신청서류', value: 'chk2', sortable: false, align:'center', width: "80px"},
+                { text: '추가정보', value: 'chk3', sortable: false, align:'center', width: "80px"},
+                { text: '공방서류', value: 'f_dochk', sortable: false, align:'center', width: "80px"},  
                 { text: 'e나라도움등록', value: 'f_enarachk', sortable: false, align:'center', width: "80px"},
             ],
             itemInputs: [],
@@ -240,7 +241,7 @@ export default {
 
 .v-data-table > .v-data-table__wrapper > table > tbody > tr > th, .v-data-table > .v-data-table__wrapper > table > thead > tr > th, .v-data-table > .v-data-table__wrapper > table > tfoot > tr > th 
 {
-    font-size: 0.40rem;
+    font-size: 0.7rem;    
     height: 35px;        
 }
 .v-data-table > .v-data-table__wrapper > table > tbody > tr > td, .v-data-table > .v-data-table__wrapper > table > thead > tr > td, .v-data-table > .v-data-table__wrapper > table > tfoot > tr > td {

@@ -1,6 +1,6 @@
 <template>
  	<v-app>
-		<v-navigation-drawer v-if="this.$store.state.user.member"  app v-model="drawer" :width="drawerWidth" disable-resize-watcher > 		
+		<v-navigation-drawer v-if="this.$store.state.user.member"  app v-model="drawer" :width="drawerWidth" disable-resize-watcher >
 			<site-navi  @close="toggleDrawer"/>
 		</v-navigation-drawer>
 
@@ -34,7 +34,7 @@ export default {
 
   data() {
 		return {
-			drawer : false,
+			drawer : true,
 			loginchk : false,
 		}
 	},
@@ -78,7 +78,7 @@ export default {
  
 .v-data-table > .v-data-table__wrapper > table > tbody > tr > th, .v-data-table > .v-data-table__wrapper > table > thead > tr > th, .v-data-table > .v-data-table__wrapper > table > tfoot > tr > th 
 {
-    font-size: 0.40rem;
+    font-size: 1.00rem;
     height: 35px;    
 }
 .v-data-table > .v-data-table__wrapper > table > tbody > tr > td, .v-data-table > .v-data-table__wrapper > table > thead > tr > td, .v-data-table > .v-data-table__wrapper > table > tfoot > tr > td {

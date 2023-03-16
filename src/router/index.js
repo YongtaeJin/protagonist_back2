@@ -8,7 +8,7 @@ Vue.use(VueRouter)
 
 export function createRouter() {
 	const router = new VueRouter({
-		mode: 'history',
+		// mode: 'history',
 		base: process.env.BASE_URL,
 		routes
 	});
@@ -31,7 +31,6 @@ export function createRouter() {
 		const access = store.getters.access;
 		const GRANT = store.getters['user/GRANT'];
 		const isMember = !!store.state.user.member;
-		// console.log(access, GRANT, isMember);
 		// console.log(to.path, to.name);
 		let msg = '';
 		if (to.name.startsWith('NoAuth') && isMember) {
@@ -68,7 +67,7 @@ export function createRouter() {
 	});
 
 	router.afterEach((to, from) => {
-
+		
 	});
 	return router;
 }

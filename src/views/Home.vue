@@ -9,10 +9,11 @@
         />
       </v-col>
       <v-col class="mb-4">
-        <h1 class="display-5 font-weight-bold">
-          Welcome to Protagonist
+        <h1 class="display-1 ">
+          스마트공방 필수정보 및 서류 업로드(도입기업전용)
         </h1>
       </v-col>   
+      
     </v-row>
 
     <v-row v-if="!this.$store.state.user.member">
