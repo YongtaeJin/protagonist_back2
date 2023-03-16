@@ -1,13 +1,13 @@
 <template>
   <v-container fill-height fluid> 
     <v-row v-if="this.$store.state.user.member" class="text-center">
-      <v-col cols="12">
+      <!-- <v-col cols="12">
         <v-img
           :src="require('../../server/upload/mainlog.jpeg')"          
           contain
           height="200"
         />
-      </v-col>
+      </v-col> -->
       <v-col class="mb-4">
         <h1 class="display-1 ">
           스마트공방 필수정보 및 서류 업로드(도입기업전용)
