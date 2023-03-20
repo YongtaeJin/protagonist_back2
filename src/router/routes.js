@@ -82,6 +82,11 @@ const routes = [
 		name: 'NoLogin',
 		component: () => import(/* webpackChunkName: "nologin" */ '../views/NotLogin.vue')
 	},
+	{
+		path: '/tiptab',
+		name: 'Tibtab',
+		component: () => import(/* webpackChunkName: "tiptab" */ '../views/TibtabView.vue')
+	},
 	
 	{
 		path: '*',
