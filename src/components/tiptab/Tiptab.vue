@@ -1,6 +1,7 @@
 <template>
   <div class="editor" v-if="editor">
     <menu-bar class="editor__header" :editor="editor" />
+    <menu-color class="editor__header" :editor="editor" />
     <editor-content class="editor__content" :editor="editor" />
     <!-- <div class="editor__footer">
       <div :class="`editor__status editor__status--${status}`">
@@ -38,9 +39,11 @@ import TextStyle from '@tiptap/extension-text-style'
 import { Editor, EditorContent } from '@tiptap/vue-2'
 import MenuBar from './MenuBar.vue'
 import * as Y from 'yjs'
+import MenuColor from './MenuColor.vue'
+
 export default {
     
-    components: {EditorContent, MenuBar,},
+    components: {EditorContent, MenuBar, MenuColor,},
 
     data() {
         return {
@@ -54,18 +57,19 @@ export default {
       this.editor = new Editor({
         extensions: [
           StarterKit.configure({
-            history: false,
+            history: true,
           }),
           Document,
           Paragraph,
           Text,
           TextStyle,
           Color,
-          Heading,
-          TextAlign.configure({
-            types: ['heading', 'paragraph'],                  
-          }),
-          Highlight,
+          // Heading,
+          // TextAlign.configure({
+          //   types: ['heading', 'paragraph'],                  
+          // }),
+          // Highlight,
+          Highlight.configure({ multicolor: true }),
           TaskList,
           TaskItem,
           // Collaboration.configure({

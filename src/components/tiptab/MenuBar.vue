@@ -98,6 +98,18 @@ export default {
           isActive: () => this.editor.isActive('heading', { level: 2 }),
         },
         {
+          icon: 'h-3',
+          title: 'Heading 3',
+          action: () => this.editor.chain().focus().toggleHeading({ level: 3 }).run(),
+          isActive: () => this.editor.isActive('heading', { level: 3 }),
+        },
+        {
+          icon: 'h-4',
+          title: 'Heading 4',
+          action: () => this.editor.chain().focus().toggleHeading({ level: 4 }).run(),
+          isActive: () => this.editor.isActive('heading', { level: 4 }),
+        },
+        {
           icon: 'paragraph',
           title: 'Paragraph',
           action: () => this.editor.chain().focus().setParagraph().run(),

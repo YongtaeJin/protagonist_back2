@@ -113,7 +113,7 @@ const store = new Vuex.Store({
 					title : "TipTab",
 					icon : "mdi-home",
 					to : '/tiptab',
-					grant : 2, 
+					grant : 9, 
 					newTab : false,
 					subItems : []
 				},
