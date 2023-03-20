@@ -38,7 +38,6 @@ import { Color } from '@tiptap/extension-color'
 import TextStyle from '@tiptap/extension-text-style'
 import { Editor, EditorContent } from '@tiptap/vue-2'
 import MenuBar from './MenuBar.vue'
-import * as Y from 'yjs'
 import MenuColor from './MenuColor.vue'
 
 export default {
